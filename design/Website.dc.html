@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<script src="icons.js"></script>
+<script src="store.js"></script>
+<script src="motion.js" data-mode="full"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hotel A-Wise · Open all night, every night</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://api.fontshare.com/v2/css?f[]=gambetta@300,400,500,600&amp;f[]=general-sans@400,500,600&amp;f[]=clash-display@400,500,600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=DM+Serif+Display:ital@0;1&amp;family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:96px}
+button,a,label,input,select,textarea,[role=button],[role=option]{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+:focus:not(:focus-visible){outline:none}
+@media (max-width:760px){input,textarea{font-size:16px!important}}
+
+html,body{overflow-x:clip;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+img,video,iframe{max-width:100%}
+html,body{margin:0;padding:0;background:#F5F2EA;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#000063;text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{color:#00003A}
+::selection{background:#F2B544;color:#00003A}
+:focus-visible{outline:2px solid #F2B544;outline-offset:3px;border-radius:4px}
+button{font:inherit;color:inherit;cursor:pointer}
+input,select,textarea{font:inherit;color:inherit}
+img{display:block;max-width:100%}
+@keyframes aw-breathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.8)}}
+@keyframes aw-rise{from{transform:translateY(105%)}to{transform:translateY(0)}}
+@keyframes aw-pop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+@keyframes aw-menu{from{opacity:0;transform:translateY(-6px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes aw-menu-item{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+@keyframes aw-fade{from{opacity:0}to{opacity:1}}
+@keyframes aw-spin{to{transform:rotate(360deg)}}
+@keyframes aw-shimmer{0%{opacity:.55}50%{opacity:1}100%{opacity:.55}}
+@keyframes aw-toast{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:1ms!important;animation-iteration-count:1!important;transition-duration:1ms!important}}
+</style>
+</helmet>
+
+<div style="{{ outerStyle }}">
+<div ref="{{ scrollRef }}" style="{{ scrollStyle }}">
+<div style="{{ rootVars }}">
+
+<sc-if value="{{ offline }}" hint-placeholder-val="{{ false }}">
+  <div role="status" style="background:#B42318;color:#FFFFFF;font-family:'Geist',system-ui,sans-serif;font-size:13px;padding:10px var(--pad);display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+    <span>You're offline. Prices and availability may be out of date.</span>
+    <a href="{{ ct.tel }}" style="color:#FFFFFF;font-family:'Geist Mono',monospace">Call {{ ct.phone }}</a>
+  </div>
+</sc-if>
+
+<sc-if value="{{ bannerShow }}" hint-placeholder-val="{{ false }}">
+  <div role="region" aria-label="Announcement" style="position:relative;z-index:41;background:#00003A;color:#F5F2EA;font-family:'Geist',system-ui,sans-serif;font-size:13.5px;line-height:1.4;padding:10px 52px 10px var(--pad);display:flex;align-items:center;justify-content:center;gap:10px;text-align:center">
+    <aw-icon name="sparkle" size="15" style="color:#F2B544;flex-shrink:0"></aw-icon><span style="text-wrap:balance">{{ bannerText }}</span>
+    <button onClick="{{ closeBanner }}" aria-label="Dismiss announcement" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:none;border-radius:8px;background:transparent;color:#F5F2EA;display:flex;align-items:center;justify-content:center"><aw-icon name="x" size="16"></aw-icon></button>
+  </div>
+</sc-if>
+<div style="position:sticky;top:0;z-index:40;height:0;display:flow-root">
+<header style="{{ navStyle }}">
+  <div aria-hidden="true" style="position:absolute;inset:0;border-radius:16px;background:rgba(245,242,234,0.86);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);border:1px solid rgba(0,0,99,0.08);box-shadow:0 14px 36px -20px rgba(20,16,10,0.45);opacity:{{ navSolid }};transition:opacity 280ms cubic-bezier(0.23,1,0.32,1);pointer-events:none"></div>
+  <div style="position:relative">
+  <div style="display:flex;align-items:center;gap:28px;padding:10px 10px 10px 20px;min-height:60px">
+    <a href="#" aria-label="Hotel A-Wise home" style="display:flex;align-items:center;gap:10px;color:var(--nf);text-decoration:none">
+      <svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="11" cy="11" r="5.5"></circle><circle cx="21" cy="11" r="5.5"></circle><circle cx="11" cy="21" r="5.5"></circle><circle cx="21" cy="21" r="5.5"></circle><rect x="12.5" y="12.5" width="7" height="7" transform="rotate(45 16 16)"></rect></svg>
+      <span style="font-family:var(--serif);font-size:22px;letter-spacing:-0.01em;white-space:nowrap">Hotel A-Wise</span>
+    </a>
+    
+    <div style="flex:1"></div>
+    <nav aria-label="Main" style="display:var(--d);gap:clamp(14px,2vw,28px);font-size:14px;min-width:0;flex-wrap:nowrap;white-space:nowrap">
+      <sc-for list="{{ navLinks }}" as="l" hint-placeholder-count="5">
+        <a data-mi-ul="" href="{{ l.href }}" aria-current="{{ l.current }}" style="color:var(--nf);text-decoration:none;position:relative;padding:6px 0;opacity:{{ l.op }}">{{ l.label }}</a>
+      </sc-for>
+    </nav>
+    <a href="{{ bookHref }}" style="display:var(--d);align-items:center;height:max(42px, var(--tap-min, 0px));padding:0 18px;border-radius:10px;background:#000063;color:#F5F2EA;text-decoration:none;font-weight:500;font-size:14px;transition:transform 160ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.97)"><span style="display:inline-flex;align-items:center;gap:8px"><aw-icon name="key" size="16"></aw-icon>Book a room</span></a>
+    <button onClick="{{ toggleMenu }}" aria-expanded="{{ menuOpen }}" aria-label="Menu" style="display:var(--mo);align-items:center;justify-content:center;height:44px;padding:0 14px;border-radius:10px;border:1px solid var(--nl);background:transparent;color:var(--nf);font-size:14px">{{ menuLabel }}</button>
+  </div>
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="padding:4px 20px 18px;display:flex;flex-direction:column;border-top:1px solid var(--nl);transform-origin:50% 0;animation:aw-menu 280ms cubic-bezier(0.23,1,0.32,1) both">
+      <sc-for list="{{ navLinks }}" as="l" hint-placeholder-count="5">
+        <a href="{{ l.href }}" onClick="{{ closeMenu }}" style="display:flex;align-items:center;justify-content:space-between;min-height:52px;color:var(--nf);text-decoration:none;font-family:var(--serif);font-size:24px;letter-spacing:-0.03em;border-bottom:1px solid var(--nl);animation:aw-menu-item 360ms cubic-bezier(0.23,1,0.32,1) both;animation-delay:{{ l.delay }}">{{ l.label }}<svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.45"><path d="M6 4l4 4-4 4"></path></svg></a>
+      </sc-for>
+      <a href="Checkout.dc.html#manage" style="display:flex;align-items:center;gap:8px;min-height:44px;margin-top:8px;color:var(--nm);font-size:14px;text-decoration:none;animation:aw-menu-item 360ms cubic-bezier(0.23,1,0.32,1) 220ms both"><aw-icon name="file" size="16"></aw-icon>Manage my booking</a>
+      
+    </div>
+  </sc-if>
+</div>
+</header>
+</div>
+
+<main id="main" style="padding-top:var(--navpad)">
+
+<!-- ================= HOME ================= -->
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <section data-noreveal="" data-screen-label="Home · Hero" style="position:relative;background:#1A1712;color:#F5F2EA;min-height:var(--hero-h);display:flex;flex-direction:column;justify-content:var(--hero-jc);padding:var(--hero-pt) var(--pad) var(--hero-pb);font-family:'Geist',system-ui,sans-serif">
+    <div aria-hidden="true" style="position:absolute;inset:0;z-index:0;overflow:hidden;border-radius:inherit"><img data-parallax="0.1" loading="lazy" fetchpriority="high" src="{{ im.hero }}" alt="Executive Room at Hotel A-Wise: large bed with lavender linen, desk by a sunlit window, ceiling fan" style="position:absolute;inset:-6% 0;width:100%;height:112%;object-fit:cover;object-position:center 55%;display:block;z-index:0">
+    <div aria-hidden="true" style="position:absolute;inset:0;z-index:0;background:linear-gradient(180deg, rgba(20,16,10,0.35) 0%, rgba(20,16,10,0.08) 32%, rgba(20,16,10,0.72) 100%)"></div></div>
+    <div style="position:relative;z-index:1;display:flex;flex-direction:column;gap:28px">
+      <h1 style="margin:0;max-width:780px;font-family:var(--serif);font-weight:300;font-size:var(--h1);line-height:1.02;letter-spacing:-0.05em;text-wrap:balance;text-shadow:0 2px 24px rgba(0,0,0,0.25)">{{ heroTitle }}</h1>
+      <div style="height:1px;background:rgba(245,242,234,0.4);display:var(--db)"></div>
+      <div style="display:var(--d);justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap">
+        <p style="margin:0;max-width:560px;font-size:18px;line-height:1.55;color:rgba(245,242,234,0.9);text-wrap:pretty">{{ cp.heroSub }}</p>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+          <a data-mi-arrow-host="" href="#rooms" style="white-space:nowrap;flex-shrink:0;display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 6px 0 20px;border-radius:999px;border:1px solid rgba(255,255,255,0.35);background:rgba(255,255,255,0.14);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:#F5F2EA;text-decoration:none;font-size:15px;transition:transform 160ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.97)">View rooms<span data-mi-arrow="" aria-hidden="true" style="width:36px;height:36px;border-radius:50%;background:#F5F2EA;color:#1A1712;display:flex;align-items:center;justify-content:center;font-size:16px">↗</span></a>
+          <span style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.06em;color:rgba(245,242,234,0.7)">NO. 1 WISEPAK LANE · NEW ASOFAN · ACCRA</span>
+        </div>
+      </div>
+    </div>
+
+    <form onSubmit="{{ submitBar }}" aria-label="Check availability" style="position:relative;z-index:1;margin-top:var(--bar-mt);--hcard:rgba(255,255,255,0.55);--hf:#00003A;--hs:rgba(0,0,58,0.66);--hl:rgba(255,255,255,0.35);background:rgba(245,242,234,0.42);-webkit-backdrop-filter:blur(22px) saturate(1.4);backdrop-filter:blur(22px) saturate(1.4);border:1px solid rgba(255,255,255,0.45);color:#00003A;border-radius:14px;padding:8px;display:flex;flex-direction:column;gap:6px;box-shadow:0 30px 60px -30px rgba(0,0,0,0.6)">
+      <div role="tablist" style="position:relative;display:grid;grid-template-columns:1fr 1fr;width:var(--tabs-w);max-width:100%;padding:4px;border-radius:12px;background:rgba(0,0,99,0.07)">
+        <span aria-hidden="true" style="position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:9px;background:#FFFFFF;box-shadow:0 1px 2px rgba(0,0,58,0.08),0 4px 12px -4px rgba(0,0,58,0.18);transform:translateX({{ tabX }});transition:transform 320ms cubic-bezier(0.23,1,0.32,1)"></span>
+        <button type="button" role="tab" aria-selected="{{ isStay }}" onClick="{{ tabStay }}" style="position:relative;height:max(38px, var(--tap-min, 0px));padding:0 18px;border:none;border-radius:9px;background:transparent;color:#00003A;font-size:14px;font-weight:500;white-space:nowrap;opacity:{{ stayOp }};transition:opacity 200ms ease,transform 150ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.97)">Stay</button>
+        <button type="button" role="tab" aria-selected="{{ isRent }}" onClick="{{ tabRent }}" style="position:relative;height:max(38px, var(--tap-min, 0px));padding:0 18px;border:none;border-radius:9px;background:transparent;color:#00003A;font-size:14px;font-weight:500;white-space:nowrap;opacity:{{ rentOp }};transition:opacity 200ms ease,transform 150ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.97)">Rent for an event</button>
+      </div>
+      <sc-if value="{{ isStay }}" hint-placeholder-val="{{ true }}">
+        <div style="animation:aw-fade 260ms cubic-bezier(0.23,1,0.32,1);display:grid;grid-template-columns:var(--c-bar);gap:1px;background:var(--hl);border-radius:8px;overflow:hidden">
+          <div style="background:var(--hcard);padding:12px 16px"><dc-import name="DatePicker" variant="bare" icon="calendar" label="Check-in" value="{{ ci }}" min="{{ today }}" on-change="{{ onCi }}" range-start="{{ ci }}" range-end="{{ co }}" hint-size="100%,52px"></dc-import></div>
+          <div style="background:var(--hcard);padding:12px 16px"><dc-import name="DatePicker" variant="bare" icon="calendar" label="Check-out" value="{{ co }}" min="{{ ciPlus1 }}" on-change="{{ onCo }}" range-start="{{ ci }}" range-end="{{ co }}" hint-size="100%,52px"></dc-import></div>
+          <div style="grid-column:var(--bar-span);background:var(--hcard);padding:var(--g-pad);display:flex;flex-direction:var(--g-dir);justify-content:space-between;align-items:var(--g-ai);gap:4px">
+            <span style="display:flex;align-items:center;gap:6px;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--hs)"><aw-icon name="users" size="14"></aw-icon>Guests</span>
+            <div style="display:flex;align-items:center;gap:14px">
+              <button type="button" aria-label="Fewer guests" onClick="{{ gMinus }}" style="width:max(32px, var(--tap-min, 0px));height:max(32px, var(--tap-min, 0px));border-radius:8px;border:1px solid var(--hl);background:transparent;font-size:18px;line-height:1">−</button>
+              <span style="font-family:'Geist Mono',monospace;font-size:18px;min-width:16px;text-align:center" aria-live="polite">{{ guests }}</span>
+              <button type="button" aria-label="More guests" onClick="{{ gPlus }}" style="width:max(32px, var(--tap-min, 0px));height:max(32px, var(--tap-min, 0px));border-radius:8px;border:1px solid var(--hl);background:transparent;font-size:18px;line-height:1">+</button>
+            </div>
+          </div>
+          <div style="grid-column:var(--bar-span);background:var(--hcard);padding:10px;display:flex;align-items:stretch">
+            <button type="submit" style="flex:1;min-height:52px;padding:0 22px;white-space:nowrap;border:none;border-radius:8px;background:#000063;color:#F5F2EA;font-weight:600;font-size:15px;display:flex;align-items:center;justify-content:space-between;gap:16px;transition:transform 160ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.97)"><span>Check availability</span><span style="font-family:'Geist Mono',monospace;font-size:13px;font-weight:500">{{ nightsLabel }}</span></button>
+          </div>
+        </div>
+        <sc-if value="{{ barErr }}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin:4px 8px 6px;font-size:13px;color:#B42318">{{ barErr }}</p></sc-if>
+      </sc-if>
+      <sc-if value="{{ isRent }}" hint-placeholder-val="{{ false }}">
+        <div style="animation:aw-fade 260ms cubic-bezier(0.23,1,0.32,1);display:grid;grid-template-columns:var(--c-bar2);gap:1px;background:var(--hl);border-radius:8px;overflow:hidden">
+          <div style="background:var(--hcard);padding:12px 16px"><dc-import name="DatePicker" variant="bare" icon="calendar" label="Event date" value="{{ rentDate }}" min="{{ today }}" on-change="{{ onRentDate }}" hint-size="100%,52px"></dc-import></div>
+          <div style="background:var(--hcard);padding:12px 16px;display:var(--d);align-items:center;font-size:14px;color:var(--hs)">Canopies, long and short tables, foldable and regular chairs. Reserve online, collect from Wisepak Lane.</div>
+          <div style="background:var(--hcard);padding:10px;display:flex">
+            <a href="{{ rentHref }}" style="flex:1;min-height:52px;padding:0 22px;border-radius:8px;background:#000063;color:#F5F2EA;font-weight:600;font-size:15px;display:flex;align-items:center;justify-content:space-between;text-decoration:none;gap:16px">Browse rentals <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </sc-if>
+    </form>
+    
+  </section>
+
+  <section data-screen-label="Home · Rooms strip" style="padding:var(--sy) var(--pad);font-family:'Geist',system-ui,sans-serif">
+    <div style="display:flex;flex-direction:column;align-items:flex-start;gap:var(--hgap);margin-bottom:var(--hmb)">
+      <h2 style="margin:0;font-family:var(--serif);font-weight:400;font-size:var(--h2s);line-height:1.08;letter-spacing:-0.04em;text-wrap:balance">{{ cp.roomsHeading }}</h2>
+      <div style="display:flex;flex-direction:column;gap:14px;max-width:440px">
+        <div aria-label="In every room" style="display:flex;flex-wrap:wrap;gap:8px"><span style="display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 14px 0 8px;border-radius:999px;background:#FFFFFF;border:1px solid rgba(0,0,99,0.1);font-size:13.5px;white-space:nowrap"><span style="width:28px;height:28px;border-radius:999px;background:#F6E2B3;color:#000063;display:flex;align-items:center;justify-content:center"><aw-icon name="snow" size="15"></aw-icon></span>AC</span><span style="display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 14px 0 8px;border-radius:999px;background:#FFFFFF;border:1px solid rgba(0,0,99,0.1);font-size:13.5px;white-space:nowrap"><span style="width:28px;height:28px;border-radius:999px;background:#F6E2B3;color:#000063;display:flex;align-items:center;justify-content:center"><aw-icon name="wifi" size="15"></aw-icon></span>Wi-Fi</span><span style="display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 14px 0 8px;border-radius:999px;background:#FFFFFF;border:1px solid rgba(0,0,99,0.1);font-size:13.5px;white-space:nowrap"><span style="width:28px;height:28px;border-radius:999px;background:#F6E2B3;color:#000063;display:flex;align-items:center;justify-content:center"><aw-icon name="tv" size="15"></aw-icon></span>TV</span><span style="display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 14px 0 8px;border-radius:999px;background:#FFFFFF;border:1px solid rgba(0,0,99,0.1);font-size:13.5px;white-space:nowrap"><span style="width:28px;height:28px;border-radius:999px;background:#F6E2B3;color:#000063;display:flex;align-items:center;justify-content:center"><aw-icon name="droplets" size="15"></aw-icon></span>Private bath</span><span style="display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 14px 0 8px;border-radius:999px;background:#FFFFFF;border:1px solid rgba(0,0,99,0.1);font-size:13.5px;white-space:nowrap"><span style="width:28px;height:28px;border-radius:999px;background:#F6E2B3;color:#000063;display:flex;align-items:center;justify-content:center"><aw-icon name="sparkle" size="15"></aw-icon></span>Fresh linen</span></div>
+        <a href="#rooms" style="font-size:14px;font-weight:500">Compare all rooms <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+      <div style="display:grid;grid-template-columns:var(--c4);gap:16px;overflow-x:auto" aria-busy="true" aria-label="Loading rooms">
+        <sc-for list="{{ skeletons }}" as="s" hint-placeholder-count="4"><div style="height:440px;border-radius:12px;background:#F6E2B3;animation:aw-shimmer 1.4s ease-in-out infinite"></div></sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{ notLoading }}" hint-placeholder-val="{{ true }}">
+      <div style="display:grid;grid-template-columns:var(--c4);gap:clamp(16px,2vw,28px);overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 8px" data-stagger="">
+        <sc-for list="{{ rooms }}" as="r" hint-placeholder-count="4">
+          <a data-mi-card="" href="{{ r.href }}" aria-label="{{ r.aria }}" style="scroll-snap-align:start;display:flex;flex-direction:column;gap:14px;min-width:0;color:#00003A;text-decoration:none;opacity:{{ r.op }};transition:transform 220ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.985)">
+            <div style="position:relative;aspect-ratio:4/5;overflow:hidden;border-radius:16px;background:#F6E2B3">
+              <img data-mi-img="" src="{{ r.img }}" alt="{{ r.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;filter:saturate(0.95) contrast(1.03)">
+              <div aria-hidden="true" style="position:absolute;inset:auto 0 0 0;height:40%;background:linear-gradient(180deg,rgba(20,16,10,0) 0%,rgba(20,16,10,0.55) 100%)"></div>
+              <div aria-hidden="true" style="position:absolute;top:0;left:22px;display:flex;flex-direction:column;align-items:center;transform-origin:50% 0" data-mi-tag="">
+                <span style="width:1px;height:22px;background:rgba(245,242,234,0.9)"></span>
+                <span style="width:58px;padding:10px 0 12px;border-radius:8px 8px 14px 14px;background:#F5F2EA;color:#000063;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 10px 22px -10px rgba(0,0,0,0.55)">
+                  <span style="width:8px;height:8px;border-radius:50%;background:transparent;box-shadow:inset 0 0 0 1.5px rgba(0,0,99,0.45)"></span>
+                  <span style="font-family:'Geist Mono',monospace;font-size:15px;font-weight:500;letter-spacing:0.04em">{{ r.code }}</span>
+                  <span style="width:24px;height:1px;background:rgba(0,0,99,0.25)"></span>
+                  <span style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.06em;opacity:0.7">{{ r.noShort }}</span>
+                </span>
+              </div>
+              <span style="position:absolute;left:14px;bottom:14px;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.06em;color:#F5F2EA;text-transform:uppercase">{{ r.leftLabel }}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
+              <span style="font-family:var(--serif);font-size:28px;line-height:1;letter-spacing:-0.05em">{{ r.name }}</span>
+              <span style="font-family:'Geist Mono',monospace;font-size:13px;white-space:nowrap">GHS {{ r.priceLabel }}<span style="opacity:0.55"> /night</span></span>
+            </div>
+            <span style="margin-top:-6px;display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:rgba(0,0,58,0.68)"><span style="display:inline-flex;align-items:center;gap:6px"><aw-icon name="bed" size="16"></aw-icon>{{ r.beds }}</span><span style="display:inline-flex;align-items:center;gap:6px"><aw-icon name="users" size="16"></aw-icon>{{ r.guests }} guests</span></span>
+          </a>
+        </sc-for>
+      </div>
+    </sc-if>
+  </section>
+
+  <section data-screen-label="Home · What's here" style="padding:0 var(--pad) var(--sy);font-family:'Geist',system-ui,sans-serif">
+    <h2 style="margin:0 0 var(--hmb);padding-top:24px;border-top:1px solid rgba(0,0,99,0.16);font-family:var(--serif);font-weight:400;font-size:var(--h2s);line-height:1.08;letter-spacing:-0.04em;text-wrap:balance">{{ cp.overviewHeading }}</h2>
+    <div style="display:grid;grid-template-columns:var(--c-55);gap:56px">
+      <div style="display:flex;flex-direction:column;gap:28px;min-width:0">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          
+        </div>
+        <ol style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px" data-stagger="">
+          <sc-for list="{{ facilities }}" as="f" hint-placeholder-count="8">
+            <li onMouseEnter="{{ f.on }}" onFocus="{{ f.on }}" tabindex="0" style="display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:20px;background:#FFFFFF;border:1px solid rgba(0,0,99,0.1);cursor:default;opacity:{{ f.op }};transition:opacity 200ms cubic-bezier(0.23,1,0.32,1)">
+              <span style="width:48px;height:48px;border-radius:14px;background:#F6E2B3;color:#000063;display:flex;align-items:center;justify-content:center"><aw-icon name="{{ f.icon }}" size="24"></aw-icon></span>
+              <span style="font-family:var(--serif);font-size:var(--fac-t);line-height:1.1;letter-spacing:-0.03em">{{ f.title }}</span>
+            </li>
+          </sc-for>
+        </ol>
+      </div>
+      <figure style="margin:0;display:var(--dfig);position:sticky;top:96px;align-self:start">
+        <div style="aspect-ratio:4/5;overflow:hidden;border-radius:16px;background:#F6E2B3"><sc-if value="{{ facImg }}" hint-placeholder-val="{{ false }}"><img loading="lazy" src="{{ facImg }}" alt="{{ facAlt }}" style="width:100%;height:100%;object-fit:cover;filter:saturate(0.92) contrast(1.04)"></sc-if></div>
+        
+      </figure>
+    </div>
+  </section>
+
+  <section data-screen-label="Home · Rentals" style="background:#00003A;color:#F5F2EA;padding:var(--sy) var(--pad);font-family:'Geist',system-ui,sans-serif">
+    <div style="display:flex;flex-direction:column;align-items:flex-start;gap:var(--hgap);margin-bottom:var(--hmb)">
+      <h2 style="margin:0;font-family:var(--serif);font-weight:400;font-size:var(--h2s);line-height:1.08;letter-spacing:-0.04em;text-wrap:balance">{{ cp.rentalsHeading }}</h2>
+      <div style="display:flex;flex-direction:column;gap:14px;max-width:440px">
+        <p style="margin:0;font-size:16px;line-height:1.5;color:rgba(245,242,234,0.78)">{{ cp.rentalsSub }}</p>
+        <a href="Checkout.dc.html#rent" style="color:#F5F2EA;font-size:14px;font-weight:500">Reserve rentals online <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:var(--c3);gap:16px" data-stagger="">
+      <sc-for list="{{ rentals }}" as="it" hint-placeholder-count="3">
+        <a data-mi-card="" href="Checkout.dc.html#rent" style="display:flex;flex-direction:column;background:#000063;border-radius:10px;overflow:hidden;color:#F5F2EA;text-decoration:none;transition:transform 220ms cubic-bezier(0.23,1,0.32,1)" style-hover="transform:translateY(-4px)" style-active="transform:scale(0.97)">
+          <div style="aspect-ratio:4/3;background:#F5F2EA;display:flex;align-items:center;justify-content:center;padding:20px"><img data-mi-img="" src="{{ it.img }}" alt="{{ it.alt }}" loading="lazy" style="max-height:100%;object-fit:contain;mix-blend-mode:multiply"></div>
+          <div style="padding:16px;display:flex;flex-direction:column;gap:8px">
+            <span style="font-family:var(--serif);font-size:22px">{{ it.name }}</span>
+            <div style="display:flex;align-items:baseline;font-family:'Geist Mono',monospace;font-size:13px"><span style="opacity:0.7">from</span><span style="flex:1;border-bottom:1.5px dotted rgba(245,242,234,0.35);margin:0 8px;transform:translateY(-4px)"></span><span>GHS {{ it.price }} / day</span></div>
+            
+          </div>
+        </a>
+      </sc-for>
+    </div>
+  </section>
+
+  <section data-screen-label="Home · Events" style="font-family:'Geist',system-ui,sans-serif">
+    <figure style="margin:0;position:relative">
+      <div style="height:var(--ev-h);overflow:hidden;background:#000063"><img src="{{ im.events }}" alt="Wedding ceremony in the A-Wise compound: white aisle, flowers, rows of blue chairs under white canopies" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center 40%;filter:saturate(0.9) contrast(1.05)"></div>
+      
+    </figure>
+    <div style="padding:56px var(--pad) var(--sy);display:flex;flex-direction:column;gap:var(--hgap)">
+      <h2 style="margin:0;font-family:var(--serif);font-weight:400;font-size:var(--h2s);line-height:1.08;letter-spacing:-0.04em;text-wrap:balance">{{ cp.spacesHeading }}</h2>
+      <div style="display:flex;flex-direction:column;gap:0">
+        <a data-mi-nudge-host="" href="Checkout.dc.html#venues" style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:center;padding:16px 0;border-top:1px solid rgba(0,0,99,0.16);color:#00003A;text-decoration:none">
+          <span style="display:flex;align-items:center;gap:14px"><span style="width:48px;height:48px;border-radius:14px;background:#F6E2B3;color:#000063;display:flex;align-items:center;justify-content:center;flex-shrink:0"><aw-icon name="tent" size="24"></aw-icon></span><span style="display:flex;flex-direction:column;gap:2px"><span style="font-family:var(--serif);font-size:24px;letter-spacing:-0.03em">{{ vn.n0 }}</span><span style="font-size:13.5px;color:rgba(0,0,58,0.68)">{{ vn.t0 }}</span></span></span>
+          <span style="display:inline-flex;align-items:center;gap:6px;font-family:'Geist Mono',monospace;font-size:13px;white-space:nowrap"><aw-icon name="users" size="15"></aw-icon>{{ vn.c0 }}</span>
+        </a>
+        <a data-mi-nudge-host="" href="Checkout.dc.html#venues" style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:center;padding:16px 0;border-top:1px solid rgba(0,0,99,0.16);border-bottom:1px solid rgba(0,0,99,0.16);color:#00003A;text-decoration:none">
+          <span style="display:flex;align-items:center;gap:14px"><span style="width:48px;height:48px;border-radius:14px;background:#F6E2B3;color:#000063;display:flex;align-items:center;justify-content:center;flex-shrink:0"><aw-icon name="presentation" size="24"></aw-icon></span><span style="display:flex;flex-direction:column;gap:2px"><span style="font-family:var(--serif);font-size:24px;letter-spacing:-0.03em">{{ vn.n1 }}</span><span style="font-size:13.5px;color:rgba(0,0,58,0.68)">{{ vn.t1 }}</span></span></span>
+          <span style="display:inline-flex;align-items:center;gap:6px;font-family:'Geist Mono',monospace;font-size:13px;white-space:nowrap"><aw-icon name="stairs" size="15"></aw-icon>{{ vn.c1 }}</span>
+        </a>
+        <a href="Checkout.dc.html#venues" style="margin-top:24px;align-self:flex-start;display:inline-flex;align-items:center;height:46px;padding:0 20px;border-radius:10px;background:#000063;color:#F5F2EA;text-decoration:none;font-size:14px;font-weight:500">Enquire about a venue</a>
+      </div>
+    </div>
+  </section>
+
+  <section data-screen-label="Home · Testimonial" style="background:#F6E2B3;padding:var(--sy) var(--pad);font-family:'Geist',system-ui,sans-serif">
+    <div style="display:grid;grid-template-columns:var(--c-55);gap:var(--hgap);align-items:center">
+      <div style="aspect-ratio:var(--tq-ar);overflow:hidden;border-radius:16px;max-width:420px;width:100%"><img src="{{ im.testimonial }}" alt="Close-up of a pillow with the Hotel A-Wise customised label" data-mi-img="" loading="lazy" style="width:100%;height:100%;object-fit:cover;filter:saturate(0.92) contrast(1.04)"></div>
+      <blockquote style="margin:0;display:flex;flex-direction:column;gap:20px">
+        <div aria-label="5 out of 5 stars" style="display:flex;gap:4px;color:#B8860B"><aw-icon name="star" size="22"></aw-icon><aw-icon name="star" size="22"></aw-icon><aw-icon name="star" size="22"></aw-icon><aw-icon name="star" size="22"></aw-icon><aw-icon name="star" size="22"></aw-icon></div>
+        <p style="margin:0;font-family:var(--serif);font-weight:300;font-size:var(--quote);line-height:1.15;letter-spacing:-0.02em;text-wrap:balance">“{{ testiQuote }}”</p>
+        <footer style="font-family:'Geist Mono',monospace;font-size:13px;color:rgba(0,0,58,0.72)">{{ testiFrom }}</footer>
+      </blockquote>
+    </div>
+  </section>
+
+  
+
+  <section data-screen-label="Home · Getting here" style="padding:0 var(--pad) var(--sy);font-family:'Geist',system-ui,sans-serif">
+    <h2 style="margin:0 0 var(--hmb);padding-top:24px;border-top:1px solid rgba(0,0,99,0.16);font-family:var(--serif);font-weight:400;font-size:var(--h2s);line-height:1.08;letter-spacing:-0.04em;text-wrap:balance">{{ cp.mapHeading }}</h2>
+    <div style="display:grid;grid-template-columns:var(--c-55);gap:48px">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        
+        <div style="display:flex;flex-direction:column;gap:12px;font-size:15px">
+          <a href="{{ ct.tel }}" style="display:flex;align-items:center;gap:12px;text-decoration:none;color:#00003A"><span style="width:40px;height:40px;border-radius:12px;background:#F6E2B3;color:#000063;display:flex;align-items:center;justify-content:center"><aw-icon name="phone" size="18"></aw-icon></span><span style="font-family:'Geist Mono',monospace">{{ ct.phone }}</span></a>
+          <a href="{{ ct.wa }}" style="display:flex;align-items:center;gap:12px;text-decoration:none;color:#00003A"><span style="width:40px;height:40px;border-radius:12px;background:rgba(37,211,102,0.14);display:flex;align-items:center;justify-content:center"><aw-icon name="whatsapp" size="18"></aw-icon></span>WhatsApp the desk</a>
+          <span style="display:flex;align-items:center;gap:12px;color:rgba(0,0,58,0.7)"><span style="width:40px;height:40px;border-radius:12px;background:rgba(0,0,99,0.06);color:#000063;display:flex;align-items:center;justify-content:center"><aw-icon name="pin" size="18"></aw-icon></span><span>{{ ct.address }}</span></span>
+        </div>
+        <a href="https://www.google.com/maps/dir/?api=1&amp;destination=5.6455136,-0.2869356" target="_blank" rel="noopener" style="align-self:flex-start;display:inline-flex;align-items:center;gap:10px;height:46px;padding:0 20px;border-radius:10px;border:1px solid #000063;color:#000063;text-decoration:none;font-size:14px;font-weight:500"><aw-icon name="googlemaps" size="18"></aw-icon>Get directions</a>
+      </div>
+      <div style="min-height:380px;border-radius:16px;overflow:hidden;background:#F6E2B3">
+        <iframe title="Map showing Hotel A-Wise, New Asofan, Accra" src="https://maps.google.com/maps?q=5.6455136,-0.2869356&amp;z=15&amp;output=embed" loading="lazy" style="width:100%;height:100%;min-height:380px;border:0;filter:grayscale(0.6) contrast(1.05)"></iframe>
+      </div>
+    </div>
+  </section>
+</sc-if>
+
+<!-- ================= ROOMS ================= -->
+<sc-if value="{{ isRooms }}" hint-placeholder-val="{{ false }}">
+  <section data-screen-label="Rooms" style="padding:calc(var(--sy) * 0.6) var(--pad) var(--sy);font-family:'Geist',system-ui,sans-serif">
+    <div style="display:grid;grid-template-columns:var(--c2);gap:32px;align-items:end;margin-bottom:40px">
+      <h1 style="margin:0;font-family:var(--serif);font-weight:400;font-size:var(--h1);line-height:0.95;letter-spacing:-0.05em">Rooms<em style="font-weight:300">, priced plainly.</em></h1>
+      <p style="margin:0;font-size:16px;line-height:1.55;color:rgba(0,0,58,0.72);max-width:440px">{{ cp.roomsIntro }}</p>
+    </div>
+    <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:center;padding:14px 0;border-top:1px solid rgba(0,0,99,0.16);border-bottom:1px solid rgba(0,0,99,0.16);margin-bottom:32px">
+      <div role="group" aria-label="Guests" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+        <span style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:rgba(0,0,58,0.6);margin-right:6px">Guests</span>
+        <sc-for list="{{ guestChips }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.on }}" aria-pressed="{{ c.active }}" style="height:max(36px, var(--tap-min, 0px));padding:0 14px;border-radius:999px;border:1px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};font-size:13px;transition:transform 150ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.97)">{{ c.label }}</button></sc-for>
+      </div>
+      <div role="group" aria-label="Budget" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+        <span style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:rgba(0,0,58,0.6);margin-right:6px">Budget / night</span>
+        <sc-for list="{{ budgetChips }}" as="c" hint-placeholder-count="4"><button onClick="{{ c.on }}" aria-pressed="{{ c.active }}" style="height:max(36px, var(--tap-min, 0px));padding:0 14px;border-radius:999px;border:1px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};font-size:13px;font-family:'Geist Mono',monospace;transition:transform 150ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.97)">{{ c.label }}</button></sc-for>
+      </div>
+      <span style="margin-left:auto;font-family:'Geist Mono',monospace;font-size:12px;color:rgba(0,0,58,0.6)" aria-live="polite">{{ filteredCount }}</span>
+    </div>
+
+    <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+      <div style="display:grid;grid-template-columns:var(--c4g);gap:clamp(16px,2vw,28px)"><sc-for list="{{ skeletons }}" as="s" hint-placeholder-count="4"><div style="height:440px;border-radius:12px;background:#F6E2B3;animation:aw-shimmer 1.4s ease-in-out infinite"></div></sc-for></div>
+    </sc-if>
+    <sc-if value="{{ roomsEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:64px 24px;border:1px dashed rgba(0,0,99,0.3);border-radius:10px;display:flex;flex-direction:column;align-items:flex-start;gap:14px">
+        <span style="font-family:'Geist Mono',monospace;font-size:12px;color:rgba(0,0,58,0.6)">0 ROOMS MATCH</span>
+        <p style="margin:0;font-family:var(--serif);font-size:32px;line-height:1.1;max-width:560px">Nothing fits that combination. Loosen the budget a little, or call us and we'll work something out.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap"><button onClick="{{ clearFilters }}" style="height:44px;padding:0 18px;border-radius:10px;border:none;background:#000063;color:#F5F2EA;font-size:14px">Clear filters</button><a href="{{ ct.tel }}" style="display:inline-flex;align-items:center;height:44px;padding:0 18px;border-radius:10px;border:1px solid #000063;text-decoration:none;font-size:14px">Call reception</a></div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ roomsShow }}" hint-placeholder-val="{{ true }}">
+      <div style="display:grid;grid-template-columns:var(--c4g);gap:clamp(16px,2vw,28px)" data-stagger="">
+        <sc-for list="{{ filteredRooms }}" as="r" hint-placeholder-count="4">
+          <a data-mi-card="" href="{{ r.href }}" aria-label="{{ r.aria }}" style="scroll-snap-align:start;display:flex;flex-direction:column;gap:14px;min-width:0;color:#00003A;text-decoration:none;opacity:{{ r.op }};transition:transform 220ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.985)">
+            <div style="position:relative;aspect-ratio:4/5;overflow:hidden;border-radius:16px;background:#F6E2B3">
+              <img data-mi-img="" src="{{ r.img }}" alt="{{ r.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;filter:saturate(0.95) contrast(1.03)">
+              <div aria-hidden="true" style="position:absolute;inset:auto 0 0 0;height:40%;background:linear-gradient(180deg,rgba(20,16,10,0) 0%,rgba(20,16,10,0.55) 100%)"></div>
+              <div aria-hidden="true" style="position:absolute;top:0;left:22px;display:flex;flex-direction:column;align-items:center;transform-origin:50% 0" data-mi-tag="">
+                <span style="width:1px;height:22px;background:rgba(245,242,234,0.9)"></span>
+                <span style="width:58px;padding:10px 0 12px;border-radius:8px 8px 14px 14px;background:#F5F2EA;color:#000063;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 10px 22px -10px rgba(0,0,0,0.55)">
+                  <span style="width:8px;height:8px;border-radius:50%;background:transparent;box-shadow:inset 0 0 0 1.5px rgba(0,0,99,0.45)"></span>
+                  <span style="font-family:'Geist Mono',monospace;font-size:15px;font-weight:500;letter-spacing:0.04em">{{ r.code }}</span>
+                  <span style="width:24px;height:1px;background:rgba(0,0,99,0.25)"></span>
+                  <span style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.06em;opacity:0.7">{{ r.noShort }}</span>
+                </span>
+              </div>
+              <span style="position:absolute;left:14px;bottom:14px;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.06em;color:#F5F2EA;text-transform:uppercase">{{ r.leftLabel }}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
+              <span style="font-family:var(--serif);font-size:28px;line-height:1;letter-spacing:-0.05em">{{ r.name }}</span>
+              <span style="font-family:'Geist Mono',monospace;font-size:13px;white-space:nowrap">GHS {{ r.priceLabel }}<span style="opacity:0.55"> /night</span></span>
+            </div>
+            <span style="margin-top:-6px;display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:rgba(0,0,58,0.68)"><span style="display:inline-flex;align-items:center;gap:6px"><aw-icon name="bed" size="16"></aw-icon>{{ r.beds }}</span><span style="display:inline-flex;align-items:center;gap:6px"><aw-icon name="users" size="16"></aw-icon>{{ r.guests }} guests</span></span>
+          </a>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <div style="margin-top:var(--sy)">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:20px">
+        <h2 style="margin:0;font-family:var(--serif);font-weight:400;font-size:var(--h3)">Side by side</h2>
+        <span style="font-family:'Geist Mono',monospace;font-size:12px;color:rgba(0,0,58,0.6)">Scroll sideways on small screens →</span>
+      </div>
+      <div style="overflow-x:auto;border-top:1.5px solid #000063">
+        <table style="width:100%;min-width:720px;border-collapse:collapse;font-size:14px">
+          <thead><tr>
+            <th scope="col" style="text-align:left;padding:14px 12px 14px 0;font-weight:400;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.06em;color:rgba(0,0,58,0.6)">ROOM</th>
+            <sc-for list="{{ rooms }}" as="r" hint-placeholder-count="4"><th scope="col" style="text-align:left;padding:14px 12px;font-weight:500;font-family:'Geist Mono',monospace;font-size:20px">{{ r.code }} <span style="font-family:var(--serif);font-style:italic;font-weight:400;font-size:16px">{{ r.name }}</span></th></sc-for>
+          </tr></thead>
+          <tbody>
+            <sc-for list="{{ compareRows }}" as="row" hint-placeholder-count="6">
+              <tr style="border-top:1px solid rgba(0,0,99,0.12)">
+                <th scope="row" style="text-align:left;padding:14px 12px 14px 0;font-weight:400;color:rgba(0,0,58,0.6);white-space:nowrap">{{ row.label }}</th>
+                <sc-for list="{{ row.cells }}" as="cell" hint-placeholder-count="4"><td style="padding:14px 12px;font-family:{{ row.font }}">{{ cell }}</td></sc-for>
+              </tr>
+            </sc-for>
+            <tr style="border-top:1px solid rgba(0,0,99,0.12)">
+              <th scope="row" style="padding:14px 12px 14px 0"></th>
+              <sc-for list="{{ rooms }}" as="r" hint-placeholder-count="4"><td style="padding:14px 12px"><a data-mi-card="" href="{{ r.href }}" style="font-size:14px;font-weight:500">View {{ r.code }} <span aria-hidden="true">→</span></a></td></sc-for>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</sc-if>
+
+<!-- ================= ROOM DETAIL ================= -->
+<sc-if value="{{ isRoom }}" hint-placeholder-val="{{ false }}">
+  <section data-noreveal="" data-screen-label="Room detail" style="padding:28px var(--pad) var(--sy);font-family:'Geist',system-ui,sans-serif">
+    <nav aria-label="Breadcrumb" style="font-family:'Geist Mono',monospace;font-size:12px;color:rgba(0,0,58,0.6);margin-bottom:24px;display:flex;gap:8px"><a href="#rooms" style="color:rgba(0,0,58,0.6)">Rooms</a><span>/</span><span style="color:#00003A">{{ room.code }}</span></nav>
+    <div style="display:grid;grid-template-columns:var(--c-detail);gap:48px;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:40px;min-width:0">
+        <div style="display:grid;grid-template-columns:var(--c-gal);gap:8px">
+          <button onClick="{{ openMain }}" aria-label="Open photo gallery" style="padding:0;border:none;background:#F6E2B3;border-radius:16px;overflow:hidden;aspect-ratio:4/3;grid-row:span 3;cursor:zoom-in"><img loading="lazy" src="{{ room.img }}" alt="{{ room.alt }}" style="width:100%;height:100%;object-fit:cover;filter:saturate(0.92) contrast(1.04)"></button>
+          <sc-for list="{{ room.thumbs }}" as="t" hint-placeholder-count="3"><button onClick="{{ t.on }}" aria-label="{{ t.alt }}" style="padding:0;border:none;background:#F6E2B3;border-radius:16px;overflow:hidden;cursor:zoom-in;min-height:90px;display:var(--db)"><img src="{{ t.src }}" alt="" style="width:100%;height:100%;object-fit:cover;filter:saturate(0.92) contrast(1.04)"></button></sc-for>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap"><span style="font-family:'Geist Mono',monospace;font-size:14px;padding:4px 10px;border-radius:6px;background:#000063;color:#F5F2EA">{{ room.code }}</span><span style="font-family:'Geist Mono',monospace;font-size:12px;color:rgba(0,0,58,0.6)">ROOMS {{ room.no }}</span></div>
+          <h1 style="margin:0;font-family:var(--serif);font-weight:400;font-size:var(--h2);line-height:1;letter-spacing:-0.05em">{{ room.name }} Room</h1>
+          <p style="margin:0;font-size:18px;line-height:1.55;color:rgba(0,0,58,0.75);max-width:600px;text-wrap:pretty">{{ room.blurb }}</p>
+        </div>
+        <div style="display:grid;grid-template-columns:var(--c2);gap:40px">
+          <div>
+            <h2 style="margin:0 0 12px;font-family:'Geist Mono',monospace;font-weight:400;font-size:12px;letter-spacing:0.08em;color:rgba(0,0,58,0.6)">IN THE ROOM</h2>
+            <ul style="list-style:none;margin:0;padding:0"><sc-for list="{{ amenList }}" as="a" hint-placeholder-count="7"><li style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(0,0,99,0.12);font-size:15px"><span style="width:34px;height:34px;border-radius:10px;background:#F6E2B3;color:#000063;display:flex;align-items:center;justify-content:center;flex-shrink:0"><aw-icon name="{{ a.icon }}" size="18"></aw-icon></span>{{ a.t }}</li></sc-for></ul>
+          </div>
+          <div>
+            <h2 style="margin:0 0 12px;font-family:'Geist Mono',monospace;font-weight:400;font-size:12px;letter-spacing:0.08em;color:rgba(0,0,58,0.6)">HOUSE RULES</h2>
+            <ul style="list-style:none;margin:0;padding:0"><sc-for list="{{ rulesList }}" as="a" hint-placeholder-count="5"><li style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(0,0,99,0.12);font-size:15px"><span style="width:34px;height:34px;border-radius:10px;background:rgba(0,0,99,0.06);color:#000063;display:flex;align-items:center;justify-content:center;flex-shrink:0"><aw-icon name="{{ a.icon }}" size="18"></aw-icon></span>{{ a.t }}</li></sc-for></ul>
+          </div>
+        </div>
+      </div>
+
+      <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}"><div onClick="{{ closeDrawer }}" style="position:fixed;inset:0;background:rgba(0,0,58,0.45);z-index:60;animation:aw-fade 240ms cubic-bezier(0.23,1,0.32,1)"></div></sc-if>
+      <aside aria-label="Reserve this room" style="{{ cardStyle }}">
+        <div onPointerDown="{{ dragStart }}" onPointerMove="{{ dragMove }}" onPointerUp="{{ dragEnd }}" onPointerCancel="{{ dragEnd }}" style="display:var(--mb);padding:10px 0 4px;touch-action:none;cursor:grab"><div style="width:44px;height:5px;border-radius:3px;background:rgba(0,0,58,0.2);margin:0 auto"></div></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
+          <span style="font-family:var(--serif);font-size:24px">Reserve {{ room.code }}</span>
+          <span style="font-family:'Geist Mono',monospace;font-size:11px;padding:4px 8px;border-radius:999px;background:{{ room.badgeBg }};color:{{ room.badgeFg }}">{{ room.leftLabel }}</span>
+        </div>
+        <sc-if value="{{ room.hasTiers }}" hint-placeholder-val="{{ false }}">
+          <div role="radiogroup" aria-label="Rate" style="display:flex;flex-direction:column;gap:6px">
+            <sc-for list="{{ tierOpts }}" as="t" hint-placeholder-count="2">
+              <button role="radio" aria-checked="{{ t.active }}" onClick="{{ t.on }}" style="display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:52px;padding:8px 14px;border-radius:10px;border:1.5px solid {{ t.bd }};background:{{ t.bg }};text-align:left;transition:transform 150ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.97)"><span style="display:flex;flex-direction:column"><span style="font-size:14px;font-weight:500">{{ t.name }}</span><span style="font-size:12px;color:rgba(0,0,58,0.6)">{{ t.note }}</span></span><span style="font-family:'Geist Mono',monospace;font-size:14px">GHS {{ t.price }}</span></button>
+            </sc-for>
+          </div>
+        </sc-if>
+        <div style="display:grid;grid-template-columns:1fr 1fr;flex-shrink:0;border:1px solid rgba(0,0,99,0.2);border-radius:10px;overflow:hidden">
+          <div style="padding:10px 12px;border-right:1px solid rgba(0,0,99,0.2)"><dc-import name="DatePicker" variant="bare" icon="calendar" label="Check-in" value="{{ ci }}" min="{{ today }}" on-change="{{ onCi }}" range-start="{{ ci }}" range-end="{{ co }}" hint-size="100%,52px"></dc-import></div>
+          <div style="padding:10px 12px"><dc-import name="DatePicker" variant="bare" icon="calendar" label="Check-out" value="{{ co }}" min="{{ ciPlus1 }}" on-change="{{ onCo }}" range-start="{{ ci }}" range-end="{{ co }}" hint-size="100%,52px"></dc-import></div>
+          <div style="grid-column:span 2;padding:10px 12px;border-top:1px solid rgba(0,0,99,0.2);display:flex;justify-content:space-between;align-items:center"><span style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.06em;color:rgba(0,0,58,0.6)">GUESTS (MAX {{ room.guests }})</span><div style="display:flex;align-items:center;gap:12px"><button aria-label="Fewer guests" onClick="{{ gMinus }}" style="width:max(36px, var(--tap-min, 0px));height:max(36px, var(--tap-min, 0px));border-radius:8px;border:1px solid rgba(0,0,99,0.25);background:#FFFFFF">−</button><span style="font-family:'Geist Mono',monospace;min-width:14px;text-align:center">{{ guestsCapped }}</span><button aria-label="More guests" onClick="{{ gPlusRoom }}" style="width:max(36px, var(--tap-min, 0px));height:max(36px, var(--tap-min, 0px));border-radius:8px;border:1px solid rgba(0,0,99,0.25);background:#FFFFFF">+</button></div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <label style="display:flex;align-items:center;gap:10px;font-size:14px;min-height:32px"><input type="checkbox" checked="{{ addBreakfast }}" onChange="{{ toggleBreakfast }}" style="width:18px;height:18px;accent-color:#000063"><aw-icon name="coffee" size="18"></aw-icon>Breakfast, 7–10am <span style="margin-left:auto;font-family:'Geist Mono',monospace;font-size:12px;color:rgba(0,0,58,0.62)">{{ bfLabel }}</span></label>
+          <label style="display:flex;align-items:center;gap:10px;font-size:14px;min-height:32px"><input type="checkbox" checked="{{ addRS }}" onChange="{{ toggleRS }}" style="width:18px;height:18px;accent-color:#000063"><aw-icon name="bell" size="18"></aw-icon>Room service <span style="margin-left:auto;font-family:'Geist Mono',monospace;font-size:12px;color:rgba(0,0,58,0.62)">{{ rsLabel }}</span></label>
+        </div>
+        <div style="border-top:1.5px dashed rgba(0,0,99,0.3);padding-top:12px;display:flex;flex-direction:column;gap:6px;font-family:'Geist Mono',monospace;font-size:13px">
+          <sc-for list="{{ receipt }}" as="l" hint-placeholder-count="2"><div style="display:flex;align-items:baseline"><span>{{ l.label }}</span><span style="flex:1;border-bottom:1.5px dotted rgba(0,0,58,0.35);margin:0 8px;transform:translateY(-4px)"></span><span>{{ l.amt }}</span></div></sc-for>
+          <div style="display:flex;align-items:baseline;font-size:16px;font-weight:500;padding-top:6px;border-top:1px solid rgba(0,0,99,0.2);margin-top:4px"><span>TOTAL</span><span style="flex:1"></span><span>{{ totalLabel }}</span></div>
+        </div>
+        <sc-if value="{{ barErr }}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin:0;font-size:13px;color:#B42318">{{ barErr }}</p></sc-if>
+        <sc-if value="{{ roomUnavailable }}" hint-placeholder-val="{{ false }}"><div role="alert" style="display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:10px;background:#FBE9E7;color:#8A1C12;font-size:13.5px;line-height:1.45"><aw-icon name="alert" size="16" style="flex-shrink:0;margin-top:1px"></aw-icon><span>{{ unavailNote }}</span></div></sc-if>
+        <sc-if value="{{ roomBookable }}" hint-placeholder-val="{{ true }}"><a href="{{ roomBookHref }}" style="display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;border-radius:10px;background:#000063;color:#F5F2EA;font-weight:600;text-decoration:none;font-size:15px;transition:transform 160ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.97)">Continue to book<aw-icon name="arrowright" size="16"></aw-icon></a></sc-if>
+        <sc-if value="{{ roomBlocked }}" hint-placeholder-val="{{ false }}"><button disabled="{{ true }}" aria-disabled="true" style="min-height:52px;border:none;border-radius:10px;background:rgba(0,0,58,0.1);color:rgba(0,0,58,0.55);font-weight:600;font-size:15px;cursor:not-allowed">{{ blockedLabel }}</button></sc-if>
+        <p style="margin:0;font-size:12px;line-height:1.5;color:rgba(0,0,58,0.6)">No charge yet. We hold your room for 15 minutes while you check out. Prefer to talk? <a href="{{ ct.tel }}">Call</a> or <a href="{{ ct.wa }}">WhatsApp</a> {{ ct.phone }}.</p>
+      </aside>
+    </div>
+
+    <div style="margin-top:var(--sy)">
+      <h2 style="margin:0 0 24px;font-family:var(--serif);font-weight:400;font-size:var(--h3)">Similar rooms</h2>
+      <div style="display:grid;grid-template-columns:var(--c3);gap:16px" data-stagger="">
+        <sc-for list="{{ similar }}" as="r" hint-placeholder-count="3">
+          <a data-mi-card="" href="{{ r.href }}" style="display:grid;grid-template-columns:96px minmax(0,1fr);gap:14px;align-items:center;padding:10px;border:1px solid rgba(0,0,99,0.14);border-radius:20px;background:#FFFFFF;color:#00003A;text-decoration:none;transition:transform 200ms cubic-bezier(0.23,1,0.32,1)" style-hover="transform:translateY(-3px)" style-active="transform:scale(0.97)">
+            <div style="height:96px;border-radius:16px;overflow:hidden"><img data-mi-img="" src="{{ r.img }}" alt="{{ r.alt }}" style="width:100%;height:100%;object-fit:cover"></div>
+            <div style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-family:'Geist Mono',monospace;font-size:22px;font-weight:500">{{ r.code }} <span style="font-family:var(--serif);font-style:italic;font-weight:400;font-size:17px">{{ r.name }}</span></span><span style="display:flex;align-items:baseline;font-family:'Geist Mono',monospace;font-size:12px"><span style="flex:1;border-bottom:1.5px dotted rgba(0,0,58,0.35);margin-right:8px;transform:translateY(-3px)"></span>GHS {{ r.priceLabel }} /night</span></div>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+  <div style="display:var(--mo);position:fixed;left:0;right:0;bottom:0;z-index:50;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:rgba(245,242,234,0.7);-webkit-backdrop-filter:blur(20px) saturate(1.4);backdrop-filter:blur(20px) saturate(1.4);border-top:1px solid rgba(255,255,255,0.6);align-items:center;justify-content:space-between;gap:12px;font-family:'Geist',system-ui,sans-serif">
+    <div style="display:flex;flex-direction:column"><span style="font-family:'Geist Mono',monospace;font-size:15px;font-weight:500">GHS {{ rate }} <span style="font-weight:400;opacity:0.6">/night</span></span><span style="font-size:12px;color:rgba(0,0,58,0.6)">{{ nightsLabel }} · {{ totalLabel }}</span></div>
+    <button onClick="{{ openDrawer }}" style="height:48px;padding:0 22px;border:none;border-radius:10px;background:#000063;color:#F5F2EA;font-weight:600;font-size:15px;transition:transform 160ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.97)">Reserve</button>
+  </div>
+</sc-if>
+
+<!-- ================= GALLERY ================= -->
+<sc-if value="{{ isGallery }}" hint-placeholder-val="{{ false }}">
+  <section data-screen-label="Gallery" style="padding:calc(var(--sy) * 0.6) var(--pad) var(--sy);font-family:'Geist',system-ui,sans-serif">
+    <div style="display:grid;grid-template-columns:var(--c2);gap:32px;align-items:end;margin-bottom:32px">
+      <h1 style="margin:0;font-family:var(--serif);font-weight:400;font-size:var(--h1);line-height:0.95;letter-spacing:-0.05em">Look around<em style="font-weight:300">.</em></h1>
+      <p style="margin:0;font-size:16px;line-height:1.55;color:rgba(0,0,58,0.72);max-width:440px">{{ cp.galleryIntro }}</p>
+    </div>
+    <div role="group" aria-label="Filter photos" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:24px">
+      <sc-for list="{{ gFilters }}" as="c" hint-placeholder-count="5"><button onClick="{{ c.on }}" aria-pressed="{{ c.active }}" style="height:max(38px, var(--tap-min, 0px));padding:0 14px;border-radius:999px;border:1px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};font-size:13px;display:flex;gap:8px;align-items:center;transition:transform 150ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.97)">{{ c.label }}<span style="font-family:'Geist Mono',monospace;font-size:11px;opacity:0.6">{{ c.count }}</span></button></sc-for>
+    </div>
+    <sc-if value="{{ galleryEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:64px 24px;border:1px dashed rgba(0,0,99,0.3);border-radius:10px"><p style="margin:0;font-family:var(--serif);font-size:28px">No photos in this set yet. The camera's charging.</p></div>
+    </sc-if>
+    <div style="column-count:var(--gcols);column-gap:12px" data-stagger="">
+      <sc-for list="{{ gItems }}" as="g" hint-placeholder-count="12">
+        <figure style="margin:0 0 12px;break-inside:avoid">
+          <button onClick="{{ g.on }}" aria-label="{{ g.label }}" style="display:block;width:100%;padding:0;border:none;background:#F6E2B3;border-radius:16px;overflow:hidden;cursor:zoom-in"><img src="{{ g.src }}" alt="{{ g.alt }}" loading="lazy" style="width:100%;height:auto;filter:saturate(0.92) contrast(1.04);transition:transform 400ms cubic-bezier(0.23,1,0.32,1)" style-hover="transform:scale(1.03)"></button>
+          <figcaption style="margin-top:6px;font-family:'Geist Mono',monospace;font-size:11px;color:rgba(0,0,58,0.6);display:flex;justify-content:space-between;gap:8px"><span>{{ g.caption }}</span><span>{{ g.cat }}</span></figcaption>
+        </figure>
+      </sc-for>
+    </div>
+    <sc-if value="{{ gMore }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:28px"><span style="font-size:13px;color:rgba(0,0,58,0.62)">{{ gMoreLabel }}</span><button onClick="{{ showMoreG }}" style="height:46px;padding:0 20px;border-radius:10px;border:1px solid #000063;background:transparent;color:#000063;font-size:14px;font-weight:500">Show more photos</button></div></sc-if>
+  </section>
+</sc-if>
+
+<!-- ================= CONTACT & FAQ ================= -->
+<sc-if value="{{ isContact }}" hint-placeholder-val="{{ false }}">
+  <section data-screen-label="Contact" style="font-family:'Geist',system-ui,sans-serif">
+    <div style="padding:calc(var(--sy) * 0.6) var(--pad) var(--sy);display:grid;grid-template-columns:var(--c-55);gap:56px">
+      <div style="display:flex;flex-direction:column;gap:28px">
+        <h1 style="margin:0;font-family:var(--serif);font-weight:400;font-size:var(--h1);line-height:0.95;letter-spacing:-0.05em">Talk to<br><em style="font-weight:300">a person.</em></h1>
+        <p style="margin:0;font-size:16px;line-height:1.55;color:rgba(0,0,58,0.72)">{{ cp.contactIntro }}</p>
+        <div style="display:flex;flex-direction:column;gap:0;border-top:1.5px solid #000063">
+          <a href="{{ ct.tel }}" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:14px 0;border-bottom:1px solid rgba(0,0,99,0.14);text-decoration:none;color:#00003A"><span style="display:flex;align-items:center;gap:12px;font-size:14px;color:rgba(0,0,58,0.7)"><span style="width:36px;height:36px;border-radius:10px;background:#F6E2B3;color:#000063;display:flex;align-items:center;justify-content:center"><aw-icon name="phone" size="18"></aw-icon></span>Reception &amp; bookings</span><span style="font-family:'Geist Mono',monospace;font-size:18px">{{ ct.phone }}</span></a>
+          <a href="{{ ct.wa }}" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:14px 0;border-bottom:1px solid rgba(0,0,99,0.14);text-decoration:none;color:#00003A"><span style="display:flex;align-items:center;gap:12px;font-size:14px;color:rgba(0,0,58,0.7)"><span style="width:36px;height:36px;border-radius:10px;background:rgba(37,211,102,0.14);color:#000063;display:flex;align-items:center;justify-content:center"><aw-icon name="whatsapp" size="18"></aw-icon></span>WhatsApp</span><span style="font-family:'Geist Mono',monospace;font-size:16px">wa.me/{{ ct.waNum }}</span></a>
+          
+          
+          <a href="{{ ct.mail }}" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:14px 0;border-bottom:1px solid rgba(0,0,99,0.14);text-decoration:none;color:#00003A"><span style="display:flex;align-items:center;gap:12px;font-size:14px;color:rgba(0,0,58,0.7)"><span style="width:36px;height:36px;border-radius:10px;background:#F6E2B3;color:#000063;display:flex;align-items:center;justify-content:center"><aw-icon name="mail" size="18"></aw-icon></span>Email</span><span style="font-family:'Geist Mono',monospace;font-size:16px">{{ ct.email }}</span></a>
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:14px 0;border-bottom:1px solid rgba(0,0,99,0.14)"><span style="display:flex;align-items:center;gap:12px;font-size:14px;color:rgba(0,0,58,0.7)"><span style="width:36px;height:36px;border-radius:10px;background:#F6E2B3;color:#000063;display:flex;align-items:center;justify-content:center"><aw-icon name="clock" size="18"></aw-icon></span>Hours</span><span style="font-family:'Geist Mono',monospace;font-size:16px">00:00–24:00, every day</span></div>
+        </div>
+      </div>
+      <form onSubmit="{{ submitContact }}" noValidate="{{ true }}" aria-label="Contact form" style="display:flex;flex-direction:column;gap:16px;background:#FFFFFF;border:1px solid rgba(0,0,99,0.14);border-radius:10px;padding:24px;align-self:start">
+        <span style="font-family:var(--serif);font-size:26px">Send a message</span>
+        <div role="radiogroup" aria-label="Subject" style="display:flex;gap:6px;flex-wrap:wrap">
+          <sc-for list="{{ subjects }}" as="s" hint-placeholder-count="4"><button type="button" role="radio" aria-checked="{{ s.active }}" onClick="{{ s.on }}" style="height:max(36px, var(--tap-min, 0px));padding:0 12px;border-radius:999px;border:1px solid {{ s.bd }};background:{{ s.bg }};color:{{ s.fg }};font-size:13px">{{ s.label }}</button></sc-for>
+        </div>
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:13px"><span style="display:flex;align-items:center;gap:8px"><aw-icon name="user" size="16"></aw-icon>Your name</span><input value="{{ cf.name }}" onChange="{{ cfName }}" placeholder="e.g. Ama Owusu" aria-invalid="{{ ce.nameBad }}" autoComplete="name" style="height:48px;padding:0 14px;border-radius:10px;border:1.5px solid {{ ce.nameBd }};background:#F5F2EA;font-size:16px"><sc-if value="{{ ce.name }}" hint-placeholder-val="{{ false }}"><span role="alert" style="color:#B42318;font-size:12px">{{ ce.name }}</span></sc-if></label>
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:13px"><span style="display:flex;align-items:center;gap:8px"><aw-icon name="phone" size="16"></aw-icon>Phone</span><div style="display:flex;gap:6px"><dc-import name="Select" variant="field" mono="{{ true }}" width="132px" panel-width="200" aria-label="Country code" value="{{ cc }}" options="{{ ccOpts }}" on-change="{{ onCc }}" hint-size="132px,48px"></dc-import><input type="tel" autoComplete="tel-national" enterKeyHint="next" value="{{ cf.phone }}" onChange="{{ cfPhone }}" inputMode="tel" placeholder="55 555 7090" aria-invalid="{{ ce.phoneBad }}" style="flex:1;min-width:0;height:48px;padding:0 14px;border-radius:10px;border:1.5px solid {{ ce.phoneBd }};background:#F5F2EA;font-size:16px;font-family:'Geist Mono',monospace"></div><sc-if value="{{ ce.phone }}" hint-placeholder-val="{{ false }}"><span role="alert" style="color:#B42318;font-size:12px">{{ ce.phone }}</span></sc-if></label>
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:13px"><span style="display:flex;align-items:center;gap:8px"><aw-icon name="mail" size="16"></aw-icon>Email (optional)</span><input value="{{ cf.email }}" onChange="{{ cfEmail }}" placeholder="you@example.com" type="email" autoComplete="email" style="height:48px;padding:0 14px;border-radius:10px;border:1.5px solid {{ ce.emailBd }};background:#F5F2EA;font-size:16px"><sc-if value="{{ ce.email }}" hint-placeholder-val="{{ false }}"><span role="alert" style="color:#B42318;font-size:12px">{{ ce.email }}</span></sc-if></label>
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:13px"><span style="display:flex;align-items:center;gap:8px"><aw-icon name="message" size="16"></aw-icon>Message</span><textarea value="{{ cf.msg }}" onChange="{{ cfMsg }}" placeholder="e.g. We land at 2am on Friday. Can someone meet us at the gate?" rows="4" style="padding:12px 14px;border-radius:10px;border:1.5px solid {{ ce.msgBd }};background:#F5F2EA;font-size:16px;resize:vertical"></textarea><sc-if value="{{ ce.msg }}" hint-placeholder-val="{{ false }}"><span role="alert" style="color:#B42318;font-size:12px">{{ ce.msg }}</span></sc-if></label>
+        <button type="submit" disabled="{{ sending }}" style="min-height:52px;border:none;border-radius:10px;background:#000063;color:#F5F2EA;font-size:15px;font-weight:500;transition:transform 160ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.97)">{{ sendLabel }}</button>
+        <span style="font-size:12px;color:rgba(0,0,58,0.6)">Urgent? Calling is faster. Reception replies to messages within the hour.</span>
+      </form>
+    </div>
+    <div style="padding:0 var(--pad) var(--sy);display:grid;grid-template-columns:var(--c-55);gap:56px">
+      <h2 style="margin:0;font-family:var(--serif);font-weight:400;font-size:var(--h2);line-height:1;letter-spacing:-0.05em">Questions<br><em style="font-weight:300">people actually ask.</em></h2>
+      <div style="border-top:1.5px solid #000063">
+        <sc-for list="{{ faqs }}" as="q" hint-placeholder-count="8">
+          <div style="border-bottom:1px solid rgba(0,0,99,0.14)">
+            <button onClick="{{ q.on }}" aria-expanded="{{ q.open }}" style="width:100%;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 0;border:none;background:transparent;text-align:left;font-family:var(--serif);font-size:21px;min-height:44px"><span>{{ q.q }}</span><span aria-hidden="true" style="font-family:'Geist Mono',monospace;font-size:18px;transition:transform 200ms cubic-bezier(0.23,1,0.32,1);transform:rotate({{ q.rot }})">+</span></button>
+            <sc-if value="{{ q.open }}" hint-placeholder-val="{{ false }}"><p style="margin:0 0 20px;max-width:620px;font-size:15px;line-height:1.6;color:rgba(0,0,58,0.75);animation:aw-fade 220ms cubic-bezier(0.23,1,0.32,1)">{{ q.a }}</p></sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+</sc-if>
+
+<!-- ================= 404 ================= -->
+<sc-if value="{{ is404 }}" hint-placeholder-val="{{ false }}">
+  <section data-screen-label="404" style="padding:calc(var(--sy) * 0.6) var(--pad) var(--sy);font-family:'Geist',system-ui,sans-serif">
+    <span style="font-family:'Geist Mono',monospace;font-size:13px;color:rgba(0,0,58,0.6)">ERROR 404 · ROOM NOT FOUND</span>
+    <h1 style="margin:16px 0 20px;font-family:var(--serif);font-weight:400;font-size:var(--h1);line-height:0.95;letter-spacing:-0.05em;max-width:900px">This room doesn't exist.<br><em style="font-weight:300">But these do.</em></h1>
+    <p style="margin:0 0 48px;font-size:16px;color:rgba(0,0,58,0.7)">Try one of these instead.</p>
+    <div style="display:grid;grid-template-columns:var(--c4g);gap:clamp(16px,2vw,28px)" data-stagger="">
+      <sc-for list="{{ rooms }}" as="r" hint-placeholder-count="4">
+        <a data-mi-card="" href="{{ r.href }}" aria-label="{{ r.aria }}" style="scroll-snap-align:start;display:flex;flex-direction:column;gap:14px;min-width:0;color:#00003A;text-decoration:none;opacity:{{ r.op }};transition:transform 220ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.985)">
+            <div style="position:relative;aspect-ratio:4/5;overflow:hidden;border-radius:16px;background:#F6E2B3">
+              <img data-mi-img="" src="{{ r.img }}" alt="{{ r.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;filter:saturate(0.95) contrast(1.03)">
+              <div aria-hidden="true" style="position:absolute;inset:auto 0 0 0;height:40%;background:linear-gradient(180deg,rgba(20,16,10,0) 0%,rgba(20,16,10,0.55) 100%)"></div>
+              <div aria-hidden="true" style="position:absolute;top:0;left:22px;display:flex;flex-direction:column;align-items:center;transform-origin:50% 0" data-mi-tag="">
+                <span style="width:1px;height:22px;background:rgba(245,242,234,0.9)"></span>
+                <span style="width:58px;padding:10px 0 12px;border-radius:8px 8px 14px 14px;background:#F5F2EA;color:#000063;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 10px 22px -10px rgba(0,0,0,0.55)">
+                  <span style="width:8px;height:8px;border-radius:50%;background:transparent;box-shadow:inset 0 0 0 1.5px rgba(0,0,99,0.45)"></span>
+                  <span style="font-family:'Geist Mono',monospace;font-size:15px;font-weight:500;letter-spacing:0.04em">{{ r.code }}</span>
+                  <span style="width:24px;height:1px;background:rgba(0,0,99,0.25)"></span>
+                  <span style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.06em;opacity:0.7">{{ r.noShort }}</span>
+                </span>
+              </div>
+              <span style="position:absolute;left:14px;bottom:14px;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.06em;color:#F5F2EA;text-transform:uppercase">{{ r.leftLabel }}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
+              <span style="font-family:var(--serif);font-size:28px;line-height:1;letter-spacing:-0.05em">{{ r.name }}</span>
+              <span style="font-family:'Geist Mono',monospace;font-size:13px;white-space:nowrap">GHS {{ r.priceLabel }}<span style="opacity:0.55"> /night</span></span>
+            </div>
+            <span style="margin-top:-6px;display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:rgba(0,0,58,0.68)"><span style="display:inline-flex;align-items:center;gap:6px"><aw-icon name="bed" size="16"></aw-icon>{{ r.beds }}</span><span style="display:inline-flex;align-items:center;gap:6px"><aw-icon name="users" size="16"></aw-icon>{{ r.guests }} guests</span></span>
+          </a>
+      </sc-for>
+    </div>
+    <a href="#" style="display:inline-block;margin-top:32px;font-size:14px;font-weight:500"><span aria-hidden="true">←</span> Back to home</a>
+  </section>
+</sc-if>
+
+</main>
+
+<footer data-screen-label="Footer" style="font-family:'Geist',system-ui,sans-serif">
+  <div style="position:relative;height:var(--foot-h);overflow:hidden;background:#1A1712">
+    <img src="{{ im.footer }}" alt="The first-floor hallway at Hotel A-Wise: yellow walls, carved wooden doors, polished tiles" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 60%">
+    <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,16,10,0.05) 0%,rgba(20,16,10,0.15) 50%,rgba(20,16,10,0.6) 100%)"></div>
+    <div style="position:absolute;left:var(--pad);right:var(--pad);bottom:clamp(24px,4vw,56px);display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap">
+      <p style="margin:0;color:#FFFFFF;font-family:var(--serif);font-weight:400;font-size:var(--foot-type);font-weight:300;line-height:1.02;letter-spacing:-0.05em">Hotel A-Wise</p>
+      <a href="{{ bookHref }}" style="width:var(--foot-btn);height:var(--foot-btn);border-radius:50%;background:#000063;color:#F5F2EA;display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;font-size:clamp(15px,1.4vw,20px);font-weight:500;line-height:1.25;box-shadow:0 0 0 10px rgba(255,255,255,0.12);transition:transform 220ms cubic-bezier(0.23,1,0.32,1)" style-hover="transform:scale(1.04)" style-active="transform:scale(0.97)">Book your<br>stay</a>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:var(--c-foot)">
+    <div style="background:#000063;color:#F5F2EA;padding:clamp(40px,5vw,72px) var(--pad) 40px;display:flex;flex-direction:column;justify-content:space-between;gap:48px">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <span style="font-family:var(--serif);font-size:28px;letter-spacing:-0.05em">Pages</span>
+        <div style="display:grid;grid-template-columns:auto auto;justify-content:start">
+          <div style="display:flex;flex-direction:column;gap:22px;padding-right:48px;border-right:1px solid rgba(245,242,234,0.35)">
+            <a href="#" style="color:#F5F2EA;text-decoration:none;font-size:18px">Home</a>
+            <a href="#rooms" style="color:#F5F2EA;text-decoration:none;font-size:18px">Rooms</a>
+            <a href="Checkout.dc.html#rent" style="color:#F5F2EA;text-decoration:none;font-size:18px">Rentals</a>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:22px;padding-left:48px">
+            <a href="#gallery" style="color:#F5F2EA;text-decoration:none;font-size:18px">Gallery</a>
+            <a href="#contact" style="color:#F5F2EA;text-decoration:none;font-size:18px">Contact</a>
+            <a href="Checkout.dc.html#venues" style="color:#F5F2EA;text-decoration:none;font-size:18px">Venues</a>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline"><span style="font-family:var(--serif);font-size:22px;letter-spacing:-0.05em">© 2026 Hotel A-Wise</span><a href="Admin.dc.html" style="color:rgba(245,242,234,0.55);font-size:12px">Staff login</a></div>
+    </div>
+    <div style="background:#FFFFFF;color:#00003A;padding:clamp(40px,5vw,64px) var(--pad) 40px;display:flex;flex-direction:column;gap:24px">
+      <span style="font-family:var(--serif);font-size:30px;color:#000063;letter-spacing:-0.05em">Contact info</span>
+      <div style="display:grid;grid-template-columns:var(--c-info)">
+        <div style="display:flex;flex-direction:column;gap:14px;padding:4px 32px 32px 0;border-right:var(--info-bd)">
+          <span style="display:flex;align-items:center;gap:8px;font-size:15px;color:rgba(0,0,58,0.7)"><aw-icon name="pin" size="18"></aw-icon>Address</span>
+          <span style="font-size:15px;line-height:1.55">{{ ct.address }}.<br>Or “Hotel A-Wise” on <a href="https://www.google.com/maps/search/?api=1&amp;query=5.6455136,-0.2869356" target="_blank" rel="noopener">Google Maps</a>.</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;padding:var(--info-p2);border-right:var(--info-bd)">
+          <span style="display:flex;align-items:center;gap:8px;font-size:15px;color:rgba(0,0,58,0.7)"><aw-icon name="phone" size="18"></aw-icon>Phone</span>
+          <a href="{{ ct.tel }}" style="font-size:15px;color:#00003A;text-decoration:none">{{ ct.phone }}</a>
+          
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;padding:var(--info-p3)">
+          <span style="display:flex;align-items:center;gap:8px;font-size:15px;color:rgba(0,0,58,0.7)"><aw-icon name="mail" size="18"></aw-icon>Email</span>
+          <a href="{{ ct.mail }}" style="font-size:15px;color:#00003A;text-decoration:none">{{ ct.email }}</a>
+        </div>
+      </div>
+      <form onSubmit="{{ submitNews }}" aria-label="Newsletter" style="margin-top:auto;display:flex;gap:8px;max-width:460px;flex-wrap:wrap;align-items:flex-end">
+        <label style="flex:1;min-width:200px;display:flex;flex-direction:column;gap:6px;font-size:13px;color:rgba(0,0,58,0.65)">The occasional letter: rates and openings, no spam
+          <input autoComplete="email" autoCapitalize="none" spellCheck="false" enterKeyHint="next" type="email" value="{{ news }}" onChange="{{ onNews }}" placeholder="you@example.com" aria-invalid="{{ newsBad }}" style="height:46px;padding:0 14px;border-radius:10px;border:1.5px solid {{ newsBd }};background:#F5F2EA;font-size:16px"><sc-if value="{{ newsErr }}" hint-placeholder-val="{{ false }}"><span role="alert" style="color:#B42318;font-size:12px">{{ newsErr }}</span></sc-if></label>
+        <button type="submit" style="height:46px;padding:0 18px;border-radius:10px;border:none;background:#000063;color:#F5F2EA;font-size:14px;transition:transform 160ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.97)">Subscribe</button>
+      </form>
+    </div>
+  </div>
+</footer>
+<sc-if value="{{ mobileSpacer }}" hint-placeholder-val="{{ false }}"><div aria-hidden="true" style="height:calc(80px + env(safe-area-inset-bottom))"></div></sc-if>
+
+</div>
+</div>
+
+
+<sc-if value="{{ showMobileBook }}" hint-placeholder-val="{{ false }}">
+  <a href="{{ bookHref }}" style="position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:45;height:48px;padding:0 20px;white-space:nowrap;display:flex;align-items:center;border-radius:12px;background:rgba(0,0,99,0.72);-webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4);border:1px solid rgba(255,255,255,0.2);color:#F5F2EA;font-family:'Geist',system-ui,sans-serif;font-weight:600;font-size:15px;text-decoration:none;gap:8px;box-shadow:0 10px 30px -10px rgba(0,0,58,0.5)"><aw-icon name="key" size="18"></aw-icon>Book a room</a>
+</sc-if>
+
+<sc-if value="{{ lbOpen }}" hint-placeholder-val="{{ false }}">
+  <div role="dialog" aria-modal="true" aria-label="Photo viewer" onClick="{{ lbClose }}" style="position:fixed;inset:0;z-index:90;background:rgba(0,0,30,0.6);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:56px 16px 24px;gap:14px;animation:aw-fade 200ms cubic-bezier(0.23,1,0.32,1);font-family:'Geist',system-ui,sans-serif">
+    <img src="{{ lbSrc }}" alt="{{ lbAlt }}" onClick="{{ stop }}" onPointerDown="{{ lbDown }}" onPointerUp="{{ lbUp }}" draggable="false" style="touch-action:pan-y;user-select:none;max-width:min(1200px,100%);max-height:78%;object-fit:contain;border-radius:2px;animation:aw-pop 260ms cubic-bezier(0.23,1,0.32,1)">
+    <div onClick="{{ stop }}" style="display:flex;align-items:center;gap:12px;color:#F5F2EA">
+      <button onClick="{{ lbPrev }}" aria-label="Previous photo" style="width:48px;height:48px;border-radius:10px;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.1);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#F5F2EA;font-size:18px">←</button>
+      <span style="font-family:'Geist Mono',monospace;font-size:12px;min-width:220px;text-align:center">{{ lbCount }} · {{ lbAlt }}</span>
+      <button onClick="{{ lbNext }}" aria-label="Next photo" style="width:48px;height:48px;border-radius:10px;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.1);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#F5F2EA;font-size:18px">→</button>
+    </div>
+    <button onClick="{{ lbClose }}" aria-label="Close photo viewer" style="position:absolute;top:14px;right:14px;width:44px;height:44px;border-radius:10px;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.1);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#F5F2EA;display:flex;align-items:center;justify-content:center"><aw-icon name="x" size="18"></aw-icon></button>
+  </div>
+</sc-if>
+
+<sc-if value="{{ booting }}" hint-placeholder-val="{{ false }}">
+  <div aria-label="Loading" style="position:fixed;inset:0;z-index:100;background:#00003A;color:#F5F2EA;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;font-family:'Geist Mono',monospace;font-size:12px">
+    {{ loaderEl }}
+    <span style="opacity:0.7">Turning the key…</span>
+  </div>
+</sc-if>
+
+{{ toastEl }}
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;headingFont&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;gambetta&quot;,&quot;instrument&quot;,&quot;dmserif&quot;,&quot;cormorant&quot;,&quot;clash&quot;,&quot;generalsans&quot;,&quot;newsreader&quot;],&quot;default&quot;:&quot;cormorant&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Brand&quot;},&quot;viewport&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;auto&quot;,&quot;desktop&quot;,&quot;tablet&quot;,&quot;mobile&quot;],&quot;default&quot;:&quot;auto&quot;,&quot;tsType&quot;:&quot;'auto'|'desktop'|'mobile'&quot;,&quot;section&quot;:&quot;Preview&quot;},&quot;timeOfDay&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;auto&quot;,&quot;day&quot;,&quot;night&quot;],&quot;default&quot;:&quot;auto&quot;,&quot;tsType&quot;:&quot;'auto'|'day'|'night'&quot;,&quot;section&quot;:&quot;Preview&quot;},&quot;simulate&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;none&quot;,&quot;loading&quot;,&quot;empty&quot;,&quot;soldout&quot;,&quot;offline&quot;],&quot;default&quot;:&quot;none&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;States&quot;}}">
+const IMG = 'uploads/Hotel-A-Wise-Images-web/';
+const p = s => IMG + s;
+const ROOMS = [
+  { code:'STD', name:'Standard', price:150, priceLabel:'150', no:'101–106', beds:'1 queen bed', guests:2, bath:'Private shower room', best:'Solo trips, short stays', left:3,
+    img:p('02-rooms/standard-room.jpg'), alt:'Standard Room: queen bed with navy throw, desk, ceiling fan and marble-tile floor',
+    blurb:"Everything you need and nothing you'll pay extra for. A proper queen bed, cold AC, a hot shower and our own pressed linen. Most people book it for one night and stay three.",
+    gallery:[['02-rooms/standard-room.jpg','Standard Room, full view'],['03-bathrooms/standard-bathroom.jpg','Standard bathroom with glass shower'],['04-spaces/spacious-hallway.jpg','The hallway outside the rooms']],
+    amen:['Air-conditioning and ceiling fan','Wi-Fi','Flat-screen TV','Work desk and chair','Private bathroom, hot shower','A-Wise customised linen'] },
+  { code:'EXE', name:'Executive', price:200, priceLabel:'200 / 250', no:'201–205', beds:'Large double bed', guests:2, bath:'Upgraded rain shower', best:'Business trips, longer stays', left:2,
+    tiers:[{name:'Executive',price:200,note:'The room as pictured'},{name:'Executive Plus',price:250,note:'More floor space, same upgraded bathroom'}],
+    img:p('02-rooms/executive-room-1.jpg'), alt:'Executive Room: large bed in lavender linen, desk by the window, glass bathroom door',
+    blurb:"More room to spread out, a desk that faces the window and an upgraded bathroom with a rain shower. Two tiers, same care. Pick the size that suits the trip.",
+    gallery:[['02-rooms/executive-room-1.jpg','Executive Room with desk and window'],['02-rooms/executive-room-2-customised-sheets.jpg','A-Wise customised pillow label'],['03-bathrooms/executive-bathroom.jpg','Executive bathroom, rain shower and LED mirror']],
+    amen:['Air-conditioning and ceiling fan','Wi-Fi','Flat-screen TV','Work desk facing the window','Rain shower, LED mirror','A-Wise customised linen'] },
+  { code:'VIP', name:'VIP', price:300, priceLabel:'300', no:'206–208', beds:'Large double bed', guests:2, bath:'VIP bathroom', best:'Anniversaries, treating yourself', left:1,
+    img:p('02-rooms/vip-room-1.jpg'), alt:'VIP Room: double bed with starry bedspread, mini fridge and carved door',
+    blurb:"Premium finishes, a mini fridge, and the VIP bathroom with the good shower. For the anniversary, the promotion, or the night you simply deserve it.",
+    gallery:[['02-rooms/vip-room-1.jpg','VIP Room with mini fridge'],['02-rooms/vip-room-2.jpg','VIP Room bed and carved door'],['03-bathrooms/vip-bathroom.jpg','VIP bathroom'],['03-bathrooms/vvip-bathroom.jpg','VIP bathroom, rain shower']],
+    amen:['Air-conditioning','Wi-Fi','Flat-screen TV','Mini fridge','VIP bathroom, rain shower, LED mirror','A-Wise customised linen'] },
+  { code:'DBL', name:'Double', price:400, priceLabel:'400', no:'107–108', beds:'2 double beds', guests:4, bath:'Private bathroom', best:'Families, friends sharing', left:2,
+    img:p('02-rooms/double-bed-room.jpg'), alt:'Double Room: two double beds with floral covers, desk and wall-mounted TV',
+    blurb:"Two double beds, one bill. Built for families, cousins in town for a wedding, or friends who'd rather share than split up.",
+    gallery:[['02-rooms/double-bed-room.jpg','Double Room with two beds'],['03-bathrooms/standard-bathroom.jpg','Private bathroom']],
+    amen:['Air-conditioning and ceiling fan','Wi-Fi','Flat-screen TV','Two double beds','Desk and two chairs','Private bathroom, hot shower'] },
+];
+const GALLERY = [
+  ['02-rooms/standard-room.jpg','Rooms','Standard Room'],['03-bathrooms/vip-bathroom.jpg','Bathrooms','VIP bathroom'],['04-spaces/second-floor-porch.jpg','Spaces','Second-floor porch'],
+  ['04-spaces/second-floor-reception-event-1.jpg','Events','Second-floor reception, dressed for dinner'],['02-rooms/vip-room-1.jpg','Rooms','VIP Room'],['04-spaces/spacious-hallway.jpg','Spaces','The hallway'],
+  ['05-services-and-rentals/private-events.jpg','Events','Wedding in the compound'],['02-rooms/executive-room-1.jpg','Rooms','Executive Room'],['03-bathrooms/executive-bathroom.jpg','Bathrooms','Executive bathroom'],
+  ['04-spaces/first-floor-porch.jpg','Spaces','First-floor porch'],['04-spaces/conference-room-angle-1.jpg','Spaces','Conference room'],['02-rooms/double-bed-room.jpg','Rooms','Double Room'],
+  ['04-spaces/first-floor-reception-event.jpg','Events','First-floor reception, event set-up'],['03-bathrooms/standard-bathroom.jpg','Bathrooms','Standard bathroom'],['04-spaces/staircase.jpg','Spaces','Staircase'],
+  ['02-rooms/vip-room-2.jpg','Rooms','VIP Room, detail'],['04-spaces/second-floor-reception-event-2.jpg','Events','Second-floor reception, round tables'],['03-bathrooms/vvip-bathroom.jpg','Bathrooms','VIP rain shower'],
+  ['01-hero-and-exterior/hotel-compound.jpg','Spaces','The compound'],['04-spaces/conference-room-angle-2.jpg','Spaces','Conference room, long view'],['02-rooms/executive-room-2-customised-sheets.jpg','Rooms','Our customised linen'],
+  ['01-hero-and-exterior/hotel-view-reception.jpg','Spaces','Front desk'],['01-hero-and-exterior/gallery-events-hero.jpg','Spaces','Corridor, first floor'],['01-hero-and-exterior/hero-front-desk.jpg','Rooms','Executive Room, morning light'],
+].map(([s,cat,cap])=>({src:p(s),cat,caption:cap,alt:cap}));
+const FAC = [
+  ['Front desk, 24/7','Staffed every hour, holidays included.','01-hero-and-exterior/hotel-view-reception.jpg','The front desk, ground floor'],
+  ['Breakfast, 7–10am','Served daily. Add it when you book.','05-services-and-rentals/bed-and-breakfast.jpg','Breakfast, served 7 to 10am'],
+  ['Room service','GHS 20 on top. Worth it at midnight.','02-rooms/vip-room-2.jpg','VIP Room, ready for room service'],
+  ['Two porches','First and second floor. Bring a book.','04-spaces/first-floor-porch.jpg','First-floor porch'],
+  ['Two receptions','One per floor. Dressed up for events on request.','04-spaces/second-floor-reception-event-1.jpg','Second-floor reception, dressed for an event'],
+  ['Conference room','Second floor, big windows, room for a team.','04-spaces/conference-room-angle-1.jpg','Conference room, second floor'],
+  ['Event compound','100 to 200 guests, under our canopies.','05-services-and-rentals/private-events.jpg','The compound set for a wedding'],
+  ['Bathrooms & linen','Premium fittings. Sheets with our name on.','03-bathrooms/vip-bathroom.jpg','VIP bathroom'],
+];
+const FAQ = [
+  ['Can I really check in at 3am?','Yes. The front desk is staffed 24 hours a day, 7 days a week, holidays included. If you know you\'ll land late, add your arrival time when you book so we have the room ready and the light on.'],
+  ['What are check-in and check-out times?','Rooms are ready from 2pm and check-out is by 12 noon. Need it earlier or later? Ask the desk. If the room is free, we\'ll usually make it work.'],
+  ['Is breakfast included?','Breakfast is served 7 to 10am daily and can be added to any booking for GHS 50 per guest per day. Tick the box when you book, or ask at the desk.'],
+  ['Do you do room service?','Yes, for an extra GHS 20 on top of whatever you order.'],
+  ['How do I pay?','Online with Mobile Money (MTN, Telecel, AirtelTigo) or Visa and Mastercard through Paystack. You can pay in full or pay a deposit. Cash and MoMo are also fine at the desk.'],
+  ['What is the cancellation policy?','Cancel free of charge up to 48 hours before check-in for a full refund. Inside 48 hours we keep the deposit. No-shows are charged the first night.'],
+  ['Can I rent chairs and canopies without staying?','Absolutely. Reserve online for your dates and collect from Wisepak Lane. Pay online, or at the desk when you pick up. We don\'t deliver yet.'],
+  ['Can I host my event at A-Wise?','Yes. The outdoor compound takes 100 to 200 guests and the second-floor conference room suits meetings and small receptions. Send an enquiry and we\'ll call you back with a quote.'],
+];
+const SUBJECTS = ['Reservation','Special request','Feedback','Events & rentals'];
+const RULES = ['Check-in from 2pm, check-out by 12 noon','Arrive any hour. The desk is staffed 24/7','No smoking indoors (porches are fine)','Quiet hours 10pm to 7am','Valid ID at check-in'];
+const ymd = d => d.toISOString().slice(0,10);
+const addDays = (s,n) => { const d = new Date(s+'T00:00:00Z'); d.setUTCDate(d.getUTCDate()+n); return ymd(d); };
+const nightsBetween = (a,b) => Math.round((new Date(b+'T00:00:00Z') - new Date(a+'T00:00:00Z'))/864e5);
+const ghs = n => 'GHS ' + n.toLocaleString('en-GH');
+const EASE = 'cubic-bezier(0.23,1,0.32,1)';
+
+class Component extends DCLogic {
+  scrollRef = React.createRef();
+  state = (() => { const t = ymd(new Date()); return {
+    hash: (location.hash||'').slice(1), vw: window.innerWidth, menu:false, tab:'stay',
+    ci:t, co:addDays(t,2), guests:2, rentDate:addDays(t,7), barErr:'',
+    fGuests:'any', fBudget:'any', fac:0, tier:0, addBreakfast:false, addRS:false,
+    lb:null, gFilter:'All', subject:0, cf:{name:'',phone:'',email:'',msg:''}, ce:{}, sending:false,
+    faq:0, news:'', toasts:[], drawer:false, dragY:0, dragging:false, booting:false, online:navigator.onLine,
+  }; })();
+
+  componentDidMount() {
+    const hookS = () => { if (window.AWStore) { this._unsubS = window.AWStore.subscribe(() => this.forceUpdate()); this.forceUpdate(); } else this._ws = setTimeout(hookS, 30); }; hookS();
+    try { this.setState({ bannerOff: sessionStorage.getItem('aw.bannerOff') === '1' }); } catch (e) {}
+    this._tick = setInterval(() => this.forceUpdate(), 10000);
+    this._hash = () => { this.setState({ hash:(location.hash||'').slice(1), menu:false, drawer:false, lb:null }); this.toTop(); };
+    this._resize = () => this.setState({ vw: window.innerWidth });
+    this._onScroll = () => { const el = this.scrollRef.current; const y = Math.max(window.scrollY || 0, el ? el.scrollTop : 0); const sc = y > 24; const ph = y > 560; if (sc !== this.state.scrolled || ph !== this.state.pastHero) this.setState({ scrolled: sc, pastHero: ph }); };
+    window.addEventListener('scroll', this._onScroll, true);
+    this._key = e => {
+      if (!this.state.lb) { if (e.key==='Escape' && this.state.drawer) this.setState({drawer:false}); return; }
+      if (e.key==='Escape') this.setState({lb:null});
+      if (e.key==='ArrowRight') this.lbStep(1);
+      if (e.key==='ArrowLeft') this.lbStep(-1);
+    };
+    this._on = () => this.setState({online:true}); this._off = () => this.setState({online:false});
+    window.addEventListener('hashchange', this._hash); window.addEventListener('resize', this._resize);
+    window.addEventListener('keydown', this._key); window.addEventListener('online', this._on); window.addEventListener('offline', this._off);
+    setTimeout(() => this.setState({ booting:false }), 650);
+  }
+  componentDidUpdate() { const lock = !!((this.mobile() && (this.state.menu || this.state.drawer)) || this.state.lb); if (lock !== !!this._awLocked) { this._awLocked = lock; window.__awLock = Math.max(0, (window.__awLock || 0) + (lock ? 1 : -1)); document.documentElement.style.overflow = window.__awLock > 0 ? 'hidden' : ''; } }
+  componentWillUnmount() {
+    clearInterval(this._tick); clearTimeout(this._ws); this._unsubS && this._unsubS(); window.removeEventListener('scroll', this._onScroll, true); window.removeEventListener('hashchange', this._hash); window.removeEventListener('resize', this._resize);
+    window.removeEventListener('keydown', this._key); window.removeEventListener('online', this._on); window.removeEventListener('offline', this._off);
+  }
+  toTop() { const el = this.scrollRef.current; if (el) el.scrollTop = 0; window.scrollTo(0,0); }
+  toast(title, body) {
+    const id = Date.now() + Math.random();
+    this.setState(s => ({ toasts:[...s.toasts, {id,title,body}].slice(-3) }));
+    setTimeout(() => this.setState(s => ({ toasts:s.toasts.filter(t => t.id !== id) })), 4200);
+  }
+  lbStep(d) { this.setState(s => s.lb ? { lb:{...s.lb, i:(s.lb.i + d + s.lb.list.length) % s.lb.list.length} } : null); }
+  openLb(list, i) { this.setState({ lb:{list, i} }); }
+
+  ew() { const v = this.props.viewport||'auto'; return v==='mobile' ? 390 : v==='tablet' ? 820 : v==='desktop' ? Math.max(this.state.vw, 1280) : this.state.vw; }
+  mobile() { return this.ew() < 1024; }
+  night() {
+    const t = this.props.timeOfDay || 'auto';
+    if (t==='night') return true; if (t==='day') return false;
+    const h = new Date().getUTCHours(); return h < 6 || h >= 18;
+  }
+  chip(active) { return { bg: active ? '#000063' : 'transparent', fg: active ? '#F5F2EA' : '#00003A', bd: active ? '#000063' : 'rgba(0,0,99,0.25)', active: active ? 'true' : 'false' }; }
+
+  renderVals() {
+    const s = this.state, sim = this.props.simulate || 'none';
+    const m = this.mobile(), night = this.night(), vp = this.props.viewport || 'auto', ew = this.ew(), ph = ew < 640, tab = m && !ph;
+    const framed = (vp==='mobile' && s.vw > 520) || (vp==='tablet' && s.vw > 900);
+    const now = new Date(), clock = String(now.getUTCHours()).padStart(2,'0') + ':' + String(now.getUTCMinutes()).padStart(2,'0');
+    const route = s.hash.split('?')[0];
+    const isHome = route==='' ; const isRooms = route==='rooms'; const isRoom = route.startsWith('room/');
+    const isGallery = route==='gallery'; const isContact = route==='contact';
+    const roomCode = isRoom ? route.split('/')[1] : null;
+    const roomData = ROOMS.find(r => r.code === roomCode);
+    const is404 = !(isHome||isRooms||isGallery||isContact||(isRoom && roomData));
+    const loading = sim==='loading';
+    const soldVIP = sim==='soldout';
+    const S = window.AWStore, db = S ? S.all() : null, T0 = ymd(new Date()), T1 = addDays(T0, 1);
+    const rates = db ? db.rates : { STD:150, EXE:200, 'EXE+':250, VIP:300, DBL:400 };
+    const setg = db ? db.settings : { bfPrice:'50', rsFee:'20' }, bfP = +setg.bfPrice || 50, rsF = +setg.rsFee || 20;
+    const freeT = t => S ? S.freeRooms(t, T0, T1).length : 0;
+    const IM = (k, d) => S ? S.img(k, d) : d, st0 = db ? db.settings : {};
+    const ROOMSX = ROOMS.map(r => { const o = { ...r, img: IM('room.'+r.code, r.img), gallery: r.gallery.map(([src,alt], gi) => [IM('room.'+r.code+'.'+gi, null) || src, alt]) };
+      const RI = (db && db.roomInfo) || {}, ri = RI[r.code] || {};
+      ['name','beds','guests','bath','best'].forEach(k => { if (ri[k] != null && String(ri[k]).trim() !== '') o[k] = k === 'guests' ? (+ri[k] || r.guests) : ri[k]; });
+      if (Array.isArray(ri.amen) && ri.amen.length) o.amen = ri.amen;
+      if (r.tiers) o.tiers = [{ ...r.tiers[0], name: (RI.EXE && RI.EXE.name) || r.tiers[0].name }, { ...r.tiers[1], name: (RI['EXE+'] && RI['EXE+'].name) || r.tiers[1].name, note: (RI['EXE+'] && RI['EXE+'].note) || r.tiers[1].note }]; if (r.code === 'EXE') { o.tiers = [{ ...o.tiers[0], price:rates.EXE }, { ...o.tiers[1], price:rates['EXE+'] }]; o.price = rates.EXE; o.priceLabel = rates.EXE + ' / ' + rates['EXE+']; } else { o.price = rates[r.code]; o.priceLabel = String(rates[r.code]); } if (S) o.left = r.code === 'EXE' ? freeT('EXE') + freeT('EXE+') : freeT(r.code); return o; });
+    const ip = (id, d) => { const it = db && db.items.find(x => x.id === id); return it ? it.price : d; };
+    const GAL = db ? db.gallery.filter(g => String(g.alt || '').trim()).map(g => ({ src:g.src, cat:g.cat, caption:g.alt, alt:g.alt })) : GALLERY;
+    const testi = db ? db.testimonials.find(t => t.status === 'Live') : null;
+
+    const rooms = ROOMSX.map(r => {
+      const left = (soldVIP && r.code==='VIP') ? 0 : r.left;
+      const tone = left===0 ? ['#E9E2E2','#B42318'] : left===1 ? ['#F2B544','#00003A'] : ['#F6E2B3','#000063'];
+      return { ...r, noShort: r.no.replace('–','-'), href:'#room/'+r.code, aria:`${r.name} Room, GHS ${r.priceLabel} per night, ${r.guests} guests`,
+        leftLabel: left===0 ? 'Sold out tonight' : left===1 ? 'Last one tonight' : `${left} left tonight`,
+        badgeBg:tone[0], badgeFg:tone[1], op: left===0 ? 0.6 : 1 };
+    });
+
+    const vars = {
+      '--pad': ph ? '20px' : tab ? '32px' : '56px', '--sy': ph ? '72px' : tab ? '104px' : '136px',
+      '--h1': ph ? '40px' : tab ? 'clamp(48px, 7vw, 68px)' : 'clamp(52px, 6vw, 96px)', '--h2': ph ? '34px' : tab ? '48px' : 'clamp(40px, 4.6vw, 72px)', '--h3': ph ? '26px' : '32px',
+      '--quote': ph ? '24px' : tab ? '32px' : 'clamp(30px, 3vw, 44px)',
+      '--c-hero': m ? '1fr' : 'minmax(0,7fr) minmax(0,4fr)', '--c2': ph ? '1fr' : 'minmax(0,1fr) minmax(0,1fr)',
+      '--c3': ph ? '1fr' : tab ? 'repeat(auto-fit,minmax(220px,1fr))' : 'repeat(3,minmax(0,1fr))', '--c4': ph ? 'repeat(4, 80%)' : tab ? 'repeat(4, 44%)' : 'repeat(4,minmax(0,1fr))',
+      '--c4g': ph ? '1fr' : 'repeat(auto-fill,minmax(250px,1fr))', '--c-55': m ? '1fr' : 'minmax(0,5fr) minmax(0,6fr)',
+      '--c-detail': m ? '1fr' : 'minmax(0,1fr) 380px', '--c-gal': ph ? '1fr' : 'minmax(0,3fr) minmax(0,1fr)',
+      '--hero-jc': m ? 'space-between' : 'flex-end', '--hero-pt': m ? '120px' : '128px', '--hero-pb': m ? '20px' : '32px', '--bar-mt': m ? '0px' : '36px', '--tabs-w': m ? '100%' : 'max-content', '--bar-span': m ? '1 / -1' : 'auto', '--g-pad': m ? '10px 16px' : '12px 16px', '--g-dir': m ? 'row' : 'column', '--g-ai': m ? 'center' : 'flex-start',
+      '--c-bar': ph ? '1fr 1fr' : 'minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1.1fr)', '--c-bar2': ph ? '1fr' : 'minmax(0,1fr) minmax(0,2fr) minmax(0,1.1fr)',
+      '--d': m ? 'none' : 'flex', '--wide': (m || ew < 1120) ? 'none' : 'inline', '--mo': m ? 'flex' : 'none', '--db': ph ? 'none' : 'block', '--dfig': m ? 'none' : 'block', '--mb': m ? 'block' : 'none',
+      '--gcols': ph ? '2' : '3', '--ev-h': ph ? '320px' : tab ? '460px' : '72vh',
+      '--serif': ({gambetta:"'Gambetta', Georgia, serif", instrument:"'Instrument Serif', Georgia, serif", dmserif:"'DM Serif Display', Georgia, serif", cormorant:"'Cormorant Garamond', Georgia, serif", clash:"'Clash Display', 'Geist', sans-serif", generalsans:"'General Sans', 'Geist', sans-serif", newsreader:"'Newsreader', Georgia, serif"})[this.props.headingFont || 'cormorant'], '--foot-h': m ? '260px' : 'clamp(280px, 34vw, 420px)', '--foot-type': 'var(--h1)', '--foot-btn': m ? '108px' : 'clamp(130px, 11vw, 170px)', '--c-foot': m ? '1fr' : 'minmax(0,5fr) minmax(0,7fr)', '--c-info': m ? '1fr' : 'repeat(3, auto)', '--info-bd': m ? 'none' : '1px solid rgba(0,0,99,0.2)', '--info-p2': m ? '4px 0 24px' : '4px 32px 32px', '--info-p3': m ? '4px 0 24px' : '4px 0 32px 32px', '--navgap': m ? '10px' : 'max(20px, calc(var(--pad) - 16px))', '--navpad': isHome ? '0px' : '84px', '--h2s': m ? '30px' : 'clamp(36px, 3.6vw, 56px)', '--hgap': m ? '20px' : '32px', '--hmb': m ? '28px' : '48px', '--fac-t': m ? '18px' : '22px', '--tq-ar': m ? '16/10' : '3/4',
+      '--tap-min': m ? '44px' : '0px', '--hero-h': m ? '720px' : 'min(92svh, 980px)',
+      '--hb': night ? '#1A1712' : '#F5F2EA', '--hf': night ? '#F5F2EA' : '#000063', '--hs': night ? 'rgba(245,242,234,0.72)' : 'rgba(0,0,58,0.7)',
+      '--hl': night ? 'rgba(245,242,234,0.16)' : 'rgba(0,0,99,0.16)', '--hcard': night ? '#000063' : '#FFFFFF',
+      background:'#F5F2EA', color:'#00003A', minHeight:'100%',
+    };
+    if (m && s.dragY === 0 && s.drawer) { /* noop */ }
+
+    // hero
+    const words = String((db && db.settings.heroTitle) || 'Your gateway to unforgettable memories').trim().split(/\s+/);
+    const accentWord = '';
+    const heroTitle = React.createElement(React.Fragment, null, words.map((w,i) =>
+      React.createElement('span', { key:w+i+night, style:{ display:'inline-block', overflow:'hidden', verticalAlign:'top', padding:'0 0.08em 0.1em 0.04em', margin:'0 0.1em 0 -0.04em' } },
+        React.createElement('span', { style:{ display:'inline-block', animation:`aw-rise 700ms ${EASE} ${i*45}ms both`, fontStyle: w===accentWord ? 'italic' : 'normal', color: (night && w===accentWord) ? '#F2B544' : 'inherit', fontWeight: w===accentWord ? 300 : 400 } }, w))));
+    const lit = [1,3,4,7,9,10,12,15,16];
+    const windows = Array.from({length:18}, (_,i) => ({ bg: night && lit.includes(i) ? '#F2B544' : 'transparent' }));
+
+    const nights = nightsBetween(s.ci, s.co);
+    const dotEl = React.createElement('span', { 'aria-hidden':true, style:{ width:8, height:8, borderRadius:'50%', background:'#F2B544', display:'inline-block', flexShrink:0, animation:'aw-breathe 2.8s ease-in-out infinite', boxShadow:'0 0 0 3px rgba(242,181,68,0.18)' } });
+    const loaderEl = React.createElement('svg', { viewBox:'0 0 32 32', width:56, height:56, fill:'none', stroke:'#F2B544', strokeWidth:1.2, style:{ animation:'aw-spin 2.4s cubic-bezier(0.77,0,0.175,1) infinite' } },
+      React.createElement('circle',{cx:11,cy:11,r:5.5}), React.createElement('circle',{cx:21,cy:11,r:5.5}), React.createElement('circle',{cx:11,cy:21,r:5.5}), React.createElement('circle',{cx:21,cy:21,r:5.5}),
+      React.createElement('rect',{x:12.5,y:12.5,width:7,height:7,transform:'rotate(45 16 16)'}));
+
+    const toastEl = React.createElement('div', { 'aria-live':'polite', style:{ position:'fixed', right:16, bottom: m ? 84 : 24, zIndex:95, width:'min(360px, calc(100% - 32px))', pointerEvents:'none' } },
+      s.toasts.map((t, i) => { const fromTop = s.toasts.length - 1 - i; return React.createElement('div', { key:t.id, role:'status', style:{
+        position:'absolute', right:0, bottom:0, width:'100%', background:'rgba(0,0,58,0.72)', WebkitBackdropFilter:'blur(18px) saturate(1.4)', backdropFilter:'blur(18px) saturate(1.4)', border:'1px solid rgba(255,255,255,0.14)', color:'#F5F2EA', borderRadius:12, padding:'14px 16px', fontFamily:"'Geist',system-ui,sans-serif",
+        boxShadow:'0 12px 32px -12px rgba(0,0,40,0.5)', transform:`translateY(${-fromTop*12}px) scale(${1-fromTop*0.05})`, opacity: fromTop>2 ? 0 : 1,
+        transition:`transform 300ms ${EASE}, opacity 300ms ${EASE}`, animation:`aw-toast 320ms ${EASE}`, pointerEvents:'auto', display:'flex', gap:10, alignItems:'flex-start' } },
+        React.createElement('span', { style:{ width:8, height:8, borderRadius:'50%', background:'#F2B544', marginTop:6, flexShrink:0 } }),
+        React.createElement('div', null, React.createElement('div', { style:{ fontSize:14, fontWeight:500 } }, t.title), t.body ? React.createElement('div', { style:{ fontSize:13, opacity:0.75, marginTop:2 } }, t.body) : null)); }));
+
+    const bookHref = `Checkout.dc.html#book?ci=${s.ci}&co=${s.co}&g=${s.guests}`;
+
+    // filters
+    const gOpts = [['any','Any'],['2','1–2'],['4','3–4']], bOpts = [['any','Any'],['200','≤ 200'],['300','≤ 300'],['400','≤ 400']];
+    let filtered = rooms.filter(r => (s.fGuests==='any' || (s.fGuests==='2' ? true : r.guests>=3)) && (s.fBudget==='any' || r.price <= +s.fBudget));
+    if (sim==='empty') filtered = [];
+
+    // room detail
+    let room = null, tierOpts = [], rate = 0, receipt = [], total = 0, freeSel = 1;
+    const rd = rooms.find(r => r.code === roomCode);
+    if (rd) {
+      room = { ...rd, blurb: (db && db.settings['blurb'+rd.code]) || rd.blurb, hasTiers: !!rd.tiers,
+        thumbs: rd.gallery.slice(1,4).map(([src,alt],i) => ({ src:/^(data:|uploads\/)/.test(src) ? src : p(src), alt, on:() => this.openLb(rd.gallery.map(([a,b])=>({src:/^(data:|uploads\/)/.test(a) ? a : p(a),alt:b})), i+1) })) };
+      rate = rd.tiers ? rd.tiers[s.tier].price : rd.price;
+      if (S && nights > 0) freeSel = S.freeRooms(rd.code === 'EXE' ? (s.tier === 1 ? 'EXE+' : 'EXE') : rd.code, s.ci, s.co).length;
+      tierOpts = (rd.tiers||[]).map((t,i) => ({ ...t, active: i===s.tier ? 'true':'false', bd: i===s.tier ? '#000063' : 'rgba(0,0,99,0.2)', bg: i===s.tier ? '#F6E2B3' : '#FFFFFF', on:() => this.setState({tier:i}) }));
+      const g = Math.min(s.guests, rd.guests), n = Math.max(nights, 0);
+      const tcode = rd.code === 'EXE' ? (s.tier === 1 ? 'EXE+' : 'EXE') : rd.code, sp = S && n ? S.stayPrice(tcode, s.ci, n) : { base:rate*n, total:rate*n, lines:[] };
+      receipt.push({ label:`${rd.tiers ? rd.tiers[s.tier].name.toUpperCase() : rd.code} × ${n} night${n===1?'':'s'}`, amt: ghs(sp.base) }); total = sp.total;
+      sp.lines.forEach(l => receipt.push({ label:l.name.toUpperCase(), amt:(l.amt < 0 ? '− ' : '+ ') + ghs(Math.abs(l.amt)) }));
+      if (s.addBreakfast) { receipt.push({ label:`BREAKFAST × ${g} × ${n}`, amt: ghs(bfP*g*n) }); total += bfP*g*n; }
+      if (s.addRS) { receipt.push({ label:'ROOM SERVICE', amt: ghs(rsF) }); total += rsF; }
+    }
+    const dragY = s.dragY;
+    const cardStyle = m ? {
+      position:'fixed', left:0, right:0, bottom:0, maxWidth: tab ? 600 : 'none', marginInline:'auto', zIndex:70, background:'rgba(245,242,234,0.82)', WebkitBackdropFilter:'blur(24px) saturate(1.4)', backdropFilter:'blur(24px) saturate(1.4)', borderTop:'1px solid rgba(255,255,255,0.7)', borderRadius:'16px 16px 0 0', padding:'0 20px calc(24px + env(safe-area-inset-bottom))', overscrollBehavior:'contain', display:'flex', flexDirection:'column', gap:14,
+      maxHeight:'88%', overflowY:'auto', boxShadow:'0 -20px 40px -20px rgba(0,0,40,0.4)',
+      transform: s.drawer ? `translateY(${dragY}px)` : 'translateY(110%)', transition: s.dragging ? 'none' : `transform 420ms ${EASE}`,
+    } : { position:'sticky', top:96, background:'rgba(255,255,255,0.6)', WebkitBackdropFilter:'blur(20px) saturate(1.3)', backdropFilter:'blur(20px) saturate(1.3)', border:'1px solid rgba(255,255,255,0.8)', boxShadow:'0 20px 50px -30px rgba(0,0,58,0.35)', borderRadius:16, padding:20, display:'flex', flexDirection:'column', gap:14 };
+
+    const outerStyle = framed
+      ? { width: vp==='tablet' ? 820 : 390, height: vp==='tablet' ? 'min(1180px, calc(100vh - 48px))' : 844, margin:'24px auto', borderRadius: vp==='tablet' ? 28 : 44, border:'10px solid #00003A', overflow:'hidden', transform:'translateZ(0)', position:'relative', boxShadow:'0 40px 80px -30px rgba(0,0,40,0.5)' }
+      : { position:'relative', minHeight:'100vh' };
+    const scrollStyle = framed
+      ? { height:'100%', overflowY:'auto' }
+      : {};
+    if (typeof document !== 'undefined') document.body.style.background = framed ? '#F6E2B3' : '#F5F2EA';
+
+    const lbItem = s.lb ? s.lb.list[s.lb.i] : null;
+    const gCats = ['All','Rooms','Bathrooms','Spaces','Events'];
+    const gList = sim==='empty' ? [] : GAL.filter(g => s.gFilter==='All' || g.cat===s.gFilter);
+    const ce = s.ce, bd = k => ce[k] ? '#B42318' : 'rgba(0,0,99,0.2)';
+
+    return {
+      outerStyle, scrollStyle, scrollRef:this.scrollRef, rootVars:vars,
+      navSolid: (!isHome || s.scrolled || s.menu) ? 1 : 0,
+      navStyle: (() => { const solid = !isHome || s.scrolled || s.menu; return { position:'relative', margin:'14px var(--navgap) 0', borderRadius:16, fontFamily:"'Geist',system-ui,sans-serif", '--nf': solid ? '#00003A' : '#FFFFFF', '--nm': solid ? 'rgba(0,0,58,0.65)' : 'rgba(255,255,255,0.8)', '--nl': solid ? 'rgba(0,0,99,0.12)' : 'rgba(255,255,255,0.3)', color:'var(--nf)', transition:'color 200ms' }; })(),
+      offline: sim==='offline' || !s.online, loading, notLoading:!loading, skeletons:[1,2,3,4], booting:s.booting, loaderEl, toastEl, dotEl,
+      clock, deskLine: night ? 'the desk lamp is on' : 'the desk is staffed',
+      navLinks: [['Rooms','#rooms'],['Rentals','Checkout.dc.html#rent'],['Venues','Checkout.dc.html#venues'],['Gallery','#gallery'],['Contact','#contact']].map(([label,href], i) => {
+        const cur = href==='#'+route; return { label, href, current: cur ? 'page' : 'false', op: cur ? 1 : 0.78, delay: (40 + i * 35) + 'ms' }; }),
+      menuOpen: s.menu, menuLabel: s.menu ? 'Close' : 'Menu', toggleMenu:() => this.setState({menu:!s.menu}), closeMenu:() => this.setState({menu:false}),
+      bookHref, showMobileBook: m && !isRoom && !s.menu && (!isHome || s.pastHero), mobileSpacer: m,
+      waStyle: { position:'fixed', right:16, bottom: m ? (isRoom ? 92 : 16) : 24, zIndex:44, height:48, padding:'0 16px', whiteSpace:'nowrap', display:'flex', alignItems:'center', borderRadius:12, background:'rgba(31,122,77,0.78)', WebkitBackdropFilter:'blur(16px) saturate(1.4)', backdropFilter:'blur(16px) saturate(1.4)', border:'1px solid rgba(255,255,255,0.25)', color:'#FFFFFF', fontFamily:"'Geist',system-ui,sans-serif", fontSize:14, fontWeight:500, textDecoration:'none', boxShadow:'0 10px 30px -10px rgba(0,0,40,0.5)' },
+      isHome, isRooms, isRoom: isRoom && !!rd, isGallery, isContact, is404,
+      heroTitle, heroSub: night ? "The front desk is staffed right now, and every night. Rooms from GHS 150, booked in two minutes, paid by MoMo." : "A small, family-run hotel in New Asofan. Premium on the details, honest on price. Rooms from GHS 150 a night, and someone at the desk around the clock.",
+      heroImg: night ? p('01-hero-and-exterior/hotel-view-reception.jpg') : p('01-hero-and-exterior/hotel-compound.jpg'),
+      heroAlt: night ? 'The A-Wise front desk with the drinks fridge lit' : 'The A-Wise compound under a blue Accra sky, palm tree by the gate',
+      heroImgStyle: { position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 55%', filter: night ? 'saturate(0.9) brightness(0.92) contrast(1.04)' : 'saturate(1) contrast(1.02)', zIndex:0 },
+      heroShade: { position:'absolute', inset:0, background: night
+        ? 'linear-gradient(180deg, rgba(14,11,7,0.35) 0%, rgba(14,11,7,0.15) 35%, rgba(14,11,7,0.7) 100%)'
+        : 'linear-gradient(180deg, rgba(20,16,10,0.25) 0%, rgba(20,16,10,0.05) 35%, rgba(20,16,10,0.6) 100%)' },
+      heroCaption: night ? `FIG. 01 · The front desk at ${clock} GMT. Someone's here.` : 'FIG. 01 · The compound, New Asofan. The gate is always open to guests.',
+      windows, windowsLabel: night ? '9 OF 18 WINDOWS LIT · DESK AWAKE' : 'DAYLIGHT · DESK STAFFED',
+      scheme: 'light',
+      isStay: s.tab==='stay', isRent: s.tab==='rent',
+      stayTabBg: s.tab==='stay' ? '#FFFFFF' : 'transparent', stayTabFg: '#00003A',
+      rentTabBg: s.tab==='rent' ? '#FFFFFF' : 'transparent', rentTabFg: '#00003A',
+      tabX: s.tab==='stay' ? '0%' : '100%', stayOp: s.tab==='stay' ? 1 : 0.6, rentOp: s.tab==='rent' ? 1 : 0.6, tabStay:() => this.setState({tab:'stay'}), tabRent:() => this.setState({tab:'rent'}),
+      today: ymd(new Date()), ci:s.ci, co:s.co, guests:s.guests,
+      onCi: e => { const v = e.target.value; this.setState(st => ({ ci:v, co: nightsBetween(v, st.co) < 1 ? addDays(v,1) : st.co, barErr:'' })); },
+      onCo: e => { const v = e.target.value; this.setState({ co:v, barErr: nightsBetween(s.ci, v) < 1 ? "Check-out comes after check-in. Time only goes one way, even here." : '' }); },
+      gMinus:() => this.setState({guests:Math.max(1,s.guests-1)}), gPlus:() => this.setState({guests:Math.min(4,s.guests+1)}),
+      gPlusRoom:() => this.setState({guests:Math.min(rd ? rd.guests : 4, s.guests+1)}), guestsCapped: rd ? Math.min(s.guests, rd.guests) : s.guests,
+      nightsLabel: nights > 0 ? `${nights} night${nights===1?'':'s'}` : '—',
+      barErr: s.barErr,
+      submitBar: e => { e.preventDefault(); if (nights < 1) { this.setState({barErr:'Pick a check-out date after your check-in.'}); return; } location.href = bookHref; },
+      rentDate:s.rentDate, onRentDate: e => this.setState({rentDate:e.target.value}), rentHref:`Checkout.dc.html#rent?from=${s.rentDate}&to=${s.rentDate}`,
+      rooms, facilities: FAC.map((f,i) => ({ ...(() => { const t = String(st0['fac'+i] || '').trim(); return t ? { t } : {}; })(), icon:['bell','coffee','utensils','sun','sofa','presentation','tent','bath'][i] || 'star', n:String(i+1).padStart(2,'0'), title: String(st0['fac'+i] || '').trim() || f[0], note:f[1], op: i===s.fac ? 1 : 0.62, on:() => this.setState({fac:i}) })),
+      facImg: IM('fac.'+s.fac, p(FAC[s.fac][2])), facAlt: String(st0['fac'+s.fac] || '').trim() || FAC[s.fac][3],
+      im: { hero: IM('hero', p('01-hero-and-exterior/hero-front-desk.jpg')), events: IM('events', p('05-services-and-rentals/private-events.jpg')), testimonial: IM('testimonial', p('02-rooms/executive-room-2-customised-sheets.jpg')), footer: IM('footer', p('04-spaces/spacious-hallway.jpg')) },
+      vn: { n0: String(st0.venue0Name||'').trim() || 'Event compound', t0: String(st0.venue0Tag||'').trim() || 'Outdoor · gated', c0: String(st0.venue0Cap||'').trim() || '100–200', n1: String(st0.venue1Name||'').trim() || 'Conference room', t1: String(st0.venue1Tag||'').trim() || 'Indoor · AC', c1: String(st0.venue1Cap||'').trim() || '2nd floor' }, facCaption: `FIG. ${String(s.fac+2).padStart(2,'0')} · ${FAC[s.fac][3]}`,
+      rentals: [
+        { name:'Canopies', price:ip('canopy', 250), note:'10 × 10 ft, white, steel frame.', img:IM('rental.canopies', p('05-services-and-rentals/canopy-rental.jpg')), alt:'White event canopy' },
+        { name:'Tables', price:Math.min(ip('longtable', 40), ip('shorttable', 25)), note:'Long and short, foldable.', img:IM('rental.tables', p('05-services-and-rentals/table-rental.jpg')), alt:'Foldable event table' },
+        { name:'Chairs', price:Math.min(ip('chair', 3), ip('foldchair', 5)), note:'Foldable or regular plastic. By the hundred.', img:IM('rental.chairs', p('05-services-and-rentals/plastic-chair-rental.jpg')), alt:'Blue foldable chair' },
+      ],
+      comingSoon: [
+        { name:'Breakfast', status:'Coming soon', note:'All-day West African kitchen.', img:p('06-coming-soon/breakfast.jpg'), alt:'Concept image: covered terrace dining' },
+        { name:'Summer Hut', status:'Coming soon', note:'Open-air sundowner lounge.', img:p('06-coming-soon/summer-hut.jpg'), alt:'Concept image: open-air garden lounge' },
+      ],
+      guestChips: gOpts.map(([v,l]) => ({ label:l, ...this.chip(s.fGuests===v), on:() => this.setState({fGuests:v}) })),
+      budgetChips: bOpts.map(([v,l]) => ({ label:l, ...this.chip(s.fBudget===v), on:() => this.setState({fBudget:v}) })),
+      filteredRooms: filtered, filteredCount: `${filtered.length} of 4 room types`, roomsEmpty: !loading && filtered.length===0, roomsShow: !loading && filtered.length>0,
+      clearFilters:() => this.setState({fGuests:'any', fBudget:'any'}),
+      compareRows: [
+        { label:'Price / night', cells: ROOMSX.map(r=>'GHS '+r.priceLabel), font:"'Geist Mono',monospace" },
+        { label:'Beds', cells: ROOMSX.map(r=>r.beds), font:'inherit' },
+        { label:'Guests', cells: ROOMSX.map(r=>'Up to '+r.guests), font:'inherit' },
+        { label:'Bathroom', cells: ROOMSX.map(r=>r.bath), font:'inherit' },
+        { label:'AC · Wi-Fi · TV', cells: ROOMS.map(()=> 'Yes'), font:'inherit' },
+        { label:'Best for', cells: ROOMSX.map(r=>r.best), font:'inherit' },
+      ],
+      room: room || { code:'', name:'', thumbs:[], amen:[], gallery:[] },
+      amenList: (room ? room.amen : []).map(t => ({ t, icon: /air|fan/i.test(t) ? 'snow' : /wi-?fi/i.test(t) ? 'wifi' : /tv/i.test(t) ? 'tv' : /desk/i.test(t) ? 'laptop' : /fridge/i.test(t) ? 'fridge' : /bed/i.test(t) ? 'bed' : /bath|shower/i.test(t) ? 'droplets' : /linen/i.test(t) ? 'sparkle' : 'check' })),
+      rulesList: RULES.map(t => ({ t, icon: /check-in/i.test(t) ? 'clock' : /arrive/i.test(t) ? 'moon' : /smok/i.test(t) ? 'ban' : /quiet/i.test(t) ? 'moon' : /id/i.test(t) ? 'id' : 'info' })), tierOpts, houseRules: RULES, rate,
+      receipt, totalLabel: ghs(total), cardStyle, drawerOpen: m && s.drawer,
+      openMain:() => rd && this.openLb(rd.gallery.map(([a,b], gi)=>({src: gi===0 ? rd.img : (/^(data:|uploads\/)/.test(a) ? a : p(a)),alt:b})), 0),
+      addBreakfast:s.addBreakfast, addRS:s.addRS, toggleBreakfast:() => this.setState({addBreakfast:!s.addBreakfast}), toggleRS:() => this.setState({addRS:!s.addRS}),
+      roomBookHref: rd ? `Checkout.dc.html#book?ci=${s.ci}&co=${s.co}&g=${Math.min(s.guests, rd.guests)}&room=${rd.code}&tier=${s.tier}&bf=${s.addBreakfast?1:0}&rs=${s.addRS?1:0}` : '#',
+      similar: rooms.filter(r => r.code !== roomCode),
+      openDrawer:() => this.setState({drawer:true, dragY:0}), closeDrawer:() => this.setState({drawer:false}),
+      dragStart: e => { this._dy = e.clientY; this._dt = Date.now(); this.setState({dragging:true}); e.currentTarget.setPointerCapture && e.currentTarget.setPointerCapture(e.pointerId); },
+      dragMove: e => { if (!s.dragging) return; this.setState({ dragY: Math.max(0, e.clientY - this._dy) }); },
+      dragEnd: e => { if (!s.dragging) return; const dy = Math.max(0, e.clientY - this._dy), v = dy / Math.max(1, Date.now() - this._dt);
+        this.setState({ dragging:false, dragY:0, drawer: !(dy > 140 || v > 0.5) }); },
+      gFilters: gCats.map(c => ({ label:c, count: c==='All' ? GAL.length : GAL.filter(g=>g.cat===c).length, ...this.chip(s.gFilter===c), on:() => this.setState({gFilter:c, gShow:12}) })),
+      gItems: gList.slice(0, s.gShow || 12).map((g,i) => ({ ...g, label:'Open photo: '+g.caption, on:() => this.openLb(gList, i) })), galleryEmpty: gList.length===0,
+      gMore: gList.length > (s.gShow || 12), gMoreLabel: `Showing ${Math.min(gList.length, s.gShow || 12)} of ${gList.length} photos`, showMoreG:() => this.setState({gShow:(s.gShow || 12) + 12}),
+      bannerShow: !!(db && db.settings.banner && String(db.settings.bannerText||'').trim()) && !s.bannerOff, bannerText: db ? db.settings.bannerText : '', closeBanner:() => { this.setState({bannerOff:true}); try { sessionStorage.setItem('aw.bannerOff','1'); } catch (e) {} },
+      testiQuote: testi ? testi.quote : 'Nothing short of extraordinary. Spotless room, incredibly comfortable bed.', testiFrom: testi ? testi.from : 'John & Mary P. · Achimota',
+      bfLabel: `GHS ${bfP} per guest, per day`,
+      cp: (() => { const st = db ? db.settings : {}, d = { heroSub:'Comfortable rooms, a front desk that never closes and honest prices, in New Asofan, Accra.', roomsHeading:'Four room standards, tailored for you', overviewHeading:'An overview of Hotel A-Wise', rentalsHeading:'Rentals for all kinds of events', rentalsSub:'Reserve online. Collect here.', spacesHeading:'Spaces for your needs', mapHeading:'Find your way to us', roomsIntro:'Per room, per night. No hidden fees.', galleryIntro:'Real photos. What you see is what you get.', contactIntro:'Someone picks up, day or night.' }; const o = {}; Object.keys(d).forEach(k => o[k] = String(st[k] || '').trim() || d[k]); return o; })(),
+      ct: (() => { const st = db ? db.settings : {}, phone = String(st.phone || '+233 55 555 7090').trim(), digits = phone.replace(/\D/g,''), waNum = String(st.wa || '233555557090').replace(/\D/g,''), email = String(st.email || 'info@hotelawise.com').trim(); return { phone, tel:'tel:+' + (digits.startsWith('233') ? digits : '233' + digits.replace(/^0/,'')), wa:'https://wa.me/' + waNum, waNum, email, mail:'mailto:' + email, address: String(st.address || 'No. 1 Wisepak Lane, New Asofan, Accra').replace(/,?\s*Accra\.?$/,'') }; })(), rsLabel: `+ GHS ${rsF}`,
+      roomBookable: nights > 0 && freeSel > 0, roomUnavailable: nights > 0 && freeSel === 0, roomBlocked: nights < 1 || freeSel === 0, blockedLabel: nights < 1 ? 'Pick your dates' : 'Not available for these dates',
+      unavailNote: rd ? `The ${rd.tiers ? rd.tiers[s.tier].name : rd.name} room is fully booked between ${new Date(s.ci+'T00:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'short',timeZone:'UTC'})} and ${new Date(s.co+'T00:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'short',timeZone:'UTC'})}. Try other dates, another room, or call ${(db && db.settings.phone) || '+233 55 555 7090'}.` : '',
+      newsErr: s.newsErr || '', newsBad: s.newsErr ? 'true' : 'false', newsBd: s.newsErr ? '#B42318' : 'rgba(0,0,99,0.2)',
+      lbOpen: !!s.lb, lbSrc: lbItem ? lbItem.src : '', lbAlt: lbItem ? lbItem.alt : '', lbCount: s.lb ? `${s.lb.i+1} / ${s.lb.list.length}` : '',
+      lbDown: e => { this._lbx = e.clientX; }, lbUp: e => { const dx = e.clientX - (this._lbx ?? e.clientX); if (Math.abs(dx) > 50) this.lbStep(dx < 0 ? 1 : -1); },
+      lbPrev:() => this.lbStep(-1), lbNext:() => this.lbStep(1), lbClose:() => this.setState({lb:null}), stop: e => e.stopPropagation(),
+      subjects: SUBJECTS.map((l,i) => ({ label:l, ...this.chip(s.subject===i), on:() => this.setState({subject:i}) })),
+      cf: s.cf, cc: s.cc || '+233', onCc: e => this.setState({cc:e.target.value}), ccOpts:[{value:'+233',label:'GH +233'},{value:'+234',label:'NG +234'},{value:'+44',label:'UK +44'},{value:'+1',label:'US +1'}], ciPlus1: addDays(s.ci,1), ce: { ...ce, nameBd:bd('name'), phoneBd:bd('phone'), emailBd:bd('email'), msgBd:bd('msg'), nameBad: ce.name?'true':'false', phoneBad: ce.phone?'true':'false' },
+      cfName: e => this.setState({cf:{...s.cf, name:e.target.value}, ce:{...ce, name:''}}),
+      cfPhone: e => this.setState({cf:{...s.cf, phone:e.target.value}, ce:{...ce, phone:''}}),
+      cfEmail: e => this.setState({cf:{...s.cf, email:e.target.value}, ce:{...ce, email:''}}),
+      cfMsg: e => this.setState({cf:{...s.cf, msg:e.target.value}, ce:{...ce, msg:''}}),
+      sending: s.sending, sendLabel: s.sending ? 'Sending…' : 'Send to reception',
+      submitContact: e => { e.preventDefault(); const f = s.cf, err = {};
+        if (!f.name.trim()) err.name = 'We\'d like to know who we\'re talking to.';
+        const digits = f.phone.replace(/\D/g,''), cc = s.cc || '+233'; if (cc === '+233' ? !/^0?[235]\d{8}$/.test(digits) : !/^\d{7,12}$/.test(digits)) err.phone = cc === '+233' ? 'Enter a Ghana mobile number, like 055 555 7090.' : 'Enter a valid phone number.';
+        if (f.email && !/^\S+@\S+\.\S+$/.test(f.email)) err.email = 'Check the email address.';
+        if (f.msg.trim().length < 5) err.msg = 'A few more words, please.';
+        if (Object.keys(err).length) { this.setState({ce:err}); return; }
+        this.setState({sending:true}); setTimeout(() => { const S2 = window.AWStore; if (S2) S2.update('msgs', m => [{ id:'w'+Date.now(), from:f.name.trim(), contact: f.email.trim() || ((s.cc || '+233') + ' ' + f.phone.trim()), subject:SUBJECTS[s.subject], status:'New', assignee:'Unassigned', at:new Date().toISOString(), text:f.msg.trim(), live:true }, ...(m || [])]); this.setState({sending:false, cf:{name:'',phone:'',email:'',msg:''}}); this.toast('Message sent.', 'Reception will reply within the hour.'); }, 700); },
+      faqs: (db ? db.faqs.map(x => [x.q, x.a]) : FAQ).map(([q,a],i) => ({ q, a, open: s.faq===i, rot: s.faq===i ? '45deg' : '0deg', on:() => this.setState({faq: s.faq===i ? -1 : i}) })),
+      news:s.news, onNews: e => this.setState({news:e.target.value, newsErr:''}),
+      submitNews: e => { e.preventDefault(); const em = s.news.trim().toLowerCase(); if (!/^\S+@\S+\.\S+$/.test(em)) { this.setState({newsErr:'Enter a valid email address.'}); return; } const S2 = window.AWStore; if (S2 && (S2.get('subscribers') || []).some(x => x.email === em)) { this.setState({news:'', newsErr:''}); this.toast('You\'re already on the list.', 'Nothing more to do.'); return; } if (S2) S2.update('subscribers', l => [...(l || []), { email:em, at:ymd(new Date()) }]); this.setState({news:'', newsErr:''}); this.toast('You\'re on the list.', 'One letter a month, at most.'); },
+    };
+  }
+}
+
+</script>
+</body>
+</html>

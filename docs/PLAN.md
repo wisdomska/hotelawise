@@ -334,6 +334,7 @@ Each milestone ends with a short summary, the preview URL, test results and bloc
 | D-16 | Rental status notifications "SMS" | Email at every step; SMS when the adapter is on |
 | D-17 | Reference screenshots flag fixes | All kept fixed (list in DECISIONS.md D-17) |
 | D-18 | Contact numbers: spec reception +233 55 555 7090; the old site footer shows +233 54 012 0400 as main | Spec values seeded and editable in Settings. **Confirm with the hotel** |
+| D-21 | Admin dark palette: Handoff navy `#07072B` vs prototype neutral black | Handoff tokens |
 | D-27 | Brief asks for repo `hotel-a-wise` | You chose `wisdomska/hotelawise` |
 
 ---

@@ -154,6 +154,11 @@ The Handoff says customers get SMS updates. SMS is off by default (no budget), s
 ## D-20 Command palette and keyboard actions are not animated
 The prototype animates the palette. Following the motion skill, the ⌘K palette opens and closes instantly, because it's used many times a day. Toasts, drawers and sheets keep their motion tokens.
 
+## D-21 Admin dark palette
+**Conflict:** The Handoff tokens give the admin dark theme bg `#07072B`, panel `#0E0E3E`, text `#ECEBF4` and chart `#6E70C9`. The rendered prototype (`reference-screens/admin-*-dark-*`) uses a neutral near-black.
+
+**Ruling:** Use the Handoff tokens. Dark-mode visual tests compare layout and spacing against the reference, but not colour.
+
 ## D-27 Repository (owner ruling)
 **Conflict:** The brief asks for a new repo, `hotel-a-wise`.
 
