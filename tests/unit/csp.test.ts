@@ -14,7 +14,9 @@ describe('content security policy', () => {
 
   it('lets only stamped scripts run when there is a nonce', () => {
     const csp = contentSecurityPolicy('abc123');
-    expect(directive(csp, 'script-src')).toBe(`script-src 'self' 'nonce-abc123' ${FIRST_VISIT_HASH} https://js.paystack.co`);
+    expect(directive(csp, 'script-src')).toBe(
+      `script-src 'self' 'nonce-abc123' ${FIRST_VISIT_HASH} https://js.paystack.co https://challenges.cloudflare.com`,
+    );
     expect(csp).not.toContain("'unsafe-eval'");
     expect(directive(contentSecurityPolicy(null), 'script-src')).toContain("'unsafe-inline'");
   });
@@ -42,5 +44,12 @@ describe('content security policy', () => {
 
   it('allows the root layout’s inline script by its hash', () => {
     expect(FIRST_VISIT_HASH).toBe(`'sha256-${createHash('sha256').update(FIRST_VISIT_SCRIPT).digest('base64')}'`);
+  });
+});
+
+describe('outside sources the site needs', () => {
+  it('lets Turnstile load its script and frame', () => {
+    const csp = contentSecurityPolicy(null);
+    for (const d of ['script-src', 'frame-src', 'connect-src']) expect(directive(csp, d)).toContain('https://challenges.cloudflare.com');
   });
 });

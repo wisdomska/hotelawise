@@ -21,13 +21,17 @@ for (const path of PAGES)
   test(`no policy violations on ${path}`, async ({ page }) => {
     const violations: string[] = [];
     page.on('console', (m) => {
-      if (/Content Security Policy|Refused to (load|execute|apply|connect|frame)/i.test(m.text())) violations.push(m.text());
+      if (m.text().startsWith('csp-violation ')) violations.push(m.text());
     });
+    // Our page only: third-party frames (Turnstile, Paystack) apply their own policies.
     await page.addInitScript(() => {
-      document.addEventListener('securitypolicyviolation', (e) => console.error(`Refused to load ${e.violatedDirective} ${e.blockedURI}`));
+      if (window.top !== window) return;
+      document.addEventListener('securitypolicyviolation', (e) => console.error(`csp-violation ${e.violatedDirective} ${e.blockedURI}`));
     });
     const res = await page.goto(path);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('load');
+    // Long-lived widgets (Turnstile) keep the network busy; give scripts time to run instead.
+    await page.waitForTimeout(2500);
     expect(res?.status()).toBeLessThan(400);
     const csp = res!.headers()['content-security-policy'] ?? '';
     expect(csp).toContain("object-src 'none'");

@@ -18,6 +18,7 @@
     "start": "next start",
     "cf:build": "node scripts/copy-photos.mjs && HOTELAWISE_WORKER_BUILD=1 opennextjs-cloudflare build",
     "cf:deploy:preview": "node scripts/cf-clean-build.mjs --env preview && opennextjs-cloudflare deploy --env preview",
+    "cf:deploy:production": "node scripts/cf-clean-build.mjs --env production && opennextjs-cloudflare deploy --env production",
     "cf:preview": "node scripts/copy-photos.mjs && HOTELAWISE_WORKER_BUILD=1 opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "lint": "eslint .",
     "format": "prettier --check .",

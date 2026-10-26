@@ -9,7 +9,21 @@ const nextConfig: NextConfig = {
   turbopack: {},
   // The Worker is built with webpack (open-next.config.ts), which shares server
   // code between pages and route handlers; Turbopack bundles it twice.
-  webpack(config) {
+  webpack(config, { isServer, dev }) {
+    // Browser script names come from route paths, so route groups put "(" and ")"
+    // in them. Some browsers send those percent-encoded, Cloudflare's static file
+    // layer redirects to the decoded path, and the script never loads (a redirect
+    // loop). Swap the brackets for underscores in browser file names; Next's
+    // manifests follow the real names.
+    if (!isServer && !dev) {
+      const clean = <T>(name: T) => (typeof name === 'string' ? name.replace(/[()]/g, '_') : name);
+      for (const key of ['filename', 'chunkFilename'] as const) {
+        const orig = config.output[key];
+        if (typeof orig === 'string')
+          config.output[key] = (data: { chunk?: { name?: string | null } }) =>
+            data.chunk?.name ? orig.replace('[name]', clean(data.chunk.name)) : orig;
+      }
+    }
     if (workerBuild) {
       const stub = path.resolve('src/server/db/node-stub.ts');
       config.resolve.alias = { ...config.resolve.alias, '@/server/db/node$': stub, [path.resolve('src/server/db/node.ts')]: stub };

@@ -58,6 +58,8 @@ test.describe('contact', () => {
 
   test('sends a message to reception', async ({ page, browserName, isMobile }) => {
     test.skip(browserName !== 'chromium' || isMobile, 'one real message per run');
+    // A deployed site runs real Turnstile, which (rightly) stops a scripted browser.
+    test.skip(!!process.env.BASE_URL, 'real Turnstile on deployed sites; checked by hand in the QA report');
     await page.goto('/contact');
     await page.getByRole('radio', { name: 'Special request' }).click();
     await page.getByPlaceholder('e.g. Ama Owusu').fill('Ama Owusu');

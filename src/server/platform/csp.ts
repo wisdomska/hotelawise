@@ -19,17 +19,25 @@ export function contentSecurityPolicy(nonce: string | null, opts: { dev?: boolea
   if (opts.dev) script.push(`'unsafe-eval'`);
   const d: Record<string, string[]> = {
     'default-src': [`'self'`],
-    'script-src': [...script, 'https://js.paystack.co'],
+    'script-src': [...script, 'https://js.paystack.co', 'https://challenges.cloudflare.com'],
     'style-src': [`'self'`, `'unsafe-inline'`, 'https://*.paystack.co', 'https://*.paystack.com'],
     'img-src': [`'self'`, 'data:', 'blob:', 'https://res.cloudinary.com', 'https://*.paystack.co', 'https://*.paystack.com'],
     'font-src': [`'self'`, 'data:'],
-    'connect-src': [`'self'`, 'https://api.paystack.co', 'https://*.paystack.co', 'https://*.paystack.com', 'https://api.cloudinary.com'],
+    'connect-src': [
+      `'self'`,
+      'https://api.paystack.co',
+      'https://*.paystack.co',
+      'https://*.paystack.com',
+      'https://api.cloudinary.com',
+      'https://challenges.cloudflare.com',
+    ],
     'frame-src': [
       'https://checkout.paystack.com',
       'https://*.paystack.co',
       'https://*.paystack.com',
       'https://www.google.com',
       'https://maps.google.com',
+      'https://challenges.cloudflare.com',
     ],
     'object-src': [`'none'`],
     'base-uri': [`'self'`],
