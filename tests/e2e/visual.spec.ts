@@ -1,7 +1,11 @@
 // Visual regression for the public pages at desktop and phone sizes. Baselines
 // were checked against design/reference-screens when they were recorded; any
-// later pixel drift fails here. Update on purpose with:
-//   pnpm build && pnpm test:e2e tests/e2e/visual.spec.ts --update-snapshots
+// later pixel drift fails here.
+// The baselines are CI's renders (ubuntu runner, freshly seeded database): text
+// rasterises slightly differently on other machines, so a local run may differ
+// by a line wrap. To update after an intended change, take the "actual" images
+// from the failing run's playwright-report artifact, check them against
+// design/reference-screens, and commit them over the old baselines.
 import { expect, test } from '@playwright/test';
 
 const PAGES = [
