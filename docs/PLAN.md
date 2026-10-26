@@ -70,9 +70,9 @@ Source-of-truth order (owner ruling, D-00): **rendered prototypes** → `Handoff
 1. `pnpm install --frozen-lockfile` (cached)
 2. lint → format check → typecheck
 3. unit tests with coverage gates: ≥90% lines/branches on `src/server/services` and `src/lib`
-4. integration tests against the Neon `ci` branch (recreated from `main`'s schema each run; test users and fixtures are created by the tests and never reach `preview` or `main`)
+4. integration tests against a throwaway Postgres 16 service container (free, no account, test users never reach `preview` or `main`); see ARCHITECTURE › Testing
 5. `opennextjs-cloudflare build` + bundle-size report
-6. Playwright e2e + axe + visual regression against the built Worker running in CI (`opennextjs-cloudflare preview`) wired to the `ci` Neon branch, so test accounts never exist on a deployed site
+6. Playwright e2e against a production build with a seeded Postgres container (+ axe and visual regression from milestone 2); the deployed preview gets a smoke run
 7. `wrangler versions upload --env preview`, which posts the version preview URL as a PR comment for manual review
 8. Lighthouse CI (mobile) budgets
 9. authorship audit
