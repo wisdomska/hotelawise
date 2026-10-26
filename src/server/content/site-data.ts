@@ -8,12 +8,13 @@ import { unstable_cache } from 'next/cache';
 import * as s from '@/server/db/schema';
 import { BUNDLES, FAQS, GHS, RENTAL_ITEMS, ROOM_TYPES, VENUES } from './catalogue';
 import { SEED_CONTENT, SEED_SETTINGS } from './defaults';
+import type { RateRule, VariantCode } from '@/server/services/pricing';
 import { cloudinaryId, GALLERY, IMAGES, PHOTO_SLOTS } from './images';
 
 export const SITE_TAG = 'site';
 
 export type SiteImage = { id: string; alt: string; concept: boolean };
-export type SiteVariant = { code: string; displayCode: string; name: string; note: string | null; price: number };
+export type SiteVariant = { code: VariantCode; displayCode: string; name: string; note: string | null; price: number; roomCount: number };
 export type SiteRoom = {
   code: string;
   name: string;
@@ -53,6 +54,8 @@ export type SiteData = {
   testimonial: { quote: string; from: string } | null;
   gallery: SiteGalleryItem[];
   comingSoon: { key: string; title: string; description: string; nowOpen: boolean }[];
+  /** Active seasonal and long-stay rules, for prices shown before checkout. */
+  rateRules: RateRule[];
 };
 
 function img(key: keyof typeof IMAGES): SiteImage {
@@ -67,11 +70,12 @@ export function defaultSiteData(): SiteData {
     content: { ...SEED_CONTENT },
     rooms: ROOM_TYPES.map((t) => {
       const variants = t.variants.map((v) => ({
-        code: v.code,
+        code: v.code as VariantCode,
         displayCode: v.displayCode,
         name: v.name,
         note: 'note' in v ? v.note : null,
         price: GHS(v.price),
+        roomCount: ((t.rooms as Record<string, readonly string[]>)[v.code] ?? []).length,
       }));
       return {
         code: t.code,
@@ -113,6 +117,8 @@ export function defaultSiteData(): SiteData {
       { key: 'breakfast', title: 'Breakfast', description: 'An all-day West African dining concept.', nowOpen: false },
       { key: 'summer_hut', title: 'Summer Hut', description: 'An open-air sundowner lounge.', nowOpen: false },
     ],
+    // Seeded switched off (scripts/seed.ts); the hotel turns them on in Rates.
+    rateRules: [],
   };
 }
 
@@ -136,6 +142,7 @@ async function loadFromDatabase(): Promise<SiteData> {
     testimonialRows,
     galleryRows,
     comingRows,
+    ruleRows,
   ] = await Promise.all([
     d.select().from(s.settings),
     d.select().from(s.contentBlocks),
@@ -154,6 +161,7 @@ async function loadFromDatabase(): Promise<SiteData> {
     d.select().from(s.testimonials).where(eq(s.testimonials.status, 'live')).orderBy(asc(s.testimonials.position)).limit(1),
     d.select().from(s.galleryItems).where(eq(s.galleryItems.published, true)).orderBy(asc(s.galleryItems.position)),
     d.select().from(s.comingSoon),
+    d.select().from(s.rateRules).where(eq(s.rateRules.active, true)),
   ]);
 
   const content = { ...fallback.content };
@@ -168,7 +176,15 @@ async function loadFromDatabase(): Promise<SiteData> {
     rooms: types.map((t) => {
       const vs = variants
         .filter((v) => v.roomTypeId === t.id)
-        .map((v) => ({ code: v.code, displayCode: v.displayCode, name: v.name, note: v.note, price: v.pricePesewas, id: v.id }));
+        .map((v) => ({
+          code: v.code as VariantCode,
+          displayCode: v.displayCode,
+          name: v.name,
+          note: v.note,
+          price: v.pricePesewas,
+          roomCount: rooms.filter((r) => r.rateVariantId === v.id).length,
+          id: v.id,
+        }));
       return {
         code: t.code,
         name: t.name,
@@ -211,10 +227,23 @@ async function loadFromDatabase(): Promise<SiteData> {
     testimonial: testimonialRows[0] ? { quote: testimonialRows[0].quote, from: testimonialRows[0].attribution } : null,
     gallery: galleryRows.map((g) => ({ image: { id: g.imageId, alt: g.alt, concept: false }, category: g.category })),
     comingSoon: comingRows.map((c) => ({ key: c.key, title: c.title, description: c.description, nowOpen: c.nowOpen })),
+    rateRules: ruleRows.map((r) => ({
+      id: r.id,
+      name: r.name,
+      kind: r.kind,
+      from: r.monthDayFrom,
+      to: r.monthDayTo,
+      minNights: r.minNights,
+      appliesTo: r.appliesTo?.length ? (r.appliesTo as VariantCode[]) : 'all',
+      direction: r.direction,
+      unit: r.unit,
+      amount: r.amount,
+      active: r.active,
+    })),
   };
 }
 
-const cachedSiteData = unstable_cache(loadFromDatabase, ['site-data-v1'], { tags: [SITE_TAG], revalidate: 3600 });
+const cachedSiteData = unstable_cache(loadFromDatabase, ['site-data-v2'], { tags: [SITE_TAG], revalidate: 3600 });
 
 export async function getSiteData(): Promise<SiteData> {
   if (!process.env.DATABASE_URL) return defaultSiteData();

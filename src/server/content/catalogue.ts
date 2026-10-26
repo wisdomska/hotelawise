@@ -41,7 +41,7 @@ export const ROOM_TYPES = [
       'A-Wise customised linen',
     ],
     variants: [
-      { code: 'EXE', displayCode: 'EXE', name: 'Executive', price: 200 },
+      { code: 'EXE', displayCode: 'EXE', name: 'Executive', price: 200, note: 'The room as pictured' },
       { code: 'EXE_PLUS', displayCode: 'EXE+', name: 'Executive Plus', price: 250, note: 'More floor space, same upgraded bathroom' },
     ],
     rooms: { EXE: ['201', '202', '205'], EXE_PLUS: ['203', '204'] },

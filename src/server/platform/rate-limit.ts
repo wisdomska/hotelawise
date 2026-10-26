@@ -15,6 +15,7 @@ export const RULES = {
   bookingLookup: { limit: 10, windowSeconds: 600 },
   guestOtp: { limit: 5, windowSeconds: 600 },
   hold: { limit: 20, windowSeconds: 600 },
+  availability: { limit: 60, windowSeconds: 600 },
 } satisfies Record<string, Rule>;
 
 const memory = new Map<string, { count: number; resetAt: number }>();

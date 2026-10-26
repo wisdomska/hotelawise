@@ -82,6 +82,14 @@ export const SEED_CONTENT: Record<string, string> = {
     'Pick your dates, choose what you need, and reserve it like a room. Collect from No. 1 Wisepak Lane, and pay online now or when you pick up.',
   'pages.venueIntro':
     "Two spaces, quoted per event. Tell us the date and the headcount and we'll call back with a price, usually the same day.",
+  // One rule per line (room pages › House rules).
+  'rooms.houseRules': [
+    'Check-in from 2pm, check-out by 12 noon',
+    'Arrive any hour. The desk is staffed 24/7',
+    'No smoking indoors (porches are fine)',
+    'Quiet hours 10pm to 7am',
+    'Valid ID at check-in',
+  ].join('\n'),
   'rooms.blurb.STD':
     "Everything you need and nothing you'll pay extra for. A proper queen bed, cold AC, a hot shower and our own pressed linen. Most people book it for one night and stay three.",
   'rooms.blurb.EXE':
