@@ -7,4 +7,5 @@ interface CloudflareEnv {
   WORKER_SELF_REFERENCE: Fetcher;
   APP_ENV: 'development' | 'preview' | 'production';
   APP_URL: string;
+  TURNSTILE_SITE_KEY: string;
 }

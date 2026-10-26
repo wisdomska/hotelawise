@@ -38,4 +38,5 @@ jobs:
       # Migrations run here, before the new code goes live — never on page load.
       - run: pnpm db:migrate
       - run: pnpm cf:build
-      - run: pnpm exec wrangler deploy --env "$TARGET"
+      # Uploads the Worker, populates the KV page cache and creates the D1 tag table.
+      - run: pnpm exec opennextjs-cloudflare deploy --env "$TARGET"
