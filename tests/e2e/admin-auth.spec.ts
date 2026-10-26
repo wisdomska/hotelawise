@@ -7,8 +7,7 @@ test.describe.configure({ mode: 'serial' });
 const email = `esi+${Date.now()}@hotelawise.com`;
 let secret = '';
 
-test('first sign-in: new password, then TOTP enrolment, then the dashboard', async ({ page, browserName }) => {
-  test.skip(browserName !== 'chromium', 'account setup runs once');
+test('first sign-in: new password, then TOTP enrolment, then the dashboard', async ({ page }) => {
   await makeUser({ email, role: 'super_admin', password: 'temporary1' });
   await page.goto('/admin');
   await expect(page).toHaveURL(/\/admin\/login/);
@@ -36,8 +35,8 @@ test('first sign-in: new password, then TOTP enrolment, then the dashboard', asy
   await expect(page.getByRole('navigation', { name: 'Admin' }).getByRole('link')).toHaveCount(14);
 });
 
-test('later sign-ins ask for the TOTP code', async ({ page, browserName }) => {
-  test.skip(browserName !== 'chromium' || !secret, 'needs the enrolled account');
+test('later sign-ins ask for the TOTP code', async ({ page }) => {
+  test.skip(!secret, 'needs the enrolled account');
   await page.goto('/admin/login');
   await page.getByLabel('Email').fill(email);
   await page.getByLabel('Password').fill('wrong-password1');
@@ -54,8 +53,7 @@ test('later sign-ins ask for the TOTP code', async ({ page, browserName }) => {
   await expect(page.getByRole('heading', { name: /Good to see you/ })).toBeVisible();
 });
 
-test('staff see only their screens, and are refused a Super Admin URL', async ({ page, browserName }) => {
-  test.skip(browserName !== 'chromium', 'runs once');
+test('staff see only their screens, and are refused a Super Admin URL', async ({ page }) => {
   const staffEmail = `kojo+${Date.now()}@hotelawise.com`;
   await makeUser({ email: staffEmail, role: 'staff', password: 'temporary1' });
   await page.goto('/admin/login');
