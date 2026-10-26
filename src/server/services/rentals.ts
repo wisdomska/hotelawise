@@ -6,6 +6,7 @@ import { and, inArray, sql } from 'drizzle-orm';
 import { accraInstant, addDays, nightsBetween, type IsoDate } from '@/lib/dates';
 import * as schema from '@/server/db/schema';
 import type { AnyDb } from './holds';
+import { rowsOf } from '@/server/db/rows';
 import { nextRef } from './references';
 
 export class NotEnoughStockError extends Error {
@@ -42,7 +43,7 @@ export function rentalDays(starts: IsoDate, ends: IsoDate): number {
 
 /** Units of each item committed on each date of [from, to], from orders that still hold stock. */
 async function committedUnits(tx: AnyDb, itemIds: string[], from: IsoDate, to: IsoDate, now: Date) {
-  const rows = await tx.execute<{ item_id: string; day: string; qty: number }>(sql`
+  const rows = await tx.execute(sql`
     select l.item_id, d::date::text as day, sum(l.qty)::int as qty
       from ${schema.orderLines} l
       join ${schema.rentalOrders} o on o.id = l.order_id
@@ -53,7 +54,7 @@ async function committedUnits(tx: AnyDb, itemIds: string[], from: IsoDate, to: I
        and d::date between o.starts and o.ends + 1
      group by l.item_id, d`);
   const map = new Map<string, number>();
-  for (const r of rows.rows) map.set(`${r.item_id}|${r.day}`, r.qty);
+  for (const r of rowsOf<{ item_id: string; day: string; qty: number }>(rows)) map.set(`${r.item_id}|${r.day}`, r.qty);
   return map;
 }
 

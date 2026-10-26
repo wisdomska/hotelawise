@@ -6,6 +6,7 @@ import { and, eq, gt, inArray, isNotNull, sql } from 'drizzle-orm';
 import type { PgDatabase, PgQueryResultHKT } from 'drizzle-orm/pg-core';
 import { nightsBetween, type IsoDate } from '@/lib/dates';
 import * as schema from '@/server/db/schema';
+import { rowsOf } from '@/server/db/rows';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyDb = PgDatabase<PgQueryResultHKT, typeof schema, any>;
@@ -36,7 +37,7 @@ export async function expireLapsedHolds(tx: AnyDb, now: Date, range?: { checkIn:
   const overlap = range
     ? sql`and ${schema.roomAllocations.checkIn} < ${range.checkOut} and ${range.checkIn} < ${schema.roomAllocations.checkOut}`
     : sql``;
-  const expired = await tx.execute<{ booking_id: string }>(sql`
+  const expired = await tx.execute(sql`
     update ${schema.roomAllocations}
        set active = false
      where ${schema.roomAllocations.active}
@@ -44,7 +45,7 @@ export async function expireLapsedHolds(tx: AnyDb, now: Date, range?: { checkIn:
        and ${schema.roomAllocations.holdExpiresAt} <= ${now.toISOString()}
        ${overlap}
     returning booking_id`);
-  const ids = expired.rows.map((r) => r.booking_id);
+  const ids = rowsOf<{ booking_id: string }>(expired).map((r) => r.booking_id);
   if (ids.length) {
     await tx
       .update(schema.bookings)
@@ -56,7 +57,7 @@ export async function expireLapsedHolds(tx: AnyDb, now: Date, range?: { checkIn:
 
 /** Candidate rooms for a variant, in room-number order, skipping blackouts and rooms off sale. */
 async function candidateRooms(tx: AnyDb, rateVariantId: string, checkIn: IsoDate, checkOut: IsoDate, now: Date) {
-  const rows = await tx.execute<{ id: string }>(sql`
+  const rows = await tx.execute(sql`
     select r.id
       from ${schema.rooms} r
      where r.rate_variant_id = ${rateVariantId}
@@ -71,7 +72,7 @@ async function candidateRooms(tx: AnyDb, rateVariantId: string, checkIn: IsoDate
             and (a.hold_expires_at is null or a.hold_expires_at > ${now.toISOString()})
             and a.stay && daterange(${checkIn}::date, ${checkOut}::date, '[)'))
      order by r.number`);
-  return rows.rows.map((r) => r.id);
+  return rowsOf<{ id: string }>(rows).map((r) => r.id);
 }
 
 export type HoldInput = {

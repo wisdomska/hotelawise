@@ -2,6 +2,7 @@
 import { sql } from 'drizzle-orm';
 import { makeRef, type RefKind } from '@/lib/refs';
 import type { AnyDb } from './holds';
+import { rowsOf } from '@/server/db/rows';
 
 const SEQUENCE: Record<RefKind, string> = {
   booking: 'booking_ref_seq',
@@ -10,6 +11,6 @@ const SEQUENCE: Record<RefKind, string> = {
 };
 
 export async function nextRef(db: AnyDb, kind: RefKind, secret: string): Promise<string> {
-  const res = await db.execute<{ n: string }>(sql`select nextval(${SEQUENCE[kind]}::regclass)::text as n`);
-  return makeRef(kind, Number(res.rows[0]!.n), secret);
+  const res = await db.execute(sql`select nextval(${SEQUENCE[kind]}::regclass)::text as n`);
+  return makeRef(kind, Number(rowsOf<{ n: string }>(res)[0]!.n), secret);
 }
