@@ -8,6 +8,7 @@ import { formatGhs } from '@/lib/money';
 import { formatPhoneLocal } from '@/lib/phone';
 import { useAdmin } from '../context';
 import { DrawerFrame, DrawerLoading } from '../drawer';
+import { invoiceAction } from '../export';
 import type { Action } from '../ui';
 import { useBookingActions } from './use-booking-actions';
 
@@ -64,7 +65,7 @@ export function BookingDrawer({ spec }: { spec: { ref: string } }) {
         },
       ]}
       note={{ value: b.notes, save: (v) => saveBookingNote(b.ref, v) }}
-      actions={actions(b, true)}
+      actions={[...actions(b, true), invoiceAction('bookings', b.ref, b.paid >= b.total && b.total > 0)]}
     />
   );
 }

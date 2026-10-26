@@ -12,7 +12,8 @@ import { KpiGrid, PageHeader, Tabs, useTab, type TabDef } from '../page-parts';
 import { c, col, DataTable, type Row } from '../table';
 import type { Action } from '../ui';
 import { useAction } from '../use-action';
-import { download, useHref } from './use-href';
+import { useExportAction } from '../export';
+import { useHref } from './use-href';
 
 type Props = {
   today: IsoDate;
@@ -49,16 +50,8 @@ export function PaymentsScreen(p: Props) {
         ? openDrawer({ kind: 'rental', ref })
         : openDrawer({ kind: 'enquiry', ref });
 
-  const actions: Action[] = can('exports.download')
-    ? [
-        {
-          label: 'Export',
-          icon: 'download',
-          hint: 'Download transactions as CSV',
-          on: () => download(`/admin/payments/export?f=${p.filter}`),
-        },
-      ]
-    : [];
+  const exportAction = useExportAction();
+  const actions: Action[] = can('exports.download') ? [exportAction('transactions', `/admin/payments/export?f=${p.filter}`)] : [];
 
   const total = p.kpis.desk + p.kpis.online;
   return (

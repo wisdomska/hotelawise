@@ -1,14 +1,13 @@
 'use client';
 // Reports from Admin.dc.html: the last 30 days for rooms, rentals and staff,
-// with a CSV of the rows behind the open tab.
-import { exportReportAction } from '@/app/admin/(app)/reports/actions';
+// with the rows behind the open tab as Excel or CSV.
 import { formatGhs } from '@/lib/money';
 import type { StaffRow } from '@/server/admin/reports';
 import { ChartGrid, RankChart } from '../charts';
 import { useAdmin } from '../context';
+import { useExportAction } from '../export';
 import { KpiGrid, PageHeader, Tabs, useTab } from '../page-parts';
 import { c, col, DataTable } from '../table';
-import { useAction } from '../use-action';
 
 export type RoomsData = {
   occupancy: number;
@@ -34,36 +33,13 @@ export function ReportsScreen({
 }) {
   const { can } = useAdmin();
   const [t, setT] = useTab(TABS, 'Rooms');
-  const { run, busy } = useAction();
-  const exportCsv = async () => {
-    const r = await run(() => exportReportAction(t), { close: false });
-    if (!r.ok || !r.data) return;
-    const { csv, name } = r.data as { csv: string; name: string };
-    const url = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' }));
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = name;
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  };
+  const exportAction = useExportAction();
   return (
     <>
       <PageHeader
         title="Reports"
         sub="The last 30 days."
-        actions={
-          can('exports.download')
-            ? [
-                {
-                  label: busy ? 'Preparing…' : 'Export',
-                  icon: 'download',
-                  hint: 'Download as CSV',
-                  disabled: busy,
-                  on: () => void exportCsv(),
-                },
-              ]
-            : []
-        }
+        actions={can('exports.download') ? [exportAction(`the ${t.toLowerCase()} report`, `/admin/reports/export?tab=${t}`)] : []}
       />
       <Tabs list={TABS} cur={t} set={setT} label="Report" />
       {t === 'Rooms' && rooms && (

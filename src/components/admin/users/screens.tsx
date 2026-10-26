@@ -10,6 +10,7 @@ import { Select } from '@/components/ui/select';
 import type { ActionResult } from '@/lib/admin/result';
 import type { Grant } from '@/server/auth/permissions';
 import { useAdmin } from '../context';
+import { useExportAction } from '../export';
 import { ConfirmModal, FieldGrid, ModalFrame, Note, SelectField, TextField } from '../modal';
 import { PageHeader, Switch, Tabs, useTab } from '../page-parts';
 import { c, col, DataTable, type Row } from '../table';
@@ -428,7 +429,7 @@ export function AuditScreen(p: {
 }) {
   const router = useRouter();
   const path = usePathname();
-  const { toast } = useAdmin();
+  const exportAction = useExportAction();
   const go = (f: Filters) => {
     const q = auditQuery(f);
     router.replace(q ? `${path}?${q}` : path, { scroll: false });
@@ -443,19 +444,10 @@ export function AuditScreen(p: {
         actions={
           p.canExport
             ? [
-                {
-                  label: 'Export',
-                  icon: 'download',
-                  hint: 'Download as CSV',
-                  on: () => {
-                    const q = auditQuery(p.filters);
-                    const a = document.createElement('a');
-                    a.href = `/admin/audit/export${q ? `?${q}` : ''}`;
-                    a.download = '';
-                    a.click();
-                    toast('Download started.', p.total > 5000 ? 'The newest 5,000 entries.' : `${p.total} entries`);
-                  },
-                },
+                exportAction(
+                  p.total > 5000 ? 'the newest 5,000 audit entries' : 'the audit log',
+                  `/admin/audit/export${auditQuery(p.filters) ? `?${auditQuery(p.filters)}` : ''}`,
+                ),
               ]
             : []
         }

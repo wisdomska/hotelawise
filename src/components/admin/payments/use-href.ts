@@ -15,12 +15,4 @@ export function useHref() {
   };
 }
 
-/** Starts a file download (CSV exports) without leaving the screen. */
-export function download(url: string) {
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = '';
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-}
+export { download } from '../export';

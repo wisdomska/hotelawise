@@ -135,6 +135,10 @@ export default async function RentConfirmationPage({
             <Icon name="googlemaps" size={16} />
             Directions
           </a>
+          <a href={`/api/invoices/${o.token}`} download data-mi-btn="ghost" style={{ ...btn, border: '1px solid #000063' }}>
+            <Icon name="download" size={16} />
+            {o.paid >= o.total && o.total > 0 ? 'Download receipt' : 'Download invoice'}
+          </a>
           <a href="/rent" data-mi-btn="ghost" style={{ ...btn, border: '1px solid #000063' }}>
             Start another order
           </a>

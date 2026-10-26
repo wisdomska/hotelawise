@@ -3,8 +3,8 @@ import { todayInAccra } from '@/lib/dates';
 import { allBookingRows } from '@/server/admin/bookings';
 import { csvDownload } from '@/server/admin/csv-response';
 
-export async function GET() {
-  return csvDownload(['bookings.view', 'exports.download'], 'Bookings', `bookings-${todayInAccra()}.csv`, async (d) => [
+export async function GET(req: Request) {
+  return csvDownload(req, ['bookings.view', 'exports.download'], 'Bookings', `hotel-a-wise-bookings-${todayInAccra()}`, async (d) => [
     ['Ref', 'Guest', 'Phone', 'Room type', 'Room', 'Check-in', 'Check-out', 'Nights', 'Status', 'Source', 'Total (GHS)', 'Paid (GHS)'],
     ...(await allBookingRows(d)).map((b) => [
       b.ref,

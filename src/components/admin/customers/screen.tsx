@@ -11,7 +11,8 @@ import type { CustomerRow, Subscriber } from '@/server/admin/customers';
 import { useAdmin } from '../context';
 import { ConfirmModal } from '../modal';
 import { PageHeader, Tabs, useTab, type TabDef } from '../page-parts';
-import { download, useHref } from '../payments/use-href';
+import { useExportAction } from '../export';
+import { useHref } from '../payments/use-href';
 import { c, col, DataTable, type Row } from '../table';
 import type { Action } from '../ui';
 
@@ -27,9 +28,10 @@ export function CustomersScreen(p: Props) {
   const TABS: TabDef[] = ['Customers', ['Newsletter', p.subscribers.total]];
   const [tab, setTab] = useTab(TABS, 'Customers');
   const canRemove = can('settings.edit');
+  const exportAction = useExportAction();
   const actions: Action[] =
     tab === 'Newsletter' && can('exports.download') && p.subscribers.total > 0
-      ? [{ label: 'Export', icon: 'download', hint: 'Download subscribers as CSV', on: () => download('/admin/customers/export') }]
+      ? [exportAction('newsletter subscribers', '/admin/customers/export')]
       : [];
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>

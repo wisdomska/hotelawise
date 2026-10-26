@@ -129,6 +129,10 @@ export default async function ConfirmationPage({
             <Icon name="googlemaps" size={16} />
             Directions
           </a>
+          <a href={`/api/invoices/${b.token}`} download data-mi-btn="ghost" style={{ ...btn, border: '1px solid #000063' }}>
+            <Icon name="download" size={16} />
+            {full ? 'Download receipt' : 'Download invoice'}
+          </a>
           <a href={`/manage?ref=${encodeURIComponent(b.ref)}`} data-mi-btn="ghost" style={{ ...btn, border: '1px solid rgba(0,0,99,0.3)' }}>
             Manage booking
           </a>

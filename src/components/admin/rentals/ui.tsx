@@ -25,6 +25,7 @@ import { formatPhoneLocal, telHref, whatsappHref } from '@/lib/phone';
 import { BackModal } from '../bookings/modals';
 import { useAdmin } from '../context';
 import { DrawerFrame, DrawerLoading } from '../drawer';
+import { invoiceAction } from '../export';
 import { ConfirmModal, FieldGrid, Lines, ModalFrame, Note, PasswordField, SelectField, StepperRows, TextField } from '../modal';
 import type { Action } from '../ui';
 import { useAction } from '../use-action';
@@ -346,7 +347,7 @@ export function OrderDrawer({ spec }: { spec: { ref: string } }) {
         },
       ]}
       note={{ value: o.notes, save: (v) => saveOrderNote(o.ref, v) }}
-      actions={actions(o, true)}
+      actions={[...actions(o, true), invoiceAction('rentals', o.ref, o.paid >= o.total && o.total > 0)]}
     />
   );
 }

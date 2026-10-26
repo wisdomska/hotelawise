@@ -7,6 +7,7 @@ import { BOOKING_FILTERS, BOOKING_STATUS, type BookingStatus } from '@/lib/admin
 import { addDays, type IsoDate } from '@/lib/dates';
 import type { BookingRow } from '@/server/admin/bookings';
 import { useAdmin } from '../context';
+import { useExportAction } from '../export';
 import { PageHeader, Tabs, useTab } from '../page-parts';
 import { Timeline, type TlBar } from '../timeline';
 import type { Action, Tone } from '../ui';
@@ -34,6 +35,7 @@ const TONE: Partial<Record<BookingStatus, Tone | 'green'>> = {
 
 export function BookingsView(p: Props) {
   const { can, openModal, openDrawer, toast, refresh } = useAdmin();
+  const exportAction = useExportAction();
   const [tab, setTab] = useTab(['List', 'Calendar'], 'List');
   const router = useRouter();
   const path = usePathname();
@@ -56,8 +58,7 @@ export function BookingsView(p: Props) {
       hint: 'Phone, WhatsApp or walk-in',
       on: () => openModal(<QuickBooking />),
     });
-  if (p.canExport)
-    actions.push({ label: 'Export', icon: 'download', hint: 'Download all bookings as CSV', on: () => download('/admin/bookings/export') });
+  if (p.canExport) actions.push(exportAction('bookings', '/admin/bookings/export'));
 
   const all = p.list ? Object.values(p.list.counts).reduce((t, n) => t + (n ?? 0), 0) : 0;
   const chips = [
@@ -125,13 +126,6 @@ export function BookingsView(p: Props) {
       {tab === 'List' && !p.list && <Loading />}
     </>
   );
-}
-
-function download(url: string) {
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = '';
-  a.click();
 }
 
 function Loading() {
