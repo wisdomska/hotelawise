@@ -1,6 +1,6 @@
 {
-  "id": "7cc22633-15da-426e-ba41-1456ae4d0de4",
-  "prevId": "87efa33f-5da3-4158-ad05-a0be166d597f",
+  "id": "d8411e99-46d7-41b3-ab3d-cedaed5ad9f3",
+  "prevId": "9dd3ff24-dbc1-4d9d-866d-5999eba49804",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -3640,6 +3640,26 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "verified": {
+          "name": "verified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "failed_verification_count": {
+          "name": "failed_verification_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "locked_until": {
+          "name": "locked_until",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},

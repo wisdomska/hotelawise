@@ -103,6 +103,9 @@ export const twoFactor = pgTable('two_factor', {
     .references(() => user.id, { onDelete: 'cascade' }),
   secret: text('secret').notNull(),
   backupCodes: text('backup_codes').notNull(),
+  verified: boolean('verified').default(true),
+  failedVerificationCount: integer('failed_verification_count').default(0),
+  lockedUntil: timestamp('locked_until', { withTimezone: true }),
 });
 
 export const grantEnum = pgEnum('grant_key', ['content', 'reports', 'inventoryEdit', 'venueQuotes', 'exports']);
