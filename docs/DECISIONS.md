@@ -265,6 +265,23 @@ GitHub code scanning (CodeQL) on a private repository needs GitHub Advanced Secu
 
 If the repository is ever made public, CodeQL can come back at no cost.
 
+## D-33 No WhatsApp float or header clock (prototype)
+
+**Conflict:** The Handoff and the spec list a floating WhatsApp button, and a live Accra clock in the nav. The final prototype removed both.
+
+**Ruling:** Follow the prototype. WhatsApp and phone links stay where the prototype puts them:
+
+- Getting here
+- Contact
+- the room booking card
+- checkout
+
+## D-34 First-load knot loader
+
+The prototype shows a full-screen Nyansapo loader ("Turning the key…") on first load.
+
+**Ruling:** Keep it, but only on the first page view of a browser session. It is CSS-only and fades out by 650 ms, so it never blocks rendering or delays the largest paint for the Lighthouse budget.
+
 ## D-27 Repository (owner ruling)
 
 **Conflict:** The brief asks for a new repo, `hotel-a-wise`.

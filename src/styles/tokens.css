@@ -67,6 +67,20 @@
   --navgap: 10px;
   --tap-min: 44px;
 
+  /* Layout switches from Website.dc.html (m = <1024px, ph = <640px). */
+  --hgap: 20px;
+  --hmb: 28px;
+  --bar-mt: 0px;
+  --hero-pt: 120px;
+  --hero-pb: 20px;
+  --hero-jc: space-between;
+  --c4: repeat(4, 80%);
+  --c3: 1fr;
+  --c55: 1fr;
+  --ev-h: 320px;
+  --fac-t: 18px;
+  --tq-ar: 16/10;
+
   --grade: saturate(0.92) contrast(1.04);
   --grade-night: saturate(0.8) brightness(0.72) contrast(1.1) sepia(0.12);
 
@@ -88,6 +102,9 @@
 
 @media (min-width: 640px) {
   :root {
+    --c4: repeat(4, 44%);
+    --c3: repeat(auto-fit, minmax(220px, 1fr));
+    --ev-h: 460px;
     --pad: 32px;
     --pad-checkout: 32px;
     --sy: 104px;
@@ -101,6 +118,18 @@
 
 @media (min-width: 1024px) {
   :root {
+    --hgap: 32px;
+    --hmb: 48px;
+    --bar-mt: 36px;
+    --hero-pt: 128px;
+    --hero-pb: 32px;
+    --hero-jc: flex-end;
+    --c4: repeat(4, minmax(0, 1fr));
+    --c3: repeat(3, minmax(0, 1fr));
+    --c55: minmax(0, 5fr) minmax(0, 6fr);
+    --ev-h: 72vh;
+    --fac-t: 22px;
+    --tq-ar: 3/4;
     --pad: 56px;
     --pad-checkout: 48px;
     --sy: 136px;

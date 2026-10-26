@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { FIRST_VISIT_SCRIPT } from '@/components/site/knot-loader';
 import { cormorant, geist, geistMono } from './fonts';
 import './globals.css';
 
@@ -21,7 +22,10 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-GB" className={`${cormorant.variable} ${geist.variable} ${geistMono.variable}`}>
+    <html lang="en-GB" className={`${cormorant.variable} ${geist.variable} ${geistMono.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: FIRST_VISIT_SCRIPT }} />
+      </head>
       <body>{children}</body>
     </html>
   );

@@ -150,3 +150,20 @@ describe('database guards', () => {
     ).rejects.toThrow();
   });
 });
+
+describe('free rooms tonight', () => {
+  it('counts rooms per type, minus live allocations, maintenance and blackouts', async () => {
+    const { freeRoomsByType } = await import('@/server/services/tonight');
+    const night = '2027-09-01';
+    expect(await freeRoomsByType(h.db, night, new Date())).toEqual({ VIP: 3 });
+    await hold(night, '2027-09-02');
+    expect(await freeRoomsByType(h.db, night, new Date())).toEqual({ VIP: 2 });
+    // The hold lapses after 15 minutes: the room counts as free again.
+    expect(await freeRoomsByType(h.db, night, new Date(Date.now() + 16 * 60_000))).toEqual({ VIP: 3 });
+    await h.db.update(schema.rooms).set({ status: 'out_of_order' }).where(eq(schema.rooms.number, '208'));
+    expect(await freeRoomsByType(h.db, night, new Date())).toEqual({ VIP: 1 });
+    await h.db.insert(schema.blackoutDates).values({ starts: night, ends: night, reason: 'Buy-out' });
+    expect(await freeRoomsByType(h.db, night, new Date())).toEqual({});
+    await h.db.update(schema.rooms).set({ status: 'available' }).where(eq(schema.rooms.number, '208'));
+  });
+});
