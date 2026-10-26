@@ -7,7 +7,7 @@ import { and, eq } from 'drizzle-orm';
 import * as schema from '@/server/db/schema';
 import type { AnyDb } from '@/server/services/holds';
 import { assertCan, ForbiddenError, type Actor, type Capability, type Grant } from './permissions';
-import { verifyPassword } from './password';
+import { createPasswordHasher } from './password';
 
 export type ActorRecord = Actor & {
   name: string;
@@ -75,5 +75,5 @@ export async function confirmPassword(db: AnyDb, userId: string, password: strin
     .select({ hash: schema.account.password })
     .from(schema.account)
     .where(and(eq(schema.account.userId, userId), eq(schema.account.providerId, 'credential')));
-  if (!acc?.hash || !(await verifyPassword({ hash: acc.hash, password }))) throw new StepUpFailedError();
+  if (!acc?.hash || !(await createPasswordHasher(db).verify({ hash: acc.hash, password }))) throw new StepUpFailedError();
 }

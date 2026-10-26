@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { hashPassword, passwordProblem, verifyPassword } from '@/server/auth/password';
+import { passwordProblem } from '@/server/auth/password';
 import { authorize, pendingSetup, SetupRequiredError, type ActorRecord } from '@/server/auth/actor';
 import { ForbiddenError } from '@/server/auth/permissions';
 import { diff } from '@/server/services/audit';
@@ -15,21 +15,13 @@ const base: ActorRecord = {
   mustChangePassword: false,
 };
 
-describe('password hashing', () => {
-  it('hashes with a random salt and verifies', async () => {
-    const a = await hashPassword('kente2026');
-    const b = await hashPassword('kente2026');
-    expect(a).not.toBe(b);
-    expect(a).toMatch(/^[0-9a-f]{32}:[0-9a-f]{128}$/);
-    expect(await verifyPassword({ hash: a, password: 'kente2026' })).toBe(true);
-    expect(await verifyPassword({ hash: a, password: 'kente2027' })).toBe(false);
-    expect(await verifyPassword({ hash: 'garbage', password: 'x' })).toBe(false);
-  });
+describe('password rule', () => {
   it('enforces the Handoff password rule', () => {
     expect(passwordProblem('short1')).toMatch(/8 characters/);
     expect(passwordProblem('nonumbers')).toMatch(/number/);
     expect(passwordProblem('12345678')).toMatch(/letters/);
-    expect(passwordProblem('a1'.repeat(70))).toMatch(/128/);
+    expect(passwordProblem('a1'.repeat(37))).toMatch(/72/);
+    expect(passwordProblem('a1'.repeat(36))).toBeNull();
     expect(passwordProblem('kente2026')).toBeNull();
   });
 });

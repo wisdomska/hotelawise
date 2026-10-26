@@ -221,6 +221,40 @@ The prototype's palette and overlay motion is kept as designed. Durations stay w
 
 All tokens are copied from `Admin.dc.html`. Dark-mode visual tests compare against the reference screenshots in full.
 
+## D-28 Password hashing runs in Postgres (owner ruling: everything on free plans)
+
+**Measured:** scrypt on the Worker costs ~96 ms of CPU per password check. Workers Free allows 10 ms per request. The owner won't pay for Workers for now, and weakening the hash is not allowed.
+
+**Ruling:** passwords are hashed with **bcrypt at cost 12, computed by Postgres (`pgcrypto`)**.
+
+- Time a Worker spends waiting on the database doesn't count as CPU. A password check now costs the Worker ~1.4 ms; the hash itself takes ~250 ms on the database.
+- bcrypt cost 12 is above the OWASP minimum (cost 10), so strength is kept.
+- bcrypt reads only 72 bytes, so passwords longer than 72 bytes are refused rather than silently cut.
+- The password travels to Neon over TLS, as every query does. Statement logging stays off.
+
+## D-29 Page cache on Workers KV instead of R2
+
+R2 needs a payment method on file, even on its free tier. The ISR cache uses Workers KV instead (free, no card); on-demand revalidation tags stay on D1.
+
+The free KV write allowance (1,000 a day) is far above what a 16-room hotel's content edits produce.
+
+## D-30 Preview site behind a password instead of Cloudflare Access
+
+Cloudflare Zero Trust (Access) asks for a payment method at sign-up. `preview.hotelawise.com` is instead protected by HTTP Basic auth in `src/proxy.ts`:
+
+- Any username; the password is `PREVIEW_PASSWORD`.
+- Fails closed if no password is set.
+- Sends `noindex` on every response.
+
+The Paystack webhook and `/api/health` stay reachable.
+
+## D-31 Workers Free bundle limit
+
+The compressed Worker must stay under 3 MiB; it is 2,232 KiB after milestone 1. CI fails above the limit.
+
+- Admin-only libraries load with `dynamic()`.
+- If the full app outgrows it, `/admin` moves to its own Worker on `admin.hotelawise.com`, which is also free.
+
 ## D-27 Repository (owner ruling)
 
 **Conflict:** The brief asks for a new repo, `hotel-a-wise`.

@@ -5,6 +5,7 @@ import { createAuth } from '@/server/auth/auth';
 import { createUser } from '@/server/auth/users';
 import { confirmPassword, loadActor, StepUpFailedError } from '@/server/auth/actor';
 import { audit } from '@/server/services/audit';
+import { createPasswordHasher } from '@/server/auth/password';
 import { freshDb } from './db';
 
 let h: Awaited<ReturnType<typeof freshDb>>;
@@ -24,6 +25,20 @@ const auth = () =>
     sendResetCode: async (_e, code) => void codes.push(code),
     onSignInAttempt: async (e) => void attempts.push(e.success),
   });
+
+describe('password hashing (bcrypt in Postgres)', () => {
+  it('hashes with a random salt at cost 12 and verifies', async () => {
+    const hasher = createPasswordHasher(h.db);
+    const a = await hasher.hash('kente2026');
+    const b = await hasher.hash('kente2026');
+    expect(a).not.toBe(b);
+    expect(a).toMatch(/^\$2a\$12\$/);
+    expect(await hasher.verify({ hash: a, password: 'kente2026' })).toBe(true);
+    expect(await hasher.verify({ hash: a, password: 'kente2027' })).toBe(false);
+    expect(await hasher.verify({ hash: 'garbage', password: 'x' })).toBe(false);
+    expect(await hasher.verify({ hash: a, password: "x' or '1'='1" })).toBe(false);
+  });
+});
 
 describe('admin sign-in', () => {
   it('signs in with the right password, rejects the wrong one, and records both', async () => {

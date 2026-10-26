@@ -11,3 +11,6 @@ UPSTASH_REDIS_REST_URL=
 UPSTASH_REDIS_REST_TOKEN=
 TURNSTILE_SECRET_KEY=
 SENTRY_DSN=
+
+# Password for the preview site (any username). Only used when APP_ENV=preview.
+PREVIEW_PASSWORD=

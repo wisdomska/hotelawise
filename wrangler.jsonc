@@ -9,7 +9,7 @@
   "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
   "observability": { "enabled": true },
   "triggers": { "crons": ["*/15 * * * *", "0 7 * * *", "0 2 * * *"] },
-  "r2_buckets": [{ "binding": "NEXT_INC_CACHE_R2_BUCKET", "bucket_name": "hotel-a-wise-cache-dev" }],
+  "kv_namespaces": [{ "binding": "NEXT_INC_CACHE_KV", "id": "00000000000000000000000000000000" }],
   "d1_databases": [
     { "binding": "NEXT_TAG_CACHE_D1", "database_name": "hotel-a-wise-tags-dev", "database_id": "00000000-0000-0000-0000-000000000000" },
   ],
@@ -23,7 +23,7 @@
       "name": "hotel-a-wise-preview",
       "routes": [{ "pattern": "preview.hotelawise.com", "custom_domain": true }],
       "triggers": { "crons": ["*/15 * * * *", "0 7 * * *", "0 2 * * *"] },
-      "r2_buckets": [{ "binding": "NEXT_INC_CACHE_R2_BUCKET", "bucket_name": "hotel-a-wise-cache-preview" }],
+      "kv_namespaces": [{ "binding": "NEXT_INC_CACHE_KV", "id": "00000000000000000000000000000000" }],
       // database_id is filled in once the D1 database exists in the hotel's Cloudflare account (RUNBOOK).
       "d1_databases": [
         {
@@ -43,7 +43,7 @@
         { "pattern": "www.hotelawise.com", "custom_domain": true },
       ],
       "triggers": { "crons": ["*/15 * * * *", "0 7 * * *", "0 2 * * *"] },
-      "r2_buckets": [{ "binding": "NEXT_INC_CACHE_R2_BUCKET", "bucket_name": "hotel-a-wise-cache" }],
+      "kv_namespaces": [{ "binding": "NEXT_INC_CACHE_KV", "id": "00000000000000000000000000000000" }],
       "d1_databases": [
         { "binding": "NEXT_TAG_CACHE_D1", "database_name": "hotel-a-wise-tags", "database_id": "00000000-0000-0000-0000-000000000000" },
       ],

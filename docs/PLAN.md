@@ -47,7 +47,12 @@ Source-of-truth order (owner ruling, D-00): **rendered prototypes** → `Handoff
 | **10 ms CPU / request**           | SSR of dynamic admin pages, and scrypt on sign-in and on password re-prompts        | Public pages are cached (ISR + tags), so they're cheap. Sign-in will exceed 10 ms. I won't weaken hashing; I'll report the measured number in M1                                                                                         |
 | R2 needs a payment method on file | Incremental cache                                                                   | Usage stays well inside R2's free 10 GB. If you'd rather not add a card, KV is the fallback                                                                                                                                              |
 
-**My expectation:** production will need **Workers Paid ($5/month)**, for CPU on sign-in and probably for bundle size. I'll confirm with numbers at the end of M1 before asking you to upgrade.
+**Outcome (owner ruling, D-28 to D-31):** everything runs on free plans, with no card needed anywhere:
+
+- Password hashing moved to Postgres (Worker CPU per check ~1.4 ms).
+- The page cache uses KV instead of R2.
+- The preview site uses a password gate instead of Cloudflare Access.
+- CI holds the Worker under 3 MiB.
 
 ---
 
@@ -56,7 +61,7 @@ Source-of-truth order (owner ruling, D-00): **rendered prototypes** → `Handoff
 - Repo: **`wisdomska/hotelawise`** (private). You chose to use it in place of a new `hotel-a-wise` repo (D-27).
 - Branches:
   - `main` is production and deploys to `hotelawise.com`.
-  - `preview` is staging and deploys to `preview.hotelawise.com`, behind Cloudflare Access.
+  - `preview` is staging and deploys to `preview.hotelawise.com`, behind a password gate (D-30).
   - Feature work goes on `feat/*`, `fix/*` and `chore/*`, with a PR into `preview`.
   - Releases are a PR from `preview` into `main`.
 - **Protection on `main` and `preview`:** PR only, required checks, linear history, no force-push, CODEOWNERS review (you). You'll need to apply these rules in GitHub settings, because this session can't change repository settings. I'll give you the exact clicks, or a `gh api` script you can run.
@@ -85,7 +90,7 @@ Separate workflows:
 
 Secrets live in GitHub Actions environments (`preview`, `production`):
 
-- `CLOUDFLARE_API_TOKEN`, scoped to Workers Scripts:Edit, Workers KV/R2/D1:Edit and Account Settings:Read for one account
+- `CLOUDFLARE_API_TOKEN`, scoped to Workers Scripts:Edit, Workers KV Storage:Edit, D1:Edit and Account Settings:Read for one account
 - `CLOUDFLARE_ACCOUNT_ID`
 - `DATABASE_URL_MIGRATE`
 
@@ -304,16 +309,16 @@ Each milestone ends with a short summary, the preview URL, test results and bloc
 
 ## 8. What I need from you (asked for at the milestone that needs it)
 
-| When | Item                                                                                                                                                                                                                                                                                                                           |
-| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Now  | ✅ Git identity (done). ✅ Repo choice (done). **Approval of this plan and the questions in §10.**                                                                                                                                                                                                                             |
-| M1   | **Cloudflare:** account ID + a _new_ API token (the one pasted in chat must be revoked, see the note below). Add it as GitHub Actions secret `CLOUDFLARE_API_TOKEN` yourself, or put it in this environment's secrets so it never appears in chat. Also confirm R2 (needs a payment method on file) or accept the KV fallback. |
-| M1   | **Neon:** a project in region `aws-eu-central-1` (Frankfurt, the closest to Accra on Neon), plus connection strings for `main` and `preview`.                                                                                                                                                                                  |
-| M1   | **Domain:** registrar access for `hotelawise.com`. Before any nameserver change, I'll export the current DNS (MX for `info@`) and show it to you for approval.                                                                                                                                                                 |
-| M1   | **Cloudinary:** cloud name + API key/secret. **Sentry:** DSN. **Upstash:** REST URL/token (×2 envs). **Turnstile:** site + secret key (×2).                                                                                                                                                                                    |
-| M1   | **GitHub settings:** apply branch protection (I'll provide the script), and add the Actions secrets.                                                                                                                                                                                                                           |
-| M3   | **Paystack** test keys (public + secret). **Resend** API key + domain verification.                                                                                                                                                                                                                                            |
-| M7   | Paystack **live** keys (after business verification). Optional: Arkesel/Hubtel key + registered sender ID. A decision on Workers Paid ($5/month).                                                                                                                                                                              |
+| When | Item                                                                                                                                                                                                                                                                                |
+| ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Now  | ✅ Git identity (done). ✅ Repo choice (done). **Approval of this plan and the questions in §10.**                                                                                                                                                                                  |
+| M1   | **Cloudflare:** account ID + a _new_ API token (the one pasted in chat must be revoked, see the note below). Add it as GitHub Actions secret `CLOUDFLARE_API_TOKEN` yourself, or put it in this environment's secrets so it never appears in chat. No payment method needed (D-29). |
+| M1   | **Neon:** a project in region `aws-eu-central-1` (Frankfurt, the closest to Accra on Neon), plus connection strings for `main` and `preview`.                                                                                                                                       |
+| M1   | **Domain:** registrar access for `hotelawise.com`. Before any nameserver change, I'll export the current DNS (MX for `info@`) and show it to you for approval.                                                                                                                      |
+| M1   | **Cloudinary:** cloud name + API key/secret. **Sentry:** DSN. **Upstash:** REST URL/token (×2 envs). **Turnstile:** site + secret key (×2).                                                                                                                                         |
+| M1   | **GitHub settings:** apply branch protection (I'll provide the script), and add the Actions secrets.                                                                                                                                                                                |
+| M3   | **Paystack** test keys (public + secret). **Resend** API key + domain verification.                                                                                                                                                                                                 |
+| M7   | Paystack **live** keys (after business verification). Optional: Arkesel/Hubtel key + registered sender ID.                                                                                                                                                                          |
 
 **Security notice:** the GitHub PAT and Cloudflare token pasted into this conversation should be treated as exposed. Please **revoke both now** and create fresh ones.
 
@@ -326,7 +331,7 @@ Each milestone ends with a short summary, the preview URL, test results and bloc
 - Neon: 0.5 GB storage per project.
 - Upstash: 500k commands/month.
 - Sentry: 5k errors/month.
-- Cloudflare Access: free up to 50 users.
+- Workers KV: 1,000 writes a day (free).
 
 ---
 
@@ -363,7 +368,7 @@ Each milestone ends with a short summary, the preview URL, test results and bloc
 
 Q1–Q3 (font, hero headline, rental payment) are settled by the prototype-first ruling.
 
-- **Q4 Workers Paid ($5/month):** OK to switch if the M1 measurements show sign-in or bundle size over the free limits? (default: I stop and ask with numbers)
+- **Q4 Workers Paid:** settled. The owner stays on free plans (D-28 to D-31).
 
 ## 11. Confirm with the hotel (all editable in Settings; seeded as below)
 

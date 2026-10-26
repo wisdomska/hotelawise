@@ -9,7 +9,7 @@ import { nextCookies } from 'better-auth/next-js';
 import { emailOTP, twoFactor } from 'better-auth/plugins';
 import * as schema from '@/server/db/schema';
 import type { AnyDb } from '@/server/services/holds';
-import { hashPassword, passwordProblem, verifyPassword } from './password';
+import { createPasswordHasher, MAX_PASSWORD_BYTES, passwordProblem } from './password';
 
 export const IDLE_TIMEOUT_SECONDS = 30 * 60;
 
@@ -45,8 +45,8 @@ export function createAuth(deps: AuthDeps) {
       enabled: true,
       disableSignUp: true, // staff are invited from Users & permissions
       minPasswordLength: 8,
-      maxPasswordLength: 128,
-      password: { hash: hashPassword, verify: verifyPassword },
+      maxPasswordLength: MAX_PASSWORD_BYTES,
+      password: createPasswordHasher(deps.db),
       revokeSessionsOnPasswordReset: true,
     },
     user: {

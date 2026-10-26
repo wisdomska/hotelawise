@@ -8,7 +8,7 @@ export default defineConfig({
     environment: 'node',
     coverage: {
       provider: 'v8',
-      include: ['src/lib/**', 'src/server/services/**', 'src/server/auth/permissions.ts'],
+      include: ['src/lib/**', 'src/server/services/**', 'src/server/auth/permissions.ts', 'src/server/platform/preview-gate.ts'],
       exclude: ['src/lib/cloudinary-loader.ts'],
       thresholds: { lines: 90, branches: 90, functions: 90, statements: 90 },
     },

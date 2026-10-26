@@ -3,7 +3,7 @@
 import { randomUUID } from 'node:crypto';
 import * as schema from '@/server/db/schema';
 import type { AnyDb } from '@/server/services/holds';
-import { hashPassword, passwordProblem } from './password';
+import { createPasswordHasher, passwordProblem } from './password';
 import type { Grant, Role } from './permissions';
 
 export type NewUser = {
@@ -20,7 +20,7 @@ export async function createUser(db: AnyDb, input: NewUser): Promise<string> {
   const email = input.email.trim().toLowerCase();
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new RangeError('Enter a valid email address.');
   const id = randomUUID();
-  const hash = await hashPassword(input.temporaryPassword);
+  const hash = await createPasswordHasher(db).hash(input.temporaryPassword);
   await db.transaction(async (tx) => {
     await tx
       .insert(schema.user)

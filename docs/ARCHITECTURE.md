@@ -7,7 +7,7 @@ How the system is built. For what is being built and why, see [PLAN.md](./PLAN.m
 ```
 Browser ──► Cloudflare Worker (OpenNext: Next.js 16 App Router)
               ├─ static assets (Workers Assets)
-              ├─ ISR cache: R2 · tags: D1 · revalidation queue: Durable Object
+              ├─ ISR cache: KV · tags: D1 · revalidation queue: Durable Object
               ├─ Neon Postgres: HTTP driver for reads, WebSocket Pool for transactions
               ├─ Paystack · Resend · Cloudinary · Upstash · Turnstile · Sentry
               └─ scheduled(): Cron Triggers (*/15, daily 07:00, daily 02:00 Accra)
@@ -88,7 +88,7 @@ Unpaid pay-at-pickup orders stop holding stock at 10:00 Accra time on pickup day
 
 - Better Auth handles email and password, TOTP two-factor and emailed 6-digit reset codes (10-minute expiry).
 - Sign-up is disabled; staff are invited.
-- Passwords use scrypt (N=16384, r=16, p=1) through `node:crypto`, with a constant-time compare (`auth/password.ts`).
+- Passwords use bcrypt at cost 12, computed in Postgres with `pgcrypto`, so the hash costs the Worker almost no CPU (`auth/password.ts`, D-28).
 
 **Session**
 
@@ -122,9 +122,14 @@ CI uses a throwaway Postgres container, not a Neon branch. It is free, needs no 
 
 ## Measurements (milestone 1)
 
-| What                                | Result                                 | Limit (Workers Free) |
-| ----------------------------------- | -------------------------------------- | -------------------- |
-| Worker bundle, compressed           | 2,026 KiB (shell, auth, schema)        | 3,072 KiB            |
-| Password check (scrypt verify), CPU | ~96 ms median (Node 22, native scrypt) | 10 ms per request    |
+| What                                                   | Result                                               | Limit (Workers Free) |
+| ------------------------------------------------------ | ---------------------------------------------------- | -------------------- |
+| Worker bundle, compressed                              | 2,232 KiB (shell, auth, schema, preview gate)        | 3,072 KiB            |
+| Password check on the Worker, CPU                      | ~1.4 ms (bcrypt runs in Postgres; ~250 ms wall time) | 10 ms per request    |
+| Password check with scrypt on the Worker (before D-28) | ~96 ms                                               | 10 ms per request    |
 
-Sign-in, the password re-prompt on money actions, and TOTP enrolment each run one scrypt verify. **They exceed the Free plan's CPU limit about tenfold, so production needs Workers Paid** (10 MiB bundle, 30 s default CPU). Public pages are cached and are not affected. Both numbers will be re-measured on the deployed preview Worker and recorded in `QA-REPORT.md`.
+Everything fits Workers Free. CPU per route is re-measured on the deployed preview Worker and recorded in `QA-REPORT.md`.
+
+## Preview protection
+
+`src/proxy.ts` asks for a password (`PREVIEW_PASSWORD`, Basic auth) on every preview request except the Paystack webhook and `/api/health`, and adds `noindex` on every non-production response (D-30).

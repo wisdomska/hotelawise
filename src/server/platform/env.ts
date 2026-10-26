@@ -20,6 +20,7 @@ const schema = z.object({
   UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
   TURNSTILE_SECRET_KEY: z.string().optional(),
   SENTRY_DSN: z.string().optional(),
+  PREVIEW_PASSWORD: z.string().optional(),
   SMS_PROVIDER: z.enum(['arkesel', 'hubtel']).optional(),
   SMS_API_KEY: z.string().optional(),
   SMS_SENDER_ID: z.string().optional(),
