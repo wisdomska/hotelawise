@@ -278,7 +278,7 @@ export async function createDeskBooking(db: AnyDb, by: Who, input: DeskBookingIn
     const q = await deskQuote(tx, input, now);
     if (!q.free.includes(input.room)) throw new RoomTakenError(input.room);
     const [room] = await tx.select({ id: s.rooms.id }).from(s.rooms).where(eq(s.rooms.number, input.room));
-    const customerId = await upsertCustomer(tx, { ...input.guest, arrivalHour: null, requests: '' });
+    const customerId = await upsertCustomer(tx, { ...input.guest, arrivalHour: null, requests: '' }, { trusted: true });
     const ref = await nextRef(tx, 'booking', input.refSecret);
     const paid = input.pay ? q.total : 0;
     const [b] = await tx

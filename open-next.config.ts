@@ -12,6 +12,9 @@ const config = defineCloudflareConfig({
   incrementalCache: kvIncrementalCache,
   queue: doQueue,
   tagCache: d1NextTagCache,
+  // Serve cached pages before Next.js starts up: on the free plan's cold isolates
+  // this takes most of the time out of a cached page's first byte.
+  enableCacheInterception: true,
 });
 // Webpack shares server code between pages and route handlers; Turbopack
 // bundles it twice, which costs about 300 KiB of the 3 MiB Worker limit.

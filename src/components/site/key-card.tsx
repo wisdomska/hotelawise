@@ -21,7 +21,20 @@ export function leftLabel(left: number | undefined): string | null {
   return left === 0 ? 'Sold out tonight' : left === 1 ? 'Last one tonight' : `${left} left tonight`;
 }
 
-export function KeyCard({ room, image, left, sizes }: { room: SiteRoom; image: SiteImageT; left?: number; sizes: string }) {
+export function KeyCard({
+  room,
+  image,
+  left,
+  sizes,
+  first,
+}: {
+  room: SiteRoom;
+  image: SiteImageT;
+  left?: number;
+  sizes: string;
+  /** The first card is usually the biggest thing on a phone screen: load it straight away. */
+  first?: boolean;
+}) {
   const label = leftLabel(left);
   const price = priceLabel(room);
   return (
@@ -46,6 +59,7 @@ export function KeyCard({ room, image, left, sizes }: { room: SiteRoom; image: S
           image={image}
           fill
           sizes={sizes}
+          {...(first ? { loading: 'eager' as const, fetchPriority: 'high' as const } : {})}
           grade={false}
           style={{ objectFit: 'cover', filter: 'saturate(0.95) contrast(1.03)' }}
         />

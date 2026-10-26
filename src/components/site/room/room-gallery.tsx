@@ -28,7 +28,15 @@ export function RoomGallery({ images }: { images: SiteImageT[] }) {
           aria-label="Open photo gallery"
           style={{ ...tile, aspectRatio: '4/3', gridRow: `span ${Math.max(1, thumbs.length)}` }}
         >
-          <SiteImage image={images[0]!} fill priority sizes="(min-width: 1024px) 50vw, 100vw" style={{ objectFit: 'cover' }} />
+          <SiteImage
+            image={images[0]!}
+            fill
+            preload
+            fetchPriority="high"
+            loading="eager"
+            sizes="(min-width: 1024px) 50vw, 100vw"
+            style={{ objectFit: 'cover' }}
+          />
         </button>
         {thumbs.map((img, i) => (
           <button

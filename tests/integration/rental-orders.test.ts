@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { eq } from 'drizzle-orm';
 import * as s from '@/server/db/schema';
 import { createPendingPayment, settlePayment } from '@/server/services/bookings';
 import { orderBy, placeRentalOrder, stockForRange } from '@/server/services/rentals';
@@ -112,5 +113,26 @@ describe('rental orders from the website', () => {
     expect(await settlePayment(h.db, { reference: ref, status: 'success', amount: o.totalPesewas, currency: 'GHS' }, later)).toMatchObject({
       kind: 'order_confirmed',
     });
+  });
+});
+
+describe('customer details from public forms', () => {
+  it('never change an existing customer’s name or email', async () => {
+    const phone = '+233244777888';
+    await h.db.insert(s.customers).values({ name: 'Kofi Mensah', phoneE164: phone, email: 'kofi@example.com' });
+    await placeRentalOrder(h.db, {
+      starts: '2027-07-01',
+      ends: '2027-07-01',
+      cart: { canopy: 1 },
+      packs: [],
+      collector: { name: 'Not Kofi', phoneE164: phone, email: 'attacker@example.com' },
+      occasion: 'Party',
+      payMode: 'at_pickup',
+      publicToken: 'rt-guard-xxxxxxxxxxxxxxxxxx',
+      refSecret: SECRET,
+      now: NOW,
+    });
+    const [c] = await h.db.select().from(s.customers).where(eq(s.customers.phoneE164, phone));
+    expect(c).toMatchObject({ name: 'Kofi Mensah', email: 'kofi@example.com' });
   });
 });

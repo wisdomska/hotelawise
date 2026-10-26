@@ -31,6 +31,11 @@ async function plan(
   by: Who,
   approved: boolean,
 ) {
+  // Lock the booking or order first, so two refunds at the same moment can't both
+  // see the same "left to refund" and together pay back more than was paid.
+  if ('bookingId' in target)
+    await tx.select({ id: s.bookings.id }).from(s.bookings).where(eq(s.bookings.id, target.bookingId)).for('update');
+  else await tx.select({ id: s.rentalOrders.id }).from(s.rentalOrders).where(eq(s.rentalOrders.id, target.orderId)).for('update');
   const where = 'bookingId' in target ? eq(s.payments.bookingId, target.bookingId) : eq(s.payments.orderId, target.orderId);
   const pays = await tx
     .select({ id: s.payments.id, amount: s.payments.amountPesewas, channel: s.payments.channel, paystackRef: s.payments.paystackRef })

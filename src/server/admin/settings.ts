@@ -42,7 +42,7 @@ export const SETTING_KINDS: Partial<Record<SettingKey, Kind>> = {
   'tax.getfundPercent': { t: 'pct', max: 50 },
   'tax.tourismPercent': { t: 'pct', max: 50 },
   'notify.smsTemplate': { t: 'text', min: 10, max: 480 },
-  'admin.sessionTimeoutMinutes': { t: 'int', min: 5, max: 480 },
+  'admin.sessionTimeoutMinutes': { t: 'int', min: 5, max: 30 },
   'security.requireTwoFactor': { t: 'bool' },
   'banner.enabled': { t: 'bool' },
   'banner.text': { t: 'text', max: 140 },

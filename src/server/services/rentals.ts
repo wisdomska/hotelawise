@@ -253,10 +253,8 @@ export async function placeRentalOrder(db: AnyDb, input: PlaceOrderInput) {
   const [customer] = await db
     .insert(schema.customers)
     .values({ name: input.collector.name, phoneE164: input.collector.phoneE164, email: input.collector.email })
-    .onConflictDoUpdate({
-      target: schema.customers.phoneE164,
-      set: { name: input.collector.name, email: sql`coalesce(${input.collector.email}, ${schema.customers.email})`, updatedAt: sql`now()` },
-    })
+    // An existing customer's name and email stay as they are (see upsertCustomer in bookings.ts).
+    .onConflictDoUpdate({ target: schema.customers.phoneE164, set: { updatedAt: sql`now()` } })
     .returning({ id: schema.customers.id });
   const firstPack = packRows.find((b) => q.packsApplied.includes(b.name));
   return createRentalOrder(db, {

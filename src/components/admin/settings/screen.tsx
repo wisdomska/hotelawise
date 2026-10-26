@@ -87,7 +87,7 @@ export function SettingsScreen({
         ])}
       {t === 'Security' &&
         form('Security', '', [
-          txt('admin.sessionTimeoutMinutes', 'Sign out after (minutes idle)', { mono: true, hint: 'From 5 to 480 minutes.' }),
+          txt('admin.sessionTimeoutMinutes', 'Sign out after (minutes idle)', { mono: true, hint: 'From 5 to 30 minutes.' }),
           {
             key: 'security.requireTwoFactor',
             label: 'Two-step sign-in for Super Admins',

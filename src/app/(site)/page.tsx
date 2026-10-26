@@ -110,7 +110,9 @@ export default async function HomePage() {
               image={data.photos.hero!}
               alt=""
               fill
-              priority
+              preload
+              fetchPriority="high"
+              loading="eager"
               sizes="100vw"
               grade={false}
               style={{ objectFit: 'cover', objectPosition: 'center 55%' }}

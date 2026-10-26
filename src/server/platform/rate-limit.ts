@@ -21,6 +21,7 @@ export const RULES = {
   payment: { limit: 30, windowSeconds: 600 },
   paymentStatus: { limit: 240, windowSeconds: 600 },
   manage: { limit: 40, windowSeconds: 600 },
+  stepUp: { limit: 5, windowSeconds: 300 },
 } satisfies Record<string, Rule>;
 
 const memory = new Map<string, { count: number; resetAt: number }>();

@@ -99,11 +99,11 @@ export async function returnChecklistAction(raw: {
     .array(z.object({ itemId: z.string().uuid(), back: z.number().int().min(0), damaged: z.number().int().min(0) }))
     .max(50)
     .parse(raw.rows);
-  // Super Admins refund on the spot, so they confirm their password; staff only submit for approval.
+  // Super Admins refund on the spot, so they always confirm their password; staff only submit for approval.
+  const isSuper = (await read('rentals.checklist', async (_d, w) => w.isSuper)) ?? false;
   const res = await act(
     'rentals.checklist',
     async (tx, who) => {
-      const { isSuper } = (await read('rentals.checklist', async (_d, w) => w))!;
       const out = await completeReturn(tx, { ...who, isSuper }, { ref: ref.parse(raw.ref), rows });
       const data = { to: out.to, id: out.id, refund: out.failed ? 0 : out.refund };
       if (isSuper)
@@ -122,7 +122,7 @@ export async function returnChecklistAction(raw: {
         data,
       );
     },
-    raw.password ? { password: raw.password } : {},
+    isSuper ? { password: raw.password } : {},
   );
   if (res.ok) {
     const d = res.data as { to: string; id: string; refund: number };

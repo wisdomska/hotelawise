@@ -257,20 +257,20 @@ function ReturnModal({ r }: { r: string }) {
       confirm={isSuper ? `Complete and refund ${formatGhs(refund)}` : 'Submit for approval'}
       busy={busy}
       onConfirm={() => {
-        if (isSuper && refund > 0 && !pw) return setErrors({ pw: 'Enter your password.' });
+        if (isSuper && !pw) return setErrors({ pw: 'Enter your password.' });
         void run(() =>
           returnChecklistAction({
             ref: o.ref,
             rows: Object.entries(rows).map(([itemId, v]) => ({ itemId, back: v.back, damaged: v.damaged })),
-            password: isSuper && refund > 0 ? pw : '',
+            password: isSuper ? pw : '',
           }),
         );
       }}
     >
       <StepperRows cols={['ITEM', 'RETURNED', 'DAMAGED', 'DEDUCTION']} rows={stepRows} />
-      {isSuper && refund > 0 && (
+      {isSuper && (
         <FieldGrid>
-          <PasswordField value={pw} onChange={setPw} err={errors.pw} hint="Needed because money goes back to the customer." wide />
+          <PasswordField value={pw} onChange={setPw} err={errors.pw} hint="Super Admins confirm their password to close an order." wide />
         </FieldGrid>
       )}
       <Lines

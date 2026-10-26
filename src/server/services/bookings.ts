@@ -191,13 +191,21 @@ export async function abandonHold(db: AnyDb, token: string, sessionId: string) {
 
 /* ───────────── checkout ───────────── */
 
-export async function upsertCustomer(tx: AnyDb, g: GuestDetails): Promise<string> {
+/**
+ * Finds the customer by phone, or adds them. Only the front desk (`trusted`),
+ * who sees the guest, may change an existing customer's name or email: the
+ * manage-booking code goes to that email, so a public form must never be able
+ * to point someone else's bookings at a new address.
+ */
+export async function upsertCustomer(tx: AnyDb, g: GuestDetails, opts: { trusted?: boolean } = {}): Promise<string> {
   const [c] = await tx
     .insert(s.customers)
     .values({ name: g.name, phoneE164: g.phoneE164, email: g.email })
     .onConflictDoUpdate({
       target: s.customers.phoneE164,
-      set: { name: g.name, email: sql`coalesce(${g.email}, ${s.customers.email})`, updatedAt: sql`now()` },
+      set: opts.trusted
+        ? { name: g.name, email: sql`coalesce(${g.email}, ${s.customers.email})`, updatedAt: sql`now()` }
+        : { updatedAt: sql`now()` },
     })
     .returning({ id: s.customers.id });
   return c!.id;

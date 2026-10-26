@@ -164,9 +164,10 @@ export function RoomsFilter({
         </div>
       ) : (
         <div data-stagger="" style={{ display: 'grid', gridTemplateColumns: 'var(--c4g)', gap: 'clamp(16px,2vw,28px)' }}>
-          {filtered.map((room) => (
+          {filtered.map((room, i) => (
             <KeyCard
               key={room.code}
+              first={i === 0}
               room={room}
               image={images[room.code]!}
               left={left[room.code]}

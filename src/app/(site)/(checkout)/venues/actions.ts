@@ -53,7 +53,8 @@ export async function sendEnquiry(raw: z.input<typeof input>): Promise<EnquiryRe
       const [customer] = await tx
         .insert(schema.customers)
         .values({ name: v.name.trim(), phoneE164: phone.e164 })
-        .onConflictDoUpdate({ target: schema.customers.phoneE164, set: { name: v.name.trim(), updatedAt: sql`now()` } })
+        // An existing customer keeps their name and email (see upsertCustomer in services/bookings.ts).
+        .onConflictDoUpdate({ target: schema.customers.phoneE164, set: { updatedAt: sql`now()` } })
         .returning({ id: schema.customers.id });
       const r = await nextRef(tx, 'enquiry', env().REF_SECRET);
       const guests = Math.min(Math.max(v.guests, venue.capacityMin ?? 1), venue.capacityMax ?? v.guests);

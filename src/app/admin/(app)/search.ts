@@ -3,6 +3,7 @@
 // Each kind is only searched when the signed-in user can see it.
 import { desc, eq, ilike, or } from 'drizzle-orm';
 import * as s from '@/server/db/schema';
+import { pendingSetup } from '@/server/auth/actor';
 import { can } from '@/server/auth/permissions';
 import { currentActor } from '@/server/auth/session';
 import { db } from '@/server/platform/db';
@@ -12,7 +13,8 @@ export type Hit = { label: string; kind: 'Booking' | 'Rental' | 'Customer'; href
 export async function searchAdmin(raw: string): Promise<Hit[]> {
   const actor = await currentActor();
   const q = raw.trim().slice(0, 60);
-  if (!actor || !actor.active || q.length < 2 || !process.env.DATABASE_URL) return [];
+  // Same gate as every admin page: nothing until the account is set up.
+  if (!actor || !actor.active || pendingSetup(actor) || q.length < 2 || !process.env.DATABASE_URL) return [];
   const d = await db();
   const like = `%${q.replace(/[%_\\]/g, (m) => '\\' + m)}%`;
   const out: Hit[] = [];

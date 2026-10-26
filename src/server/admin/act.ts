@@ -9,6 +9,7 @@ import { ForbiddenError, type Capability } from '@/server/auth/permissions';
 import { requirePermission } from '@/server/auth/session';
 import { SITE_TAG } from '@/server/content/site-data';
 import { db, withTransactionDb } from '@/server/platform/db';
+import { allow } from '@/server/platform/rate-limit';
 import type { AnyDb } from '@/server/services/holds';
 import type { Who } from './bookings';
 
@@ -25,7 +26,13 @@ export class AdminError extends Error {
   }
 }
 
-type Opts = { password?: string; site?: boolean };
+/**
+ * `password` turns on the step-up: the signed-in user's password is checked
+ * before anything runs. The key's presence is what counts, so a request that
+ * leaves the field out (or sends something that isn't a string) is refused,
+ * never waved through.
+ */
+type Opts = { password?: unknown; site?: boolean };
 
 export async function act(
   capability: Capability,
@@ -34,8 +41,10 @@ export async function act(
 ): Promise<ActionResult> {
   try {
     const actor = await requirePermission(capability);
-    if (opts.password !== undefined) {
-      if (!opts.password) return fail('Enter your password.', { pw: 'Enter your password.' });
+    if ('password' in opts) {
+      if (typeof opts.password !== 'string' || !opts.password) return fail('Enter your password.', { pw: 'Enter your password.' });
+      if (!(await allow('stepUp', actor.id)))
+        return fail('Too many password attempts. Wait a few minutes and try again.', { pw: 'Too many attempts. Wait a few minutes.' });
       await confirmPassword(await db(), actor.id, opts.password);
     }
     const r = await withTransactionDb((tx) => fn(tx, { id: actor.id, name: actor.name }));

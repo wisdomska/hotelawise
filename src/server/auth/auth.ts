@@ -62,7 +62,7 @@ export function createAuth(deps: AuthDeps) {
       // Sliding 30-minute idle timeout: every request refreshes the expiry.
       expiresIn: IDLE_TIMEOUT_SECONDS,
       updateAge: 60,
-      freshAge: 5 * 60, // money and key-reveal actions need a session (or re-auth) this fresh
+      freshAge: 5 * 60, // Better Auth's own sensitive endpoints; admin money and key actions re-ask for the password (act)
     },
     advanced: {
       cookiePrefix: 'aw',
