@@ -12,7 +12,26 @@
   },
   "scripts": {
     "prepare": "husky",
-    "design:capture": "node scripts/design/capture-reference.mjs"
+    "design:capture": "node scripts/design/capture-reference.mjs",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "cf:build": "opennextjs-cloudflare build",
+    "cf:preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "lint": "eslint .",
+    "format": "prettier --check .",
+    "format:write": "prettier --write .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:coverage": "vitest run tests/unit --coverage",
+    "test:e2e": "playwright test",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "db:seed": "tsx scripts/seed.ts",
+    "admin:create": "tsx scripts/create-super-admin.ts",
+    "images:import": "tsx scripts/import-images.ts"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
