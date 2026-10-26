@@ -313,3 +313,7 @@ A phone with its clock set wrong would show a fresh hold as expired. The server 
 ## D-39 The Worker is built with webpack
 
 Turbopack bundles server code once for pages and again for route handlers (auth, Paystack webhook, calendar files), which put the Worker at 2.66 MiB of the free plan's 3 MiB. A webpack build shares those modules and comes to 2.30 MiB with the same routes. Local development and the e2e server keep Turbopack; only `pnpm cf:build` (set in `open-next.config.ts`) uses webpack.
+
+## D-40 Rate limits are counted in Postgres, not Upstash
+
+Upstash is blocked on the owner's network (Sophos), and adding another service only for counters isn't worth it. Each check is one atomic upsert on a `rate_limits` row (`env:rule:caller`), a fixed window per rule, so every Worker isolate shares the same count. If the database can't be reached the check falls back to the isolate's in-memory window instead of turning guests away. Windows older than a day are deleted by the nightly housekeeping job.

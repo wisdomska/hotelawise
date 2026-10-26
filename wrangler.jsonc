@@ -39,6 +39,8 @@
         "APP_ENV": "preview",
         "APP_URL": "https://hotel-a-wise-preview.wisdomska.workers.dev",
         "TURNSTILE_SITE_KEY": "0x4AAAAAAFmY-i1HGdxRTFd8",
+        // Paystack test mode: publishable key only; the secret is a Worker secret.
+        "NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY": "pk_test_7b1e3e1d5bdb671a60774af35d7e688e73941da7",
       },
     },
     "production": {

@@ -39,6 +39,7 @@ export function createAuth(deps: AuthDeps) {
         account: schema.account,
         verification: schema.verification,
         twoFactor: schema.twoFactor,
+        rateLimit: schema.authRateLimit,
       },
     }),
     emailAndPassword: {
@@ -70,9 +71,10 @@ export function createAuth(deps: AuthDeps) {
       ipAddress: { ipAddressHeaders: ['cf-connecting-ip'] },
     },
     // Handoff: sign-in locks for 30 s after 5 tries. Per client IP (cf-connecting-ip).
-    // Persistent storage across isolates is added with Upstash in milestone 5.
+    // Counted in Postgres so every Worker isolate shares the lockout (DECISIONS D-40).
     rateLimit: {
       enabled: true,
+      storage: 'database',
       window: 60,
       max: 30,
       customRules: {

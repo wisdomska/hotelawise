@@ -6,6 +6,7 @@
 // drizzle/0001_constraints.sql and are covered by tests/integration.
 import { sql } from 'drizzle-orm';
 import {
+  bigint,
   boolean,
   check,
   date,
@@ -94,6 +95,14 @@ export const verification = pgTable('verification', {
   expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
+});
+
+/** Better Auth's sign-in rate limits, kept in the database so every isolate shares them (D-40). */
+export const authRateLimit = pgTable('auth_rate_limit', {
+  id: text('id').primaryKey(),
+  key: text('key').notNull().unique(),
+  count: integer('count').notNull(),
+  lastRequest: bigint('last_request', { mode: 'number' }).notNull(),
 });
 
 export const twoFactor = pgTable('two_factor', {
@@ -734,4 +743,11 @@ export const comingSoon = pgTable('coming_soon', {
   title: text('title').notNull(),
   description: text('description').notNull(),
   nowOpen: boolean('now_open').notNull().default(false),
+});
+
+/** Fixed-window rate-limit counters shared by every Worker isolate (DECISIONS D-40). */
+export const rateLimits = pgTable('rate_limits', {
+  key: text('key').primaryKey(), // `${env}:${rule}:${caller}`
+  count: integer('count').notNull(),
+  resetAt: timestamp('reset_at', { withTimezone: true }).notNull(),
 });

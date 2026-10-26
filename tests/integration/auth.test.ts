@@ -94,3 +94,24 @@ describe('admin sign-in', () => {
     expect(rows.at(-1)).toMatchObject({ actorName: 'System', action: 'Released hold' });
   });
 });
+
+describe('sign-in lockout', () => {
+  const signIn = (a: ReturnType<typeof auth>) =>
+    a.handler(
+      new Request('http://localhost:3000/api/auth/sign-in/email', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'cf-connecting-ip': '203.0.113.9', origin: 'http://localhost:3000' },
+        body: JSON.stringify({ email: 'nobody@hotelawise.com', password: 'not-the-one1' }),
+      }),
+    );
+
+  it('locks an address after five tries, and every isolate sees the lock', async () => {
+    const first = auth();
+    for (let i = 0; i < 5; i++) expect((await signIn(first)).status).toBe(401);
+    expect((await signIn(first)).status).toBe(429);
+    // A second instance stands in for another Worker isolate: the count lives in Postgres.
+    expect((await signIn(auth())).status).toBe(429);
+    const rows = await h.db.select().from(schema.authRateLimit);
+    expect(rows.some((r) => r.key.includes('203.0.113.9') && r.count >= 5)).toBe(true);
+  });
+});

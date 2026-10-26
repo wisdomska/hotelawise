@@ -44,12 +44,6 @@ importers:
       '@tanstack/react-table':
         specifier: ^9.3.1
         version: 9.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@upstash/ratelimit':
-        specifier: ^2.2.0
-        version: 2.2.0(@upstash/redis@1.40.0)
-      '@upstash/redis':
-        specifier: ^1.40.0
-        version: 1.40.0
       better-auth:
         specifier: ^1.7.13
         version: 1.7.13(drizzle-kit@0.31.11)(drizzle-orm@0.45.4(@cloudflare/workers-types@5.20261026.1)(@neondatabase/serverless@1.2.0)(@types/pg@8.23.1)(@upstash/redis@1.40.0)(kysely@0.29.7)(pg@8.23.1))(next@16.4.3(@babel/core@7.29.7)(@playwright/test@1.63.0)(@types/node@26.6.5)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(pg@8.23.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.0.5)
@@ -2824,15 +2818,6 @@ packages:
     resolution: {integrity: sha512-nAB74NfSNKknqQ1RrYj6uz8FcXEomu/MATJZxh/x+BArzN2U3JbOYC0APYzUIGhVY3m5hRxA8VPNdPBoG8txlA==}
     cpu: [x64]
     os: [win32]
-
-  '@upstash/core-analytics@0.0.10':
-    resolution: {integrity: sha512-7qJHGxpQgQr9/vmeS1PktEwvNAF7TI4iJDi8Pu2CFZ9YUGHZH4fOP5TfYlZ4aVxfopnELiE4BS4FBjyK7V1/xQ==}
-    engines: {node: '>=16.0.0'}
-
-  '@upstash/ratelimit@2.2.0':
-    resolution: {integrity: sha512-gSydXspG6TJKTh71/gGGv4IGDjD9rXglQfm2jAue2kh4bcfWtEAsG1NW4OqzZd/hubJPojsbOU6AMdS6Xqh0tQ==}
-    peerDependencies:
-      '@upstash/redis': ^1.38.2
 
   '@upstash/redis@1.40.0':
     resolution: {integrity: sha512-F6+V7Kof2McJtGWclusZLt7hBRmIMZg+albS32/5TuNRg/92FM2nkyKPY9wWEieMj9hjyUi4iURsN1djsHNbwA==}
@@ -8223,18 +8208,10 @@ snapshots:
   '@unrs/resolver-binding-win32-x64-msvc@1.12.2':
     optional: true
 
-  '@upstash/core-analytics@0.0.10':
-    dependencies:
-      '@upstash/redis': 1.40.0
-
-  '@upstash/ratelimit@2.2.0(@upstash/redis@1.40.0)':
-    dependencies:
-      '@upstash/core-analytics': 0.0.10
-      '@upstash/redis': 1.40.0
-
   '@upstash/redis@1.40.0':
     dependencies:
       uncrypto: 0.1.3
+    optional: true
 
   '@vitest/coverage-v8@5.0.5(vitest@5.0.5)':
     dependencies:
@@ -10817,7 +10794,8 @@ snapshots:
       has-symbols: 1.1.0
       which-boxed-primitive: 1.1.1
 
-  uncrypto@0.1.3: {}
+  uncrypto@0.1.3:
+    optional: true
 
   undici-types@5.26.5: {}
 
