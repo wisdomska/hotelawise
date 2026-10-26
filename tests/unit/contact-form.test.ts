@@ -35,4 +35,15 @@ describe('contact form rules', () => {
     const r = checkContact({ ...base, email: ' Ama@Example.COM ' });
     expect(r.ok && r.value.email).toBe('ama@example.com');
   });
+
+  it('limits name, email and message length', () => {
+    expect(checkContact({ ...base, name: 'x'.repeat(121), email: `${'a'.repeat(250)}@x.com`, message: 'y'.repeat(4001) })).toEqual({
+      ok: false,
+      errors: {
+        name: 'That name is a little long. Use 120 characters or fewer.',
+        email: 'Check the email address.',
+        message: 'That’s a long one. Keep it under 4,000 characters, or call us.',
+      },
+    });
+  });
 });

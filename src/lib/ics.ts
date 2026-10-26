@@ -1,5 +1,5 @@
 // iCalendar files for "Add to calendar" (bookings and rental pickups).
-const esc = (v: string) => v.replace(/\\/g, '\\\\').replace(/;/g, '\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+const esc = (v: string) => v.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
 
 export type IcsEvent = {
   uid: string;

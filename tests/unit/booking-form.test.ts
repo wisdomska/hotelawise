@@ -31,4 +31,12 @@ describe('booking form', () => {
     expect(checkMomo('0244123456')).toEqual({ ok: true, e164: '+233244123456' });
     expect(checkMomo('12')).toEqual({ ok: false, error: 'Enter the MoMo number that should get the prompt.' });
   });
+
+  it('limits name and email length', () => {
+    const r = checkGuest({ ...base, name: 'x'.repeat(121), email: `${'a'.repeat(250)}@x.com` });
+    expect(r).toEqual({
+      ok: false,
+      errors: { name: 'That name is a little long. Use 120 characters or fewer.', email: 'Check the email address.' },
+    });
+  });
 });

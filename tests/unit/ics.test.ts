@@ -32,4 +32,16 @@ describe('calendar file', () => {
     });
     expect(f).toContain('DTSTART:20270301T070000Z');
   });
+
+  it('escapes the description when there is one', () => {
+    const f = icsFile({
+      uid: 'y',
+      summary: 'Stay',
+      location: 'Here',
+      start: '2027-03-01',
+      end: '2027-03-02',
+      description: 'Ref AW-1; desk, 24h',
+    });
+    expect(f).toContain('DESCRIPTION:Ref AW-1\\; desk\\, 24h');
+  });
 });
