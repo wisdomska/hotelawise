@@ -264,7 +264,7 @@ export default async function HomePage() {
                 textDecoration: 'none',
               }}
             >
-              <div style={{ position: 'relative', aspectRatio: '4/3', background: '#F5F2EA' }}>
+              <div style={{ position: 'relative', aspectRatio: '1/1', background: '#F5F2EA' }}>
                 <SiteImage
                   data-mi-img=""
                   image={it.image}

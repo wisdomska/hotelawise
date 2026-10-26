@@ -29,6 +29,8 @@ export function WhatsHere({ heading, tiles }: { heading: string; tiles: { title:
       </h2>
       <div style={{ display: 'grid', gridTemplateColumns: 'var(--c55)', gap: 56 }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 28, minWidth: 0 }}>
+          {/* The prototype keeps an (empty) intro block here, which offsets the tiles by one gap. */}
+          <div aria-hidden="true" />
           <ol
             data-stagger=""
             style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gridTemplateColumns: 'repeat(2,minmax(0,1fr))', gap: 10 }}
