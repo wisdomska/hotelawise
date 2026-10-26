@@ -11,7 +11,7 @@ Inputs read:
 
 Reference renders are in `design/reference-screens/`. They were captured by `scripts/design/capture-reference.mjs` at 1440×900 and 390×844, covering every route, every simulated state, both roles, light and dark.
 
-Source-of-truth order: `Handoff.md` → rendered prototypes → spec → brief. Conflicts and their rulings are in [DECISIONS.md](./DECISIONS.md) (summarised in §9).
+Source-of-truth order (owner ruling, D-00): **rendered prototypes** → `Handoff.md` → spec → brief. The prototypes were edited after the Handoff was written, so whatever the prototype renders wins. Tokens (colours, type, spacing, motion) are extracted from the prototype source; the Handoff fills gaps the prototype doesn't cover. Conflicts and their rulings are in [DECISIONS.md](./DECISIONS.md) (summarised in §9).
 
 ---
 
@@ -32,7 +32,7 @@ Source-of-truth order: `Handoff.md` → rendered prototypes → spec → brief. 
 | Cron | Cloudflare **Cron Triggers** → a `scheduled()` handler wrapped around the OpenNext worker | `*/15 * * * *` expires holds and releases pay-at-pickup orders at 10:00 Accra. `0 7 * * *` sends reminders. `0 2 * * *` runs housekeeping (prunes OTPs and login events past retention) |
 | Bot protection | **Turnstile** (managed) on every public form + booking hold creation | Verified server-side |
 | Errors | **Sentry** (`@sentry/cloudflare` on the worker, `@sentry/nextjs` client) | PII scrubbed |
-| UI | Tailwind CSS v4 (tokens as CSS variables), Radix primitives, Motion, Vaul, Sonner, cmdk, react-hook-form + Zod, TanStack Table, date-fns + `@date-fns/tz`, Recharts (admin only, dynamic import) | Fonts via `next/font/google`: Newsreader, Geist, Geist Mono (see D-07) |
+| UI | Tailwind CSS v4 (tokens as CSS variables), Radix primitives, Motion, Vaul, Sonner, cmdk, react-hook-form + Zod, TanStack Table, date-fns + `@date-fns/tz`, Recharts (admin only, dynamic import) | Fonts via `next/font/google`: Cormorant Garamond (display), Geist (UI), Geist Mono (see D-07) |
 | Tests | Vitest (+ coverage v8), Playwright (Chromium, WebKit, Pixel 7, iPhone 14), axe-core, Lighthouse CI, Playwright visual comparisons, k6 for the concurrency smoke | |
 | Tooling | pnpm 10, ESLint (flat, `next/core-web-vitals` + `typescript-eslint` strict), Prettier, Husky + lint-staged + commitlint, Changesets-free `release-please` for semver tags and CHANGELOG | |
 
@@ -170,7 +170,7 @@ Key tables (columns abbreviated; full DDL goes in `docs/ARCHITECTURE.md` in M1):
 
 | Route | Cache | Notes |
 |---|---|---|
-| `/` | ISR, tag `content`, `rooms` | night/day hero by Accra hour (client-side swap of the grade so the cached HTML stays shared) |
+| `/` | ISR, tag `content`, `rooms` | hero exactly as the prototype renders it; the prototype's `night()` logic (Accra hour, 18:00–06:00) is ported client-side where the prototype uses it (D-09) |
 | `/rooms` | ISR | filters client-side |
 | `/rooms/[code]` | ISR, `generateStaticParams` STD/EXE/VIP/DBL | OG image per room via `opengraph-image.tsx` |
 | `/gallery`, `/contact`, `/events` (venues + rentals overview) | ISR | |
@@ -322,28 +322,29 @@ Each milestone ends with a short summary, the preview URL, test results and bloc
 | D-04 | Demo login `admin@123` | Preview only (ruling 4) |
 | D-05 | Vercel/Supabase in docs | Cloudflare Workers + Neon + Cloudinary (ruling 5) |
 | D-06 | Rental order statuses (spec: delivery stages) | Handoff stages: Reserved → Ready for pickup → Collected → Returned → Completed |
-| D-07 | **Heading font:** Handoff says Newsreader; the prototype's saved Tweak default is **Cormorant Garamond** | Follow Handoff (Newsreader). **Question Q1** |
-| D-08 | **Hero copy:** prototype/CMS seed "Your gateway to unforgettable memories" vs spec ban on "unforgettable memories" and its "Arrive at 3am…" line | Follow the rendered prototype (higher source); it's CMS-editable. **Question Q2** |
-| D-09 | **Night/day hero:** Handoff requires it, but the prototype renders the same hero by day and night | Implement per Handoff: day uses `hero-front-desk.jpg` (Executive bedroom) with the standard grade; night uses `hotel-view-reception.jpg` (front desk) with the night grade |
-| D-10 | Executive Plus is a separate code `EXE+` in prototype data | Modelled as a rate variant of EXE (spec + Handoff data model); public code stays EXE |
+| D-00 | Handoff vs prototype | **Prototype wins** (owner ruling) |
+| D-07 | **Heading font:** Handoff says Newsreader; the prototypes use **Cormorant Garamond** throughout | Cormorant Garamond (prototype) |
+| D-08 | **Hero copy:** prototype/CMS seed "Your gateway to unforgettable memories" vs spec ban on "unforgettable memories" and its "Arrive at 3am…" line | Prototype copy, CMS-editable |
+| D-09 | **Night/day hero:** Handoff requires a separate night hero; the prototype renders the same photo hero by day and night | Prototype: one photo hero; its `night()` details ported as-is |
+| D-10 | Executive Plus is a separate code `EXE+` in prototype data | Stored as a rate variant of EXE; shown as `EXE+` / "Executive Plus" exactly where the prototype shows it |
 | D-11 | Manage booking: Handoff says ref + phone; brief adds OTP | Add OTP (safer, prevents lookup by guessed ref + known phone) |
 | D-12 | Pay-at-hotel "Confirmed – unpaid" isn't a Handoff status | `status=confirmed` + `payment_status=unpaid` |
 | D-13 | Holds per rate variant (Handoff) vs DB-enforced per-room exclusion | A hold allocates a concrete room inside the constraint; expired holds are lazily deactivated in the same transaction |
-| D-14 | Rental payment: spec "deposit or full"; Handoff "online full incl. refundable deposit, or pay at pickup"; seed "rental deposit 50%" | Handoff flow. The 50% setting is kept but unused. **Question Q3** |
+| D-14 | Rental payment: spec "deposit or full"; Handoff "online full incl. refundable deposit, or pay at pickup"; seed "rental deposit 50%" | Prototype: pay online in full incl. refundable security deposit, or pay when you collect. No 50% option |
 | D-15 | Late payment after hold expiry | Confirm if still free, else auto-refund + email + staff alert |
 | D-16 | Rental status notifications "SMS" | Email at every step; SMS when the adapter is on |
 | D-17 | Reference screenshots flag fixes | All kept fixed (list in DECISIONS.md D-17) |
 | D-18 | Contact numbers: spec reception +233 55 555 7090; the old site footer shows +233 54 012 0400 as main | Spec values seeded and editable in Settings. **Confirm with the hotel** |
-| D-21 | Admin dark palette: Handoff navy `#07072B` vs prototype neutral black | Handoff tokens |
+| D-20 | ⌘K palette animation | Prototype motion kept |
+| D-21 | Admin dark palette: Handoff navy `#07072B` vs prototype neutral black | Prototype tokens (`#111113` / `#1A1A1D` / `#EDEDEF`…) |
 | D-27 | Brief asks for repo `hotel-a-wise` | You chose `wisdomska/hotelawise` |
 
 ---
 
 ## 10. Questions before I start (defaults apply if you just say "approved")
 
-- **Q1 Heading font:** Newsreader (Handoff, default) or Cormorant Garamond (the prototype's saved Tweak)?
-- **Q2 Hero headline:** keep "Your gateway to unforgettable memories" (prototype, default) or use the spec's "Arrive at 3am. We'll have the light on."?
-- **Q3 Rental online payment:** full amount + refundable security deposit (Handoff, default), or allow a 50% deposit online too?
+Q1–Q3 (font, hero headline, rental payment) are settled by the prototype-first ruling.
+
 - **Q4 Workers Paid ($5/month):** OK to switch if the M1 measurements show sign-in or bundle size over the free limits? (default: I stop and ask with numbers)
 
 ## 11. Confirm with the hotel (all editable in Settings; seeded as below)

@@ -1,6 +1,13 @@
 # Decisions log
 
-Source-of-truth order: `design/Handoff.md` → rendered prototypes (`design/*.dc.html`) → `design/uploads/2-ATTACH-hotel-a-wise-spec.md` → build brief.
+## D-00 The prototype outranks the Handoff (owner ruling)
+The owner edited the prototypes after writing `Handoff.md`. Wherever the two disagree, **what the prototype renders wins**.
+- Tokens are taken from the prototype source: colours, type, spacing, radii, shadows and motion.
+- The Handoff fills gaps the prototype doesn't cover: the data model, integrations and server rules.
+
+The owner's own rulings (D-01 to D-05) and the brief's explicit requirements still apply on top of the prototype. Those requirements are pickup-only rentals, hover gating, reduced motion, the OTP on manage booking, and security rules. Each place where the build adds to the prototype is listed in this log.
+
+Source-of-truth order: **rendered prototypes** (`design/*.dc.html`) → `design/Handoff.md` → `design/uploads/2-ATTACH-hotel-a-wise-spec.md` → build brief (see D-00).
 
 Each entry gives the conflict, the ruling and why. Entries marked **(owner ruling)** come straight from the owner, WISDOMSKA(SENYA). Entries marked **(open)** have a default but are waiting on an answer.
 
@@ -41,34 +48,35 @@ Correctness never depends on cron timing: expired holds are treated as expired i
 - Statuses run `pending_payment → reserved → ready_for_pickup → collected → returned → completed`, with `cancelled` reachable from any state before `collected`.
 - Moving a card back a stage requires a reason, which is written to `order_status_events` and to the audit log (Handoff).
 
-## D-07 Heading font (open, Q1)
-**Conflict:** The Handoff tokens say Newsreader. The prototype's saved Tweak default is `cormorant` (Cormorant Garamond), and the reference renders use it.
+## D-07 Heading font: Cormorant Garamond (prototype)
+**Conflict:** The Handoff tokens say Newsreader. The website, checkout and admin prototypes all use Cormorant Garamond for display type.
 
-**Ruling:** Newsreader, because the Handoff is the higher source. It is a single token, so swapping costs nothing if the owner prefers Cormorant.
+**Ruling:** Cormorant Garamond, loaded with `next/font/google`. The display sizes, weights and italics are the prototype's.
 
-## D-08 Hero headline (open, Q2)
-**Conflict:** The rendered prototype seeds "Your gateway to unforgettable memories", which is also the old site's line and appears in the review screenshots. The spec bans "unforgettable memories" and proposes "Arrive at 3am. We'll have the light on."
+## D-08 Hero headline (prototype)
+**Conflict:** The spec bans "unforgettable memories" and proposes "Arrive at 3am. We'll have the light on." The prototype seeds "Your gateway to unforgettable memories", which is also the old site's line.
 
-**Ruling:** Follow the prototype, which is the higher source. The headline is CMS-editable (Content › Home page).
+**Ruling:** Use the prototype's copy. It's CMS-editable in Content › Home page.
 
-## D-09 Night/day hero
-**Conflict:** The Handoff requires a night/day hero by Accra hour (night is 18:00–06:00), and the image renames say `hotel-view-reception.jpg` is the night hero. The final prototype renders the same hero by day and by night.
+## D-09 Hero by time of day (prototype)
+**Conflict:** The Handoff asks for a separate night hero, the front-desk photo with a night grade. The prototype renders the same photo hero by day and by night.
 
-**Ruling:** Implement the Handoff.
-- **Day:** Executive bedroom (`hero-front-desk.jpg`, renamed) with grade `saturate(.92) contrast(1.04)`.
-- **Night:** the front desk (`hotel-view-reception.jpg`, renamed) with grade `saturate(.8) brightness(.72) contrast(1.1) sepia(.12)`.
-
-The choice is made on the client from the Accra clock, so the cached HTML stays shared. Both images are `srcset`'d, and only the active one is high priority.
+**Ruling:** Follow the prototype.
+- There is one photo hero, using the prototype's image and overlay.
+- The prototype's `night()` logic (Accra hour, 18:00–06:00) is ported as-is: the hero CSS variables, the lamp-coloured accent word and the "desk lamp is on" line, wherever the prototype renders them.
+- The time of day is decided on the client, so the cached HTML stays shared.
 
 ## D-10 Executive Plus
-**Conflict:** The prototype data uses a separate room code, `EXE+`.
+**Conflict:** The prototype shows Executive Plus with its own code, `EXE+`.
 
-**Ruling:** Model it as a rate variant of EXE (`EXECUTIVE` GHS 200, `EXECUTIVE_PLUS` GHS 250), as the spec and the Handoff data model do. The public code stays `EXE`, and the variant is chosen at booking, as in the prototype's tier select.
+**Ruling:**
+- **Display:** exactly as the prototype does (`EXE+` in admin tables, "Executive Plus" in names).
+- **Storage:** a rate variant of the EXE room type, so availability, the tier select and pricing share one model.
 
 ## D-11 Manage booking needs a one-time code
 **Conflict:** The Handoff says ref + phone. The brief adds an OTP.
 
-**Ruling:** Use ref + phone + a 6-digit OTP, sent by email (SMS when enabled). It expires after 10 minutes, allows 5 attempts and is rate-limited.
+**Ruling:** This is an addition to the prototype, required by the brief. It is styled in the prototype's manage-booking visual language. Use ref + phone + a 6-digit OTP, sent by email (SMS when enabled). It expires after 10 minutes, allows 5 attempts and is rate-limited.
 
 **Why:** References are short, and a phone number is often known to others. This is standard practice for self-service changes involving money.
 
@@ -83,13 +91,14 @@ The choice is made on the client from the Accra clock, so the cached HTML stays 
 - Every allocating transaction first deactivates expired holds that overlap the requested range.
 - Cron only tidies up.
 
-## D-14 Rental payment amount (open, Q3)
-**Conflict:**
-- Spec: deposit or full.
-- Handoff: pay online in full, including the refundable security deposit, or pay at pickup.
-- Seed assumption: "rental deposit 50%".
+## D-14 Rental payment (prototype)
+**Conflict:** The spec says pay a deposit or in full. The seed list says "rental deposit 50%".
 
-**Ruling:** The Handoff flow. The 50% value is kept as an unused setting until the owner decides.
+**Ruling:** Follow the prototype checkout. There are two choices:
+- Pay online now: the full rental plus a refundable security deposit.
+- Pay when you collect: items are held until 10am on pickup day.
+
+There is no 50% option.
 
 ## D-15 Payment lands after the hold expired
 **Ruling:**
@@ -151,13 +160,28 @@ The Handoff says customers get SMS updates. SMS is off by default (no budget), s
 - The prototype's hovers aren't gated. All hovers use a Tailwind `hover-hover:` variant, defined as `@media (hover:hover) and (pointer:fine)`.
 - Under `prefers-reduced-motion`, motion is replaced by opacity-only transitions. Animations are not removed, as the prototype does with `animation-duration:1ms`.
 
-## D-20 Command palette and keyboard actions are not animated
-The prototype animates the palette. Following the motion skill, the ⌘K palette opens and closes instantly, because it's used many times a day. Toasts, drawers and sheets keep their motion tokens.
+## D-20 Command palette motion (prototype)
+The prototype's palette and overlay motion is kept as designed. Durations stay within the prototype's motion tokens.
 
-## D-21 Admin dark palette
-**Conflict:** The Handoff tokens give the admin dark theme bg `#07072B`, panel `#0E0E3E`, text `#ECEBF4` and chart `#6E70C9`. The rendered prototype (`reference-screens/admin-*-dark-*`) uses a neutral near-black.
+## D-21 Admin dark palette (prototype)
+**Conflict:** The Handoff lists a navy dark theme (bg `#07072B`, panel `#0E0E3E`).
 
-**Ruling:** Use the Handoff tokens. Dark-mode visual tests compare layout and spacing against the reference, but not colour.
+**Ruling:** Use the prototype's neutral dark tokens:
+
+| Token | Value |
+|---|---|
+| `--bg` | `#111113` |
+| `--panel` | `#1A1A1D` |
+| `--side` | `#18181B` |
+| `--lane` | `#151517` |
+| `--ink` | `#EDEDEF` |
+| chart | `#9A9CE0` |
+| `--green` | `#5BC08A` |
+| `--red` | `#F2857A` |
+| `--amberInk` | `#F2B544` |
+| lines | `rgba(255,255,255,.08)` and `rgba(255,255,255,.16)` |
+
+All tokens are copied from `Admin.dc.html`. Dark-mode visual tests compare against the reference screenshots in full.
 
 ## D-27 Repository (owner ruling)
 **Conflict:** The brief asks for a new repo, `hotel-a-wise`.
