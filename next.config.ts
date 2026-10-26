@@ -1,7 +1,11 @@
 import type { NextConfig } from 'next';
 import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
 
+// Set by `pnpm cf:build`: keep local-only modules (node-postgres) out of the Worker.
+const workerBuild = process.env.HOTELAWISE_WORKER_BUILD === '1';
+
 const nextConfig: NextConfig = {
+  turbopack: workerBuild ? { resolveAlias: { '@/server/db/node': './src/server/db/node-stub.ts' } } : {},
   reactStrictMode: true,
   poweredByHeader: false,
   // typedRoutes is switched on once every linked route exists (milestone 5).

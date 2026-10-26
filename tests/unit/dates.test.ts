@@ -1,7 +1,19 @@
 import { describe, expect, it } from 'vitest';
 import {
-  accraClock, accraHour, accraInstant, addDays, eachNight, formatDayMonth, formatShortDate, isIsoDate,
-  isNightInAccra, monthDay, nightsBetween, rangesOverlap, todayInAccra, weekday,
+  accraClock,
+  accraHour,
+  accraInstant,
+  addDays,
+  eachNight,
+  formatDayMonth,
+  formatShortDate,
+  isIsoDate,
+  isNightInAccra,
+  monthDay,
+  nightsBetween,
+  rangesOverlap,
+  todayInAccra,
+  weekday,
 } from '@/lib/dates';
 
 describe('dates', () => {

@@ -168,7 +168,10 @@ export const roomTypes = pgTable('room_types', {
   sleeps: smallint('sleeps').notNull(),
   bathroom: text('bathroom').notNull(),
   bestFor: text('best_for').notNull().default(''),
-  amenities: text('amenities').array().notNull().default(sql`'{}'::text[]`),
+  amenities: text('amenities')
+    .array()
+    .notNull()
+    .default(sql`'{}'::text[]`),
   position: smallint('position').notNull().default(0),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
@@ -468,7 +471,9 @@ export const rentalOrders = pgTable(
     ends: date('ends').notNull(),
     occasion: text('occasion').notNull().default(''),
     payMode: text('pay_mode', { enum: ['online', 'at_pickup'] }).notNull(),
-    fulfilment: text('fulfilment', { enum: ['pickup', 'delivery'] }).notNull().default('pickup'),
+    fulfilment: text('fulfilment', { enum: ['pickup', 'delivery'] })
+      .notNull()
+      .default('pickup'),
     deliveryZoneId: uuid('delivery_zone_id').references(() => deliveryZones.id),
     collectorName: text('collector_name').notNull(),
     collectorPhoneE164: text('collector_phone_e164').notNull(),
@@ -601,10 +606,7 @@ export const payments = pgTable(
     createdAt: createdAt(),
   },
   (t) => [
-    check(
-      'payments_one_target_ck',
-      sql`num_nonnulls(${t.bookingId}, ${t.orderId}, ${t.enquiryId}) = 1`,
-    ),
+    check('payments_one_target_ck', sql`num_nonnulls(${t.bookingId}, ${t.orderId}, ${t.enquiryId}) = 1`),
     check('payments_amount_ck', sql`${t.amountPesewas} > 0`),
     index('payments_created_idx').on(t.createdAt),
   ],

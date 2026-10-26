@@ -33,7 +33,13 @@ export function createAuth(deps: AuthDeps) {
     basePath: '/api/auth',
     database: drizzleAdapter(deps.db, {
       provider: 'pg',
-      schema: { user: schema.user, session: schema.session, account: schema.account, verification: schema.verification, twoFactor: schema.twoFactor },
+      schema: {
+        user: schema.user,
+        session: schema.session,
+        account: schema.account,
+        verification: schema.verification,
+        twoFactor: schema.twoFactor,
+      },
     }),
     emailAndPassword: {
       enabled: true,
@@ -119,10 +125,7 @@ export function createAuth(deps: AuthDeps) {
         create: {
           // Deactivated accounts can't sign in.
           before: async (session) => {
-            const [u] = await deps.db
-              .select({ banned: schema.user.banned })
-              .from(schema.user)
-              .where(eq(schema.user.id, session.userId));
+            const [u] = await deps.db.select({ banned: schema.user.banned }).from(schema.user).where(eq(schema.user.id, session.userId));
             if (!u || u.banned) throw new APIError('FORBIDDEN', { message: 'This account is deactivated.' });
             return { data: session };
           },

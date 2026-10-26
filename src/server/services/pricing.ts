@@ -90,8 +90,7 @@ export type PromoCode = {
 };
 
 export type PromoResult =
-  | { ok: true; code: string; discount: Pesewas; freeBreakfast: boolean; label: string }
-  | { ok: false; error: string };
+  { ok: true; code: string; discount: Pesewas; freeBreakfast: boolean; label: string } | { ok: false; error: string };
 
 /** Copy and rules from the prototype's AWStore.promoCheck. */
 export function applyPromo(
@@ -105,11 +104,7 @@ export function applyPromo(
   if (!promo) return { ok: false, error: "We don't recognise that code. Check the spelling." };
   if (!promo.active) return { ok: false, error: "That code isn't active right now." };
   if (promo.endsOn && promo.endsOn < ctx.today) return { ok: false, error: 'That code has expired.' };
-  if (
-    promo.appliesTo !== 'all' &&
-    promo.appliesTo !== ctx.variant &&
-    !(promo.appliesTo === 'EXE' && ctx.variant === 'EXE_PLUS')
-  ) {
+  if (promo.appliesTo !== 'all' && promo.appliesTo !== ctx.variant && !(promo.appliesTo === 'EXE' && ctx.variant === 'EXE_PLUS')) {
     return { ok: false, error: "That code isn't valid for this room." };
   }
   if (promo.minNights && ctx.nights < promo.minNights) {
@@ -121,7 +116,6 @@ export function applyPromo(
       : promo.type === 'ghs'
         ? Math.min(ctx.roomSubtotal, promo.value)
         : ctx.breakfastCost;
-  const label =
-    promo.type === 'pct' ? `${promo.value}% off` : promo.type === 'ghs' ? `GHS ${promo.value / 100} off` : 'Free breakfast';
+  const label = promo.type === 'pct' ? `${promo.value}% off` : promo.type === 'ghs' ? `GHS ${promo.value / 100} off` : 'Free breakfast';
   return { ok: true, code, discount, freeBreakfast: promo.type === 'breakfast', label };
 }

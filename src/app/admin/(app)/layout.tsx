@@ -30,7 +30,10 @@ export default async function AdminAppLayout({ children }: { children: React.Rea
                 .filter((s) => s.group === g)
                 .map((s) => (
                   <li key={s.key}>
-                    <Link href={s.href} className="block rounded-[var(--radius-control)] px-3 py-2 text-sm text-paper no-underline hover-hover:bg-white/5">
+                    <Link
+                      href={s.href}
+                      className="block rounded-[var(--radius-control)] px-3 py-2 text-sm text-paper no-underline hover-hover:bg-white/5"
+                    >
                       {s.label}
                     </Link>
                   </li>

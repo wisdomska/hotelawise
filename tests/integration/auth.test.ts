@@ -27,7 +27,12 @@ const auth = () =>
 
 describe('admin sign-in', () => {
   it('signs in with the right password, rejects the wrong one, and records both', async () => {
-    const id = await createUser(h.db, { name: 'Esi Asamoah', email: 'Esi@HotelAwise.com', role: 'super_admin', temporaryPassword: 'kente2026' });
+    const id = await createUser(h.db, {
+      name: 'Esi Asamoah',
+      email: 'Esi@HotelAwise.com',
+      role: 'super_admin',
+      temporaryPassword: 'kente2026',
+    });
     const a = auth();
     const ok = await a.api.signInEmail({ body: { email: 'esi@hotelawise.com', password: 'kente2026' } });
     expect(ok.user.id).toBe(id);
@@ -38,7 +43,13 @@ describe('admin sign-in', () => {
   });
 
   it('blocks deactivated staff', async () => {
-    const id = await createUser(h.db, { name: 'Kojo Asante', email: 'kojo@hotelawise.com', role: 'staff', temporaryPassword: 'adinkra99', grants: ['content'] });
+    const id = await createUser(h.db, {
+      name: 'Kojo Asante',
+      email: 'kojo@hotelawise.com',
+      role: 'staff',
+      temporaryPassword: 'adinkra99',
+      grants: ['content'],
+    });
     expect((await loadActor(h.db, id))!.grants).toEqual(['content']);
     await h.db.update(schema.user).set({ banned: true }).where(eq(schema.user.id, id));
     await expect(auth().api.signInEmail({ body: { email: 'kojo@hotelawise.com', password: 'adinkra99' } })).rejects.toThrow();
@@ -54,7 +65,9 @@ describe('admin sign-in', () => {
     const a = auth();
     await a.api.forgetPasswordEmailOTP({ body: { email: 'esi@hotelawise.com' } });
     expect(codes.at(-1)).toMatch(/^\d{6}$/);
-    await expect(a.api.resetPasswordEmailOTP({ body: { email: 'esi@hotelawise.com', otp: codes.at(-1)!, password: 'weak' } })).rejects.toThrow();
+    await expect(
+      a.api.resetPasswordEmailOTP({ body: { email: 'esi@hotelawise.com', otp: codes.at(-1)!, password: 'weak' } }),
+    ).rejects.toThrow();
     await a.api.resetPasswordEmailOTP({ body: { email: 'esi@hotelawise.com', otp: codes.at(-1)!, password: 'akwaaba2026' } });
     const ok = await a.api.signInEmail({ body: { email: 'esi@hotelawise.com', password: 'akwaaba2026' } });
     expect(ok.user.email).toBe('esi@hotelawise.com');

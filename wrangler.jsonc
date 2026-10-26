@@ -10,7 +10,9 @@
   "observability": { "enabled": true },
   "triggers": { "crons": ["*/15 * * * *", "0 7 * * *", "0 2 * * *"] },
   "r2_buckets": [{ "binding": "NEXT_INC_CACHE_R2_BUCKET", "bucket_name": "hotel-a-wise-cache-dev" }],
-  "d1_databases": [{ "binding": "NEXT_TAG_CACHE_D1", "database_name": "hotel-a-wise-tags-dev", "database_id": "00000000-0000-0000-0000-000000000000" }],
+  "d1_databases": [
+    { "binding": "NEXT_TAG_CACHE_D1", "database_name": "hotel-a-wise-tags-dev", "database_id": "00000000-0000-0000-0000-000000000000" },
+  ],
   "durable_objects": { "bindings": [{ "name": "NEXT_CACHE_DO_QUEUE", "class_name": "DOQueueHandler" }] },
   "migrations": [{ "tag": "v1", "new_sqlite_classes": ["DOQueueHandler"] }],
   "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "hotel-a-wise-dev" }],
@@ -23,23 +25,31 @@
       "triggers": { "crons": ["*/15 * * * *", "0 7 * * *", "0 2 * * *"] },
       "r2_buckets": [{ "binding": "NEXT_INC_CACHE_R2_BUCKET", "bucket_name": "hotel-a-wise-cache-preview" }],
       // database_id is filled in once the D1 database exists in the hotel's Cloudflare account (RUNBOOK).
-      "d1_databases": [{ "binding": "NEXT_TAG_CACHE_D1", "database_name": "hotel-a-wise-tags-preview", "database_id": "00000000-0000-0000-0000-000000000000" }],
+      "d1_databases": [
+        {
+          "binding": "NEXT_TAG_CACHE_D1",
+          "database_name": "hotel-a-wise-tags-preview",
+          "database_id": "00000000-0000-0000-0000-000000000000",
+        },
+      ],
       "durable_objects": { "bindings": [{ "name": "NEXT_CACHE_DO_QUEUE", "class_name": "DOQueueHandler" }] },
       "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "hotel-a-wise-preview" }],
-      "vars": { "APP_ENV": "preview", "APP_URL": "https://preview.hotelawise.com" }
+      "vars": { "APP_ENV": "preview", "APP_URL": "https://preview.hotelawise.com" },
     },
     "production": {
       "name": "hotel-a-wise",
       "routes": [
         { "pattern": "hotelawise.com", "custom_domain": true },
-        { "pattern": "www.hotelawise.com", "custom_domain": true }
+        { "pattern": "www.hotelawise.com", "custom_domain": true },
       ],
       "triggers": { "crons": ["*/15 * * * *", "0 7 * * *", "0 2 * * *"] },
       "r2_buckets": [{ "binding": "NEXT_INC_CACHE_R2_BUCKET", "bucket_name": "hotel-a-wise-cache" }],
-      "d1_databases": [{ "binding": "NEXT_TAG_CACHE_D1", "database_name": "hotel-a-wise-tags", "database_id": "00000000-0000-0000-0000-000000000000" }],
+      "d1_databases": [
+        { "binding": "NEXT_TAG_CACHE_D1", "database_name": "hotel-a-wise-tags", "database_id": "00000000-0000-0000-0000-000000000000" },
+      ],
       "durable_objects": { "bindings": [{ "name": "NEXT_CACHE_DO_QUEUE", "class_name": "DOQueueHandler" }] },
       "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "hotel-a-wise" }],
-      "vars": { "APP_ENV": "production", "APP_URL": "https://hotelawise.com" }
-    }
-  }
+      "vars": { "APP_ENV": "production", "APP_URL": "https://hotelawise.com" },
+    },
+  },
 }

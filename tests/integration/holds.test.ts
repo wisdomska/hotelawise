@@ -10,17 +10,38 @@ let roomIds: string[];
 
 beforeAll(async () => {
   h = await freshDb('holds');
-  const [type] = await h.db.insert(schema.roomTypes).values({ code: 'VIP', name: 'VIP', beds: 'Large double bed', sleeps: 2, bathroom: 'VIP bathroom' }).returning();
-  const [variant] = await h.db.insert(schema.rateVariants).values({ roomTypeId: type!.id, code: 'VIP', displayCode: 'VIP', name: 'VIP', pricePesewas: 30000 }).returning();
+  const [type] = await h.db
+    .insert(schema.roomTypes)
+    .values({ code: 'VIP', name: 'VIP', beds: 'Large double bed', sleeps: 2, bathroom: 'VIP bathroom' })
+    .returning();
+  const [variant] = await h.db
+    .insert(schema.rateVariants)
+    .values({ roomTypeId: type!.id, code: 'VIP', displayCode: 'VIP', name: 'VIP', pricePesewas: 30000 })
+    .returning();
   vipId = variant!.id;
-  const rooms = await h.db.insert(schema.rooms).values([{ number: '206', rateVariantId: vipId }, { number: '207', rateVariantId: vipId }, { number: '208', rateVariantId: vipId }]).returning();
+  const rooms = await h.db
+    .insert(schema.rooms)
+    .values([
+      { number: '206', rateVariantId: vipId },
+      { number: '207', rateVariantId: vipId },
+      { number: '208', rateVariantId: vipId },
+    ])
+    .returning();
   roomIds = rooms.map((r) => r.id);
 });
 afterAll(async () => h?.drop());
 
 let n = 0;
 const hold = (checkIn: string, checkOut: string, now?: Date) =>
-  createHold(h.db, { rateVariantId: vipId, checkIn, checkOut, guests: 2, sessionId: 's', publicToken: `tok-${++n}`, ...(now ? { now } : {}) });
+  createHold(h.db, {
+    rateVariantId: vipId,
+    checkIn,
+    checkOut,
+    guests: 2,
+    sessionId: 's',
+    publicToken: `tok-${++n}`,
+    ...(now ? { now } : {}),
+  });
 
 describe('room holds (database-enforced)', () => {
   it('assigns the first free room in number order', async () => {
@@ -33,7 +54,17 @@ describe('room holds (database-enforced)', () => {
   });
 
   it('rejects a direct overlapping insert at the database level', async () => {
-    const [b] = await h.db.insert(schema.bookings).values({ publicToken: 'raw', rateVariantId: vipId, roomId: roomIds[0], checkIn: '2027-01-10', checkOut: '2027-01-11', status: 'confirmed' }).returning();
+    const [b] = await h.db
+      .insert(schema.bookings)
+      .values({
+        publicToken: 'raw',
+        rateVariantId: vipId,
+        roomId: roomIds[0],
+        checkIn: '2027-01-10',
+        checkOut: '2027-01-11',
+        status: 'confirmed',
+      })
+      .returning();
     await expect(
       h.db.insert(schema.roomAllocations).values({ bookingId: b!.id, roomId: roomIds[0]!, checkIn: '2027-01-10', checkOut: '2027-01-11' }),
     ).rejects.toMatchObject({ cause: { code: '23P01' } });
@@ -108,10 +139,14 @@ describe('database guards', () => {
     await expect(h.db.delete(schema.auditLog)).rejects.toThrow();
   });
   it('requires alt text before a gallery photo is published', async () => {
-    await expect(h.db.insert(schema.galleryItems).values({ imageId: 'x', alt: '  ', category: 'Rooms', published: true })).rejects.toThrow();
+    await expect(
+      h.db.insert(schema.galleryItems).values({ imageId: 'x', alt: '  ', category: 'Rooms', published: true }),
+    ).rejects.toThrow();
     await h.db.insert(schema.galleryItems).values({ imageId: 'x', alt: '', category: 'Rooms', published: false });
   });
   it('ties each payment to exactly one booking, order or enquiry', async () => {
-    await expect(h.db.insert(schema.payments).values({ ref: 'P1', amountPesewas: 100, channel: 'desk', status: 'success' })).rejects.toThrow();
+    await expect(
+      h.db.insert(schema.payments).values({ ref: 'P1', amountPesewas: 100, channel: 'desk', status: 'success' }),
+    ).rejects.toThrow();
   });
 });

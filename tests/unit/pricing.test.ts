@@ -3,10 +3,42 @@ import { applyPromo, ruleApplies, stayPrice, type PromoCode, type RateRule } fro
 
 // The prototype's seed rules (store.js), in pesewas.
 const rules: RateRule[] = [
-  { id: 'r1', name: 'Christmas & New Year', kind: 'range', from: '12-20', to: '01-02', appliesTo: 'all', direction: 'up', unit: 'pct', amount: 15, active: true },
+  {
+    id: 'r1',
+    name: 'Christmas & New Year',
+    kind: 'range',
+    from: '12-20',
+    to: '01-02',
+    appliesTo: 'all',
+    direction: 'up',
+    unit: 'pct',
+    amount: 15,
+    active: true,
+  },
   { id: 'r2', name: 'Weekend nights', kind: 'weekend', appliesTo: ['DBL'], direction: 'up', unit: 'ghs', amount: 3000, active: true },
-  { id: 'r3', name: 'Long stay', kind: 'longstay', minNights: 7, appliesTo: 'all', direction: 'down', unit: 'pct', amount: 10, active: true },
-  { id: 'r4', name: 'Independence Day', kind: 'range', from: '03-06', to: '03-06', appliesTo: 'all', direction: 'up', unit: 'pct', amount: 10, active: false },
+  {
+    id: 'r3',
+    name: 'Long stay',
+    kind: 'longstay',
+    minNights: 7,
+    appliesTo: 'all',
+    direction: 'down',
+    unit: 'pct',
+    amount: 10,
+    active: true,
+  },
+  {
+    id: 'r4',
+    name: 'Independence Day',
+    kind: 'range',
+    from: '03-06',
+    to: '03-06',
+    appliesTo: 'all',
+    direction: 'up',
+    unit: 'pct',
+    amount: 10,
+    active: false,
+  },
 ];
 
 describe('stayPrice', () => {
@@ -36,7 +68,17 @@ describe('stayPrice', () => {
     expect(month.total).toBe(30 * 13500);
   });
   it('never prices a night below zero and rejects bad night counts', () => {
-    const big: RateRule = { id: 'x', name: 'Huge', kind: 'longstay', minNights: 1, appliesTo: 'all', direction: 'down', unit: 'ghs', amount: 99999, active: true };
+    const big: RateRule = {
+      id: 'x',
+      name: 'Huge',
+      kind: 'longstay',
+      minNights: 1,
+      appliesTo: 'all',
+      direction: 'down',
+      unit: 'ghs',
+      amount: 99999,
+      active: true,
+    };
     expect(stayPrice('STD', 15000, '2026-10-26', 1, [big]).total).toBe(0);
     expect(() => stayPrice('STD', 15000, '2026-10-26', -1, rules)).toThrow(RangeError);
     expect(() => stayPrice('STD', 15000, '2026-10-26', 1.5, rules)).toThrow(RangeError);

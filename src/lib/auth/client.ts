@@ -5,7 +5,8 @@ import { emailOTPClient, twoFactorClient } from 'better-auth/client/plugins';
 export const authClient = createAuthClient({
   basePath: '/api/auth',
   plugins: [
-    twoFactorClient({ onTwoFactorRedirect: () => window.location.assign('/admin/login?step=2fa') }),
+    // The sign-in form handles the two-factor step itself (twoFactorRedirect).
+    twoFactorClient(),
     emailOTPClient(),
   ],
 });

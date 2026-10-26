@@ -48,7 +48,10 @@ async function committedUnits(tx: AnyDb, itemIds: string[], from: IsoDate, to: I
       from ${schema.orderLines} l
       join ${schema.rentalOrders} o on o.id = l.order_id
       cross join generate_series(${from}::date, ${to}::date, interval '1 day') d
-     where l.item_id in (${sql.join(itemIds.map((i) => sql`${i}::uuid`), sql`, `)})
+     where l.item_id in (${sql.join(
+       itemIds.map((i) => sql`${i}::uuid`),
+       sql`, `,
+     )})
        and o.status not in ('cancelled', 'returned', 'completed')
        and not (o.status in ('pending_payment', 'reserved') and o.hold_until is not null and o.hold_until <= ${now.toISOString()})
        and d::date between o.starts and o.ends + 1
@@ -126,9 +129,11 @@ export async function createRentalOrder(db: AnyDb, input: RentalOrderInput) {
         createdBy: input.createdBy ?? null,
       })
       .returning();
-    await tx.insert(schema.orderLines).values(
-      priced.map((l) => ({ orderId: order!.id, itemId: l.itemId, qty: l.qty, unitPesewas: l.unit, depositPesewas: l.deposit, days })),
-    );
+    await tx
+      .insert(schema.orderLines)
+      .values(
+        priced.map((l) => ({ orderId: order!.id, itemId: l.itemId, qty: l.qty, unitPesewas: l.unit, depositPesewas: l.deposit, days })),
+      );
     await tx.insert(schema.orderStatusEvents).values({ orderId: order!.id, from: null, to: order!.status });
     return order!;
   });

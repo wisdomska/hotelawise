@@ -24,7 +24,8 @@ export const SEED_SETTINGS = {
   'booking.freeCancellationHours': 48, // confirm
   'booking.noShowCharge': 'first_night', // confirm
   'booking.holdMinutes': 15,
-  'booking.policyText': 'Free cancellation up to 48 hours before check-in. Inside 48 hours the deposit is kept. No-shows are charged the first night.',
+  'booking.policyText':
+    'Free cancellation up to 48 hours before check-in. Inside 48 hours the deposit is kept. No-shows are charged the first night.',
   // Rentals
   'rentals.deliveryEnabled': false, // DECISIONS D-01
   'rentals.pickupFromHour': 7,

@@ -73,7 +73,7 @@ export function makeRef(kind: RefKind, sequenceValue: number, secret: string): s
   let chars: number = minChars;
   let offset = 0;
   // Keep 5 bits per character; width grows in whole characters with an even bit count.
-  while (sequenceValue - offset >= 2 ** (bitsFor(chars))) {
+  while (sequenceValue - offset >= 2 ** bitsFor(chars)) {
     offset += 2 ** bitsFor(chars);
     chars += 1;
   }

@@ -17,42 +17,103 @@ const SRC = 'design/uploads/Hotel-A-Wise-Images-web';
 
 export const IMAGES = {
   // Renamed (Handoff.md › Seed assumptions)
-  executiveBedroom: { id: 'rooms/executive-bedroom', file: `${SRC}/01-hero-and-exterior/hero-front-desk.jpg`, alt: 'Executive bedroom with a large double bed, ceiling fan and window onto the trees' },
-  frontDesk: { id: 'spaces/front-desk', file: `${SRC}/01-hero-and-exterior/hotel-view-reception.jpg`, alt: 'The front desk on the ground floor, staffed day and night' },
-  groundFloorLounge: { id: 'spaces/ground-floor-lounge', file: `${SRC}/01-hero-and-exterior/contact-hero.jpg`, alt: 'The ground-floor lounge' },
+  executiveBedroom: {
+    id: 'rooms/executive-bedroom',
+    file: `${SRC}/01-hero-and-exterior/hero-front-desk.jpg`,
+    alt: 'Executive bedroom with a large double bed, ceiling fan and window onto the trees',
+  },
+  frontDesk: {
+    id: 'spaces/front-desk',
+    file: `${SRC}/01-hero-and-exterior/hotel-view-reception.jpg`,
+    alt: 'The front desk on the ground floor, staffed day and night',
+  },
+  groundFloorLounge: {
+    id: 'spaces/ground-floor-lounge',
+    file: `${SRC}/01-hero-and-exterior/contact-hero.jpg`,
+    alt: 'The ground-floor lounge',
+  },
   corridor: { id: 'spaces/corridor', file: `${SRC}/01-hero-and-exterior/gallery-events-hero.jpg`, alt: 'Corridor on the first floor' },
-  compoundWedding: { id: 'events/compound-wedding', file: `${SRC}/05-services-and-rentals/private-events.jpg`, alt: 'The compound set for a wedding under white canopies' },
+  compoundWedding: {
+    id: 'events/compound-wedding',
+    file: `${SRC}/05-services-and-rentals/private-events.jpg`,
+    alt: 'The compound set for a wedding under white canopies',
+  },
   // Exterior
   compound: { id: 'spaces/compound', file: `${SRC}/01-hero-and-exterior/hotel-compound.jpg`, alt: 'The outdoor event compound' },
   // Rooms
   standardRoom: { id: 'rooms/standard-room', file: `${SRC}/02-rooms/standard-room.jpg`, alt: 'Standard Room, full view' },
   executiveRoom: { id: 'rooms/executive-room', file: `${SRC}/02-rooms/executive-room-1.jpg`, alt: 'Executive Room with desk and window' },
-  executiveLinen: { id: 'rooms/executive-linen', file: `${SRC}/02-rooms/executive-room-2-customised-sheets.jpg`, alt: 'A-Wise customised pillow label' },
+  executiveLinen: {
+    id: 'rooms/executive-linen',
+    file: `${SRC}/02-rooms/executive-room-2-customised-sheets.jpg`,
+    alt: 'A-Wise customised pillow label',
+  },
   vipRoom: { id: 'rooms/vip-room', file: `${SRC}/02-rooms/vip-room-1.jpg`, alt: 'VIP Room with mini fridge' },
   vipRoomDetail: { id: 'rooms/vip-room-detail', file: `${SRC}/02-rooms/vip-room-2.jpg`, alt: 'VIP Room bed and carved door' },
   doubleRoom: { id: 'rooms/double-room', file: `${SRC}/02-rooms/double-bed-room.jpg`, alt: 'Double Room with two beds' },
   // Bathrooms
-  standardBathroom: { id: 'bathrooms/standard', file: `${SRC}/03-bathrooms/standard-bathroom.jpg`, alt: 'Standard bathroom with glass shower' },
-  executiveBathroom: { id: 'bathrooms/executive', file: `${SRC}/03-bathrooms/executive-bathroom.jpg`, alt: 'Executive bathroom, rain shower and LED mirror' },
+  standardBathroom: {
+    id: 'bathrooms/standard',
+    file: `${SRC}/03-bathrooms/standard-bathroom.jpg`,
+    alt: 'Standard bathroom with glass shower',
+  },
+  executiveBathroom: {
+    id: 'bathrooms/executive',
+    file: `${SRC}/03-bathrooms/executive-bathroom.jpg`,
+    alt: 'Executive bathroom, rain shower and LED mirror',
+  },
   vipBathroom: { id: 'bathrooms/vip', file: `${SRC}/03-bathrooms/vip-bathroom.jpg`, alt: 'VIP bathroom' },
   vipRainShower: { id: 'bathrooms/vip-rain-shower', file: `${SRC}/03-bathrooms/vvip-bathroom.jpg`, alt: 'VIP bathroom, rain shower' },
   // Spaces
-  conferenceRoom1: { id: 'spaces/conference-room-1', file: `${SRC}/04-spaces/conference-room-angle-1.jpg`, alt: 'Conference room, second floor' },
-  conferenceRoom2: { id: 'spaces/conference-room-2', file: `${SRC}/04-spaces/conference-room-angle-2.jpg`, alt: 'Second-floor conference room with long tables and blue chairs' },
+  conferenceRoom1: {
+    id: 'spaces/conference-room-1',
+    file: `${SRC}/04-spaces/conference-room-angle-1.jpg`,
+    alt: 'Conference room, second floor',
+  },
+  conferenceRoom2: {
+    id: 'spaces/conference-room-2',
+    file: `${SRC}/04-spaces/conference-room-angle-2.jpg`,
+    alt: 'Second-floor conference room with long tables and blue chairs',
+  },
   firstFloorPorch: { id: 'spaces/first-floor-porch', file: `${SRC}/04-spaces/first-floor-porch.jpg`, alt: 'First-floor porch' },
   secondFloorPorch: { id: 'spaces/second-floor-porch', file: `${SRC}/04-spaces/second-floor-porch.jpg`, alt: 'Second-floor porch' },
-  firstFloorReceptionEvent: { id: 'events/first-floor-reception', file: `${SRC}/04-spaces/first-floor-reception-event.jpg`, alt: 'First-floor reception, event set-up' },
-  secondFloorReceptionEvent1: { id: 'events/second-floor-reception-1', file: `${SRC}/04-spaces/second-floor-reception-event-1.jpg`, alt: 'Second-floor reception, dressed for dinner' },
-  secondFloorReceptionEvent2: { id: 'events/second-floor-reception-2', file: `${SRC}/04-spaces/second-floor-reception-event-2.jpg`, alt: 'Second-floor reception, round tables' },
+  firstFloorReceptionEvent: {
+    id: 'events/first-floor-reception',
+    file: `${SRC}/04-spaces/first-floor-reception-event.jpg`,
+    alt: 'First-floor reception, event set-up',
+  },
+  secondFloorReceptionEvent1: {
+    id: 'events/second-floor-reception-1',
+    file: `${SRC}/04-spaces/second-floor-reception-event-1.jpg`,
+    alt: 'Second-floor reception, dressed for dinner',
+  },
+  secondFloorReceptionEvent2: {
+    id: 'events/second-floor-reception-2',
+    file: `${SRC}/04-spaces/second-floor-reception-event-2.jpg`,
+    alt: 'Second-floor reception, round tables',
+  },
   staircase: { id: 'spaces/staircase', file: `${SRC}/04-spaces/staircase.jpg`, alt: 'Staircase' },
   hallway: { id: 'spaces/hallway', file: `${SRC}/04-spaces/spacious-hallway.jpg`, alt: 'The hallway outside the rooms' },
   // Services and rentals
   canopy: { id: 'rentals/canopy', file: `${SRC}/05-services-and-rentals/canopy-rental.jpg`, alt: 'White canopy on a steel frame' },
   table: { id: 'rentals/table', file: `${SRC}/05-services-and-rentals/table-rental.jpg`, alt: 'Foldable event table' },
-  foldableChair: { id: 'rentals/foldable-chair', file: `${SRC}/05-services-and-rentals/plastic-chair-rental.jpg`, alt: 'Blue foldable chair with padded seat' },
-  bedAndBreakfast: { id: 'services/breakfast-dish', file: `${SRC}/05-services-and-rentals/bed-and-breakfast.jpg`, alt: 'Breakfast, served 7 to 10am' },
+  foldableChair: {
+    id: 'rentals/foldable-chair',
+    file: `${SRC}/05-services-and-rentals/plastic-chair-rental.jpg`,
+    alt: 'Blue foldable chair with padded seat',
+  },
+  bedAndBreakfast: {
+    id: 'services/breakfast-dish',
+    file: `${SRC}/05-services-and-rentals/bed-and-breakfast.jpg`,
+    alt: 'Breakfast, served 7 to 10am',
+  },
   // Coming soon (concept images)
-  breakfastConcept: { id: 'coming-soon/breakfast', file: `${SRC}/06-coming-soon/breakfast.jpg`, alt: 'Concept image: Breakfast, an all-day West African dining concept', concept: true },
+  breakfastConcept: {
+    id: 'coming-soon/breakfast',
+    file: `${SRC}/06-coming-soon/breakfast.jpg`,
+    alt: 'Concept image: Breakfast, an all-day West African dining concept',
+    concept: true,
+  },
   summerHutConcept: {
     id: 'coming-soon/summer-hut',
     file: `${SRC}/06-coming-soon/summer-hut.jpg`,

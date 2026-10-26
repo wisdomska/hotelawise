@@ -4,7 +4,16 @@ import { authorize, pendingSetup, SetupRequiredError, type ActorRecord } from '@
 import { ForbiddenError } from '@/server/auth/permissions';
 import { diff } from '@/server/services/audit';
 
-const base: ActorRecord = { id: 'u', name: 'Esi', email: 'esi@hotelawise.com', role: 'super_admin', grants: [], active: true, twoFactorEnabled: true, mustChangePassword: false };
+const base: ActorRecord = {
+  id: 'u',
+  name: 'Esi',
+  email: 'esi@hotelawise.com',
+  role: 'super_admin',
+  grants: [],
+  active: true,
+  twoFactorEnabled: true,
+  mustChangePassword: false,
+};
 
 describe('password hashing', () => {
   it('hashes with a random salt and verifies', async () => {
@@ -41,7 +50,10 @@ describe('authorize', () => {
 
 describe('audit diff', () => {
   it('keeps only changed fields', () => {
-    expect(diff({ price: 24000, name: 'EXE+' }, { price: 25000, name: 'EXE+' })).toEqual({ before: { price: 24000 }, after: { price: 25000 } });
+    expect(diff({ price: 24000, name: 'EXE+' }, { price: 25000, name: 'EXE+' })).toEqual({
+      before: { price: 24000 },
+      after: { price: 25000 },
+    });
     expect(diff(null, { a: 1 })).toEqual({ before: null, after: { a: 1 } });
   });
 });

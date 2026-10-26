@@ -18,14 +18,21 @@ function sign(params: Record<string, string>): string {
     .sort()
     .map((k) => `${k}=${params[k]}`)
     .join('&');
-  return createHash('sha1').update(payload + secret).digest('hex');
+  return createHash('sha1')
+    .update(payload + secret)
+    .digest('hex');
 }
 
 let failed = 0;
 for (const [name, img] of Object.entries(IMAGES)) {
   const publicId = `${CLOUDINARY_FOLDER}/${img.id}`;
   const context = `alt=${img.alt.replace(/[|=]/g, ' ')}`;
-  const params: Record<string, string> = { public_id: publicId, overwrite: 'false', context, timestamp: String(Math.floor(Date.now() / 1000)) };
+  const params: Record<string, string> = {
+    public_id: publicId,
+    overwrite: 'false',
+    context,
+    timestamp: String(Math.floor(Date.now() / 1000)),
+  };
   const form = new FormData();
   const bytes = await readFile(path.resolve(img.file));
   form.append('file', new Blob([bytes], { type: 'image/jpeg' }), path.basename(img.file));
