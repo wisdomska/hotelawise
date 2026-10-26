@@ -317,3 +317,7 @@ Turbopack bundles server code once for pages and again for route handlers (auth,
 ## D-40 Rate limits are counted in Postgres, not Upstash
 
 Upstash is blocked on the owner's network (Sophos), and adding another service only for counters isn't worth it. Each check is one atomic upsert on a `rate_limits` row (`env:rule:caller`), a fixed window per rule, so every Worker isolate shares the same count. If the database can't be reached the check falls back to the isolate's in-memory window instead of turning guests away. Windows older than a day are deleted by the nightly housekeeping job.
+
+## D-41 The preview site is open to anyone with the link
+
+The owner asked for the preview to open without a password. `PREVIEW_GATE=off` in `wrangler.jsonc` turns the Basic-auth gate off; every page still sends `X-Robots-Tag: noindex, nofollow` and robots.txt disallows everything, so search engines stay away. Payments on preview use Paystack test keys only. Setting `PREVIEW_GATE` to `on` brings the password back.

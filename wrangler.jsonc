@@ -37,6 +37,9 @@
       "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "hotel-a-wise-preview" }],
       "vars": {
         "APP_ENV": "preview",
+        // Open to anyone with the link, at the owner's request (DECISIONS D-41). Still noindex.
+        // Set to "on" to ask for PREVIEW_PASSWORD again.
+        "PREVIEW_GATE": "off",
         "APP_URL": "https://hotel-a-wise-preview.wisdomska.workers.dev",
         "TURNSTILE_SITE_KEY": "0x4AAAAAAFmY-i1HGdxRTFd8",
         // Paystack test mode: publishable key only; the secret is a Worker secret.

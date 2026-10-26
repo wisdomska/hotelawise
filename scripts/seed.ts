@@ -3,7 +3,7 @@
 // on any environment (DECISIONS D-04). Safe to re-run: existing rows are kept,
 // so edits made in the admin are never overwritten.
 //   DATABASE_URL=… pnpm db:seed
-import { createNodeDb } from '../src/server/db/node';
+import { connect } from './connect';
 import * as s from '../src/server/db/schema';
 import { cloudinaryId, GALLERY, IMAGES, PHOTO_SLOTS } from '../src/server/content/images';
 import { SEED_SETTINGS, SEED_CONTENT } from '../src/server/content/defaults';
@@ -11,7 +11,7 @@ import { BUNDLES, FAQS, GHS, PROMOS, RATE_RULES, RENTAL_ITEMS, ROOM_TYPES, VENUE
 
 const url = process.env.DATABASE_URL;
 if (!url) throw new Error('Set DATABASE_URL');
-const { db, close } = createNodeDb(url);
+const { db, close } = connect(url);
 async function main() {
   await db.transaction(async (tx) => {
     for (const t of ROOM_TYPES) {

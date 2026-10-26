@@ -9,6 +9,7 @@ describe('preview gate', () => {
   it('does nothing outside preview', () => {
     expect(previewGate(req('/'), { appEnv: 'production', password: 'x' })).toBeNull();
     expect(previewGate(req('/'), { appEnv: 'development' })).toBeNull();
+    expect(previewGate(req('/'), { appEnv: 'preview', gate: 'off' })).toBeNull();
   });
   it('challenges without the right password, and fails closed when none is set', () => {
     expect(previewGate(req('/'), cfg)?.status).toBe(401);

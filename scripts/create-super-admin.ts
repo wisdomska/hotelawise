@@ -2,7 +2,7 @@
 // accounts anywhere (DECISIONS D-04). The new admin must change this temporary
 // password and enrol TOTP on first sign-in.
 //   SUPER_ADMIN_NAME="…" SUPER_ADMIN_EMAIL=… SUPER_ADMIN_TEMP_PASSWORD=… DATABASE_URL=… pnpm admin:create
-import { createNodeDb } from '../src/server/db/node';
+import { connect } from './connect';
 import { createUser } from '../src/server/auth/users';
 
 const { DATABASE_URL, SUPER_ADMIN_NAME, SUPER_ADMIN_EMAIL, SUPER_ADMIN_TEMP_PASSWORD } = process.env;
@@ -11,7 +11,7 @@ if (!DATABASE_URL || !SUPER_ADMIN_EMAIL || !SUPER_ADMIN_TEMP_PASSWORD) {
   process.exit(1);
 }
 
-const { db, close } = createNodeDb(DATABASE_URL);
+const { db, close } = connect(DATABASE_URL);
 try {
   const id = await createUser(db, {
     name: SUPER_ADMIN_NAME ?? 'Super Admin',

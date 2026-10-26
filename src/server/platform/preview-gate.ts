@@ -1,6 +1,8 @@
 // Keeps the public and search engines off the staging site without Cloudflare
 // Access (whose sign-up asks for a payment method; DECISIONS D-30). HTTP Basic
-// auth, any username, password = PREVIEW_PASSWORD. Only active when APP_ENV=preview.
+// auth, any username, password = PREVIEW_PASSWORD. Only active when APP_ENV=preview,
+// and the owner can open the preview with PREVIEW_GATE=off (DECISIONS D-41); pages
+// still carry noindex and robots.txt still disallows everything.
 
 /** Paths that must stay reachable on preview: payment webhooks and the health check. */
 const OPEN_PATHS = [/^\/api\/paystack\/webhook$/, /^\/api\/health$/];
@@ -14,9 +16,9 @@ function safeEqual(a: string, b: string): boolean {
 
 export function previewGate(
   request: { headers: Headers; nextUrl: { pathname: string } },
-  config: { appEnv?: string; password?: string },
+  config: { appEnv?: string; password?: string; gate?: string },
 ): Response | null {
-  if (config.appEnv !== 'preview') return null;
+  if (config.appEnv !== 'preview' || config.gate === 'off') return null;
   if (OPEN_PATHS.some((p) => p.test(request.nextUrl.pathname))) return null;
   const challenge = new Response('This is the Hotel A-Wise staging site.', {
     status: 401,
