@@ -3,7 +3,7 @@
 // When no database is configured (the Worker build), it returns the seeded
 // catalogue and default copy, so pages still prerender.
 import 'server-only';
-import { asc, eq } from 'drizzle-orm';
+import { asc, eq, ne } from 'drizzle-orm';
 import { unstable_cache } from 'next/cache';
 import * as s from '@/server/db/schema';
 import { BUNDLES, FAQS, GHS, RENTAL_ITEMS, ROOM_TYPES, VENUES } from './catalogue';
@@ -162,7 +162,11 @@ async function loadFromDatabase(): Promise<SiteData> {
     d.select().from(s.contentBlocks),
     d.select().from(s.roomTypes).orderBy(asc(s.roomTypes.position)),
     d.select().from(s.rateVariants).orderBy(asc(s.rateVariants.position)),
-    d.select({ number: s.rooms.number, rateVariantId: s.rooms.rateVariantId }).from(s.rooms).orderBy(asc(s.rooms.number)),
+    d
+      .select({ number: s.rooms.number, rateVariantId: s.rooms.rateVariantId })
+      .from(s.rooms)
+      .where(ne(s.rooms.status, 'retired'))
+      .orderBy(asc(s.rooms.number)),
     d.select().from(s.imageSlots),
     d.select().from(s.rentalItems).where(eq(s.rentalItems.archived, false)).orderBy(asc(s.rentalItems.position)),
     d.select().from(s.bundles).where(eq(s.bundles.active, true)).orderBy(asc(s.bundles.position)),

@@ -1,12 +1,21 @@
 'use client';
 // Rooms & rates modals from Admin.dc.html buildModal: room type, rate rule,
-// promo code and blocked dates.
+// promo code and blocked dates, plus adding a room and changing its type.
 import { useEffect, useState } from 'react';
-import { blockDatesAction, loadRoomNumbers, savePromoAction, saveRoomTypeAction, saveRuleAction } from '@/app/admin/(app)/rooms/actions';
+import {
+  addRoomAction,
+  blockDatesAction,
+  changeRoomTypeAction,
+  loadRoomNumbers,
+  loadRoomTypeOptions,
+  savePromoAction,
+  saveRoomTypeAction,
+  saveRuleAction,
+} from '@/app/admin/(app)/rooms/actions';
 import { todayInAccra, type IsoDate } from '@/lib/dates';
 import { formatGhs } from '@/lib/money';
 import { useAdmin } from '../context';
-import { AreaField, DateField, FieldGrid, Lines, ModalFrame, SelectField, TextField } from '../modal';
+import { AreaField, DateField, FieldGrid, Lines, ModalFrame, Note, SelectField, TextField } from '../modal';
 import { useAction } from '../use-action';
 
 export const ROOM_OPTS = [
@@ -407,6 +416,56 @@ export function BlackoutModal() {
           options={[{ value: 'all', label: 'All rooms' }, ...rooms.map((n) => ({ value: n, label: `Room ${n}` }))]}
         />
         <TextField label="Reason" value={f.reason} onChange={set('reason')} placeholder="e.g. Repainting" err={errors.reason} />
+      </FieldGrid>
+    </ModalFrame>
+  );
+}
+
+function useRoomTypes() {
+  const [o, setO] = useState<{ types: { value: string; label: string }[]; removed: string[] } | null>(null);
+  useEffect(() => {
+    void loadRoomTypeOptions().then((x) => setO(x));
+  }, []);
+  return o;
+}
+
+export function AddRoomModal() {
+  const o = useRoomTypes();
+  const { f, set, run, busy, errors, setErrors } = useForm({ number: '', type: '' });
+  const type = f.type || o?.types[0]?.value || '';
+  return (
+    <ModalFrame
+      title="Add a room"
+      sub="It goes on the room board and can be booked on the website straight away, at its type’s price."
+      confirm="Add room"
+      busy={busy}
+      onConfirm={() => {
+        if (!f.number.trim()) return setErrors({ number: 'Enter the room number.' });
+        void run(() => addRoomAction({ number: f.number, type }));
+      }}
+    >
+      <FieldGrid>
+        <TextField label="Room number" value={f.number} onChange={set('number')} placeholder="e.g. 209" err={errors.number} />
+        <SelectField label="Room type" value={type} onChange={set('type')} options={o?.types ?? []} err={errors.type} />
+      </FieldGrid>
+      {!!o?.removed.length && <Note>Removed rooms you can bring back by adding the number again: {o.removed.join(', ')}.</Note>}
+    </ModalFrame>
+  );
+}
+
+export function ChangeRoomTypeModal({ number, current }: { number: string; current: string }) {
+  const o = useRoomTypes();
+  const { f, set, run, busy } = useForm({ type: current });
+  return (
+    <ModalFrame
+      title={`Change room ${number}’s type`}
+      sub="The room takes the new type’s price and details. Not possible while it has a guest or upcoming stays."
+      confirm="Change type"
+      busy={busy}
+      onConfirm={() => void run(() => changeRoomTypeAction(number, f.type))}
+    >
+      <FieldGrid>
+        <SelectField label="Room type" value={f.type} onChange={set('type')} options={o?.types ?? []} wide />
       </FieldGrid>
     </ModalFrame>
   );

@@ -2,11 +2,14 @@
 // Booking and room drawers (Admin.dc.html buildDrawer: booking, room).
 import { useEffect, useState } from 'react';
 import { loadBooking, loadRoom, saveBookingNote, setRoomStatusAction } from '@/app/admin/(app)/bookings/actions';
+import { removeRoomAction } from '@/app/admin/(app)/rooms/actions';
 import { BOOKING_STATUS, ROOM_STATUS, SOURCE, type RoomStatus } from '@/lib/admin/labels';
 import { formatDayMonth } from '@/lib/dates';
 import { formatGhs } from '@/lib/money';
 import { formatPhoneLocal } from '@/lib/phone';
 import { useAdmin } from '../context';
+import { ConfirmModal } from '../modal';
+import { ChangeRoomTypeModal } from '../rooms/modals';
 import { DrawerFrame, DrawerLoading } from '../drawer';
 import { invoiceAction } from '../export';
 import type { Action } from '../ui';
@@ -71,7 +74,7 @@ export function BookingDrawer({ spec }: { spec: { ref: string } }) {
 }
 
 export function RoomDrawer({ spec }: { spec: { number: string } }) {
-  const { openDrawer, can, toast, refresh, version } = useAdmin();
+  const { openDrawer, openModal, closeDrawer, can, toast, refresh, version } = useAdmin();
   const r = useLoad(() => loadRoom(spec.number), [spec.number, version]);
   if (r === undefined) return <DrawerLoading label={`Room ${spec.number}`} />;
   if (r === null) return null;
@@ -94,6 +97,24 @@ export function RoomDrawer({ spec }: { spec: { number: string } }) {
           },
         }),
       );
+  if (can('rooms.edit')) {
+    acts.push({ label: 'Change type', icon: 'edit', on: () => openModal(<ChangeRoomTypeModal number={r.number} current={r.variant} />) });
+    acts.push({
+      label: 'Remove room',
+      icon: 'trash',
+      kind: 'danger',
+      on: () =>
+        openModal(
+          <ConfirmModal
+            title={`Remove room ${r.number}?`}
+            sub="It comes off the room board and the website. Past bookings keep their room number. Not possible while it has a guest or upcoming stays."
+            confirm="Remove room"
+            run={() => removeRoomAction(r.number)}
+            then={closeDrawer}
+          />,
+        ),
+    });
+  }
   return (
     <DrawerFrame
       kicker={`ROOM ${r.number}`}

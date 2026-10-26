@@ -333,3 +333,7 @@ The Worker's `scheduled()` handler is bundled by Wrangler outside Next.js, so se
 - every 15 minutes: release lapsed booking holds; mark unpaid pay-at-pickup orders cancelled after 10:00 on pickup day (stock was already free; this tells the desk and the customer).
 - 07:00: day-before reminders for check-in, rental pickup and rental return, at most 60 a run (Resend's free plan sends 100 emails a day). Each is stamped when sent, so a retried run sends nothing twice.
 - 02:00: housekeeping. Spent guest and sign-in codes, finished rate-limit windows, expired sessions, and sign-in history older than 180 days. Bookings, orders, payments and the audit log are never pruned.
+
+## D-44 Super Admins add, retype and remove rooms
+
+The owner asked for rooms to be changeable from the admin, since the building will change. Rooms & rates › Room status has **Add room** (a number and a room type); the room drawer has **Change type** and **Remove room**. Changing type or removing is refused while the room has a guest or any stay from today on, so no booking is left without a room. A room that was never booked is deleted. One with history gets the new `retired` status instead: it leaves the board, the website and every availability count, but past bookings, invoices and reports keep its number. Adding the same number again brings it back.

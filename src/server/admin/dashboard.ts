@@ -2,7 +2,7 @@
 // day they landed (Accra = UTC); occupancy is rooms held by live bookings per
 // night over all 16 rooms.
 import 'server-only';
-import { count, eq, inArray, sql, sum } from 'drizzle-orm';
+import { count, eq, inArray, ne, sql, sum } from 'drizzle-orm';
 import { addDays, type IsoDate } from '@/lib/dates';
 import * as s from '@/server/db/schema';
 import { rowsOf } from '@/server/db/rows';
@@ -31,7 +31,7 @@ export async function last30(db: AnyDb, today: IsoDate): Promise<Series> {
                        and b.check_in <= d::date and b.check_out > d::date
        group by 1`),
     ),
-    db.select({ n: count() }).from(s.rooms),
+    db.select({ n: count() }).from(s.rooms).where(ne(s.rooms.status, 'retired')),
   ]);
   const m = new Map(rowsOf<{ day: string; rooms: number; rentals: number }>(money).map((r) => [r.day, r]));
   const o = new Map(rowsOf<{ day: string; n: number }>(occ).map((r) => [r.day, r.n]));
@@ -53,7 +53,7 @@ export async function tonightByRate(db: AnyDb, today: IsoDate): Promise<[string,
              count(distinct b.room_id) filter (where b.id is not null)::int as booked,
              count(distinct r.id)::int as total
         from rate_variants v
-        join rooms r on r.rate_variant_id = v.id
+        join rooms r on r.rate_variant_id = v.id and r.status <> 'retired'
         left join bookings b on b.room_id = r.id and b.status in ${LIVE} and b.status <> 'checked_out'
                             and b.check_in <= '${today}'::date and b.check_out > '${today}'::date
        group by v.name, v.position

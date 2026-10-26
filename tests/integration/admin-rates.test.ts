@@ -131,4 +131,52 @@ describe('rooms & rates', () => {
       { number: '203', name: 'Executive Plus' },
     ]);
   });
+
+  it('adds a room, changes its type and refuses a number that exists', async () => {
+    expect(await R.addRoom(h.db, who, { number: ' 209 ', type: 'EXE' })).toEqual({ number: '209', type: 'Executive', restored: false });
+    await expect(R.addRoom(h.db, who, { number: '209', type: 'EXE' })).rejects.toThrow('already exists');
+    await expect(R.addRoom(h.db, who, { number: 'Room 9!', type: 'EXE' })).rejects.toThrow('letters or numbers');
+    await expect(R.addRoom(h.db, who, { number: '210', type: 'NOPE' })).rejects.toThrow('Pick a room type');
+    expect((await R.changeRoomType(h.db, who, { number: '209', type: 'EXE_PLUS' }, '2026-11-01')).changed).toBe(true);
+    expect((await R.roomTypeRows(h.db)).find((t) => t.code === 'EXE_PLUS')!.numbers).toEqual(['203', '209']);
+  });
+
+  it('removes a never-booked room for good, and keeps one with history as removed', async () => {
+    expect(await R.removeRoom(h.db, who, '209', '2026-11-01')).toEqual({ kept: false });
+    expect(await h.db.select().from(s.rooms).where(eq(s.rooms.number, '209'))).toHaveLength(0);
+
+    const [room] = await h.db.select().from(s.rooms).where(eq(s.rooms.number, '201'));
+    const [c] = await h.db.insert(s.customers).values({ name: 'Kofi Mensah', phoneE164: '+233244000999' }).returning();
+    const [v] = await h.db.select().from(s.rateVariants).where(eq(s.rateVariants.code, 'EXE'));
+    const stay = (checkIn: string, checkOut: string) =>
+      h.db
+        .insert(s.bookings)
+        .values({
+          ref: `AW-${checkIn.slice(5, 7)}${checkIn.slice(8)}`,
+          publicToken: `tok-${checkIn}-xxxxxxxxxxxx`,
+          customerId: c!.id,
+          rateVariantId: v!.id,
+          roomId: room!.id,
+          checkIn,
+          checkOut,
+          guests: 1,
+          status: 'confirmed',
+          totalPesewas: 20000,
+        } as never)
+        .returning();
+    const [future] = await stay('2026-11-05', '2026-11-06');
+    await h.db.insert(s.roomAllocations).values({ bookingId: future!.id, roomId: room!.id, checkIn: '2026-11-05', checkOut: '2026-11-06' });
+    await expect(R.removeRoom(h.db, who, '201', '2026-11-01')).rejects.toThrow('upcoming stay');
+    await expect(R.changeRoomType(h.db, who, { number: '201', type: 'EXE_PLUS' }, '2026-11-01')).rejects.toThrow('Move it');
+
+    // Once the stay is over the room can go, but its booking keeps the number.
+    expect(await R.removeRoom(h.db, who, '201', '2026-12-01')).toEqual({ kept: true });
+    expect(await R.removedRooms(h.db)).toEqual(['201']);
+    expect((await R.roomTypeRows(h.db)).find((t) => t.code === 'EXE')!.numbers).toEqual([]);
+    expect(await R.roomNumbers(h.db)).toEqual(['203']);
+
+    // Adding the number again brings it back.
+    expect(await R.addRoom(h.db, who, { number: '201', type: 'EXE' })).toMatchObject({ restored: true });
+    expect(await R.removedRooms(h.db)).toEqual([]);
+  });
 });

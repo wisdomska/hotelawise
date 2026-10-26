@@ -3,7 +3,7 @@
 // these functions answer "how many are free?" for display and pre-checks.
 import { addDays, eachNight, rangesOverlap, type IsoDate } from '@/lib/dates';
 
-export type RoomLike = { id: string; status: 'available' | 'occupied' | 'cleaning' | 'maintenance' | 'out_of_order' };
+export type RoomLike = { id: string; status: 'available' | 'occupied' | 'cleaning' | 'maintenance' | 'out_of_order' | 'retired' };
 export type AllocationLike = { roomId: string; checkIn: IsoDate; checkOut: IsoDate; active: boolean; holdExpiresAt: Date | null };
 export type BlackoutLike = { starts: IsoDate; ends: IsoDate; roomIds: readonly string[] | null };
 
@@ -13,9 +13,9 @@ export function allocationCounts(a: AllocationLike, now: Date): boolean {
   return a.holdExpiresAt === null || a.holdExpiresAt.getTime() > now.getTime();
 }
 
-/** Rooms that can be sold: Maintenance and Out of order take a room off sale. */
+/** Rooms that can be sold: Maintenance, Out of order and retired rooms are off sale. */
 export function sellable(room: RoomLike): boolean {
-  return room.status !== 'maintenance' && room.status !== 'out_of_order';
+  return room.status !== 'maintenance' && room.status !== 'out_of_order' && room.status !== 'retired';
 }
 
 function blackedOut(roomId: string, night: IsoDate, blackouts: readonly BlackoutLike[]): boolean {

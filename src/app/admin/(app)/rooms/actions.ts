@@ -4,11 +4,16 @@
 // cache is refreshed after each one.
 import { z } from 'zod';
 import { done, fail } from '@/lib/admin/result';
-import { formatDayMonth, isIsoDate } from '@/lib/dates';
+import { formatDayMonth, isIsoDate, todayInAccra } from '@/lib/dates';
 import { formatGhs } from '@/lib/money';
 import { act, read } from '@/server/admin/act';
 import {
   addBlackout,
+  addRoom,
+  changeRoomType,
+  removedRooms,
+  removeRoom,
+  roomTypeRows,
   deletePromo,
   deleteRule,
   removeBlackout,
@@ -241,7 +246,7 @@ export async function blockDatesAction(raw: { from: string; to: string; room: st
         ends: raw.to,
         room: z
           .string()
-          .regex(/^(all|\d{3})$/)
+          .regex(/^(all|[0-9A-Z]{1,6})$/)
           .parse(raw.room),
         reason: raw.reason.trim().slice(0, 120),
       });
@@ -286,6 +291,62 @@ export async function savePoliciesAction(patch: Record<string, string | boolean>
     async (tx, who) => {
       await savePolicies(tx, who, out);
       return done('Policies saved.', 'Shown on the website and on every confirmation.');
+    },
+    site,
+  );
+}
+
+/* ── rooms ── */
+
+export async function loadRoomTypeOptions() {
+  return read('rooms.edit', async (d) => ({
+    types: (await roomTypeRows(d)).map((t) => ({ value: t.code, label: t.name })),
+    removed: await removedRooms(d),
+  }));
+}
+
+export async function addRoomAction(raw: { number: string; type: string }) {
+  if (!raw.number.trim()) return fail('Enter the room number.', { number: 'Enter the room number.' });
+  return act(
+    'rooms.edit',
+    async (tx, who) => {
+      const r = await addRoom(tx, who, { number: raw.number, type: z.string().max(12).parse(raw.type) });
+      return done(`Room ${r.number} ${r.restored ? 'is back' : 'added'}.`, `${r.type}. It can be booked on the website now.`);
+    },
+    site,
+  );
+}
+
+export async function changeRoomTypeAction(number: string, type: string) {
+  return act(
+    'rooms.edit',
+    async (tx, who) => {
+      const r = await changeRoomType(
+        tx,
+        who,
+        { number: z.string().max(6).parse(number), type: z.string().max(12).parse(type) },
+        todayInAccra(),
+      );
+      return done(
+        r.changed ? `Room ${r.number} is now ${r.type}.` : 'Nothing changed.',
+        r.changed ? 'Prices and the website follow the new type.' : undefined,
+      );
+    },
+    site,
+  );
+}
+
+export async function removeRoomAction(number: string) {
+  return act(
+    'rooms.edit',
+    async (tx, who) => {
+      const r = await removeRoom(tx, who, z.string().max(6).parse(number), todayInAccra());
+      return done(
+        `Room ${number} removed.`,
+        r.kept
+          ? 'Its past bookings keep the room number. Add the number again to bring it back.'
+          : 'It’s off the website and the room board.',
+      );
     },
     site,
   );

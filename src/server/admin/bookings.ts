@@ -225,7 +225,7 @@ export async function deskQuote(db: AnyDb, input: { variant: string; checkIn: Is
     await db.execute(sql`
       select r.number from rooms r
        where r.rate_variant_id = ${v.id}
-         and r.status not in ('maintenance', 'out_of_order')
+         and r.status not in ('maintenance', 'out_of_order', 'retired')
          and not exists (select 1 from blackout_dates x where x.starts < ${checkOut}::date and x.ends >= ${input.checkIn}::date
                            and (x.room_ids is null or r.id = any(x.room_ids)))
          and not exists (select 1 from room_allocations a
@@ -663,6 +663,7 @@ export async function roomBoard(db: AnyDb): Promise<RoomTile[]> {
     .innerJoin(s.rateVariants, eq(s.rateVariants.id, s.rooms.rateVariantId))
     .leftJoin(s.bookings, and(eq(s.bookings.roomId, s.rooms.id), eq(s.bookings.status, 'checked_in')))
     .leftJoin(s.customers, eq(s.customers.id, s.bookings.customerId))
+    .where(ne(s.rooms.status, 'retired'))
     .orderBy(asc(s.rooms.number));
   return rows.map((r) => ({ ...r, status: r.ref ? 'occupied' : r.status === 'occupied' ? 'available' : r.status }));
 }
@@ -674,6 +675,7 @@ export async function roomDetail(db: AnyDb, number: string, today: IsoDate) {
       number: s.rooms.number,
       status: s.rooms.status,
       code: s.rateVariants.displayCode,
+      variant: s.rateVariants.code,
       name: s.rateVariants.name,
       price: s.rateVariants.pricePesewas,
       sleeps: s.roomTypes.sleeps,
@@ -725,6 +727,7 @@ export async function roomRows(db: AnyDb) {
     .select({ number: s.rooms.number, name: s.rateVariants.name })
     .from(s.rooms)
     .innerJoin(s.rateVariants, eq(s.rateVariants.id, s.rooms.rateVariantId))
+    .where(ne(s.rooms.status, 'retired'))
     .orderBy(asc(s.rooms.number));
 }
 

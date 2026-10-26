@@ -11,7 +11,7 @@ export async function freeRoomsByType(db: AnyDb, night: IsoDate, now: Date): Pro
       from room_types t
       join rate_variants v on v.room_type_id = t.id
       join rooms r on r.rate_variant_id = v.id
-     where r.status not in ('maintenance', 'out_of_order')
+     where r.status not in ('maintenance', 'out_of_order', 'retired')
        and not exists (
          select 1 from blackout_dates b
           where ${night}::date between b.starts and b.ends
@@ -32,7 +32,7 @@ export async function freeRoomsForStay(db: AnyDb, variant: string, checkIn: IsoD
       from rooms r
       join rate_variants v on v.id = r.rate_variant_id
      where v.code = ${variant}
-       and r.status not in ('maintenance', 'out_of_order')
+       and r.status not in ('maintenance', 'out_of_order', 'retired')
        and not exists (
          select 1 from blackout_dates b
           where b.starts < ${checkOut}::date and b.ends >= ${checkIn}::date

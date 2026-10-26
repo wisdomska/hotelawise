@@ -39,7 +39,7 @@ export async function roomsReport(d: AnyDb, today: IsoDate) {
   const [{ nights: sold = 0, revenue = 0 } = {}] = rowsOf<{ nights: number; revenue: number | string }>(nights);
   const occ = Math.round(series.occupancy.reduce((a, b) => a + b, 0) / series.occupancy.length);
   const rev = Number(revenue);
-  const rooms = await d.execute(sql`select count(*)::int as n from rooms`);
+  const rooms = await d.execute(sql`select count(*)::int as n from rooms where status <> 'retired'`);
   const roomCount = rowsOf<{ n: number }>(rooms)[0]?.n || 16;
   return {
     occupancy: occ,

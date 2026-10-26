@@ -20,7 +20,7 @@ import { KpiGrid, PageHeader, Tabs, useTab, type TabDef } from '../page-parts';
 import { SettingsForm } from '../settings-form';
 import { c, col, DataTable, type Row } from '../table';
 import { chip, mono, statusTone, type Action } from '../ui';
-import { BlackoutModal, PromoModal, roomsLabel, RoomTypeModal, RuleModal, type PromoSpec, type RuleSpec } from './modals';
+import { AddRoomModal, BlackoutModal, PromoModal, roomsLabel, RoomTypeModal, RuleModal, type PromoSpec, type RuleSpec } from './modals';
 
 type Props = {
   canEdit: boolean;
@@ -70,6 +70,10 @@ export function RoomsView(p: Props) {
   });
 
   let actions: Action[] = [];
+  if (sup && tab === 'Room status')
+    actions = [
+      { label: 'Add room', icon: 'plus', kind: 'primary', hint: 'A new room, or one coming back', on: () => openModal(<AddRoomModal />) },
+    ];
   if (sup && tab === 'Rate rules')
     actions = [
       {

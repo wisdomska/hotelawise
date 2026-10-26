@@ -167,7 +167,7 @@ export const auditLog = pgTable(
 
 /* ───────────── Rooms & rates ───────────── */
 
-export const roomStatusEnum = pgEnum('room_status', ['available', 'occupied', 'cleaning', 'maintenance', 'out_of_order']);
+export const roomStatusEnum = pgEnum('room_status', ['available', 'occupied', 'cleaning', 'maintenance', 'out_of_order', 'retired']);
 
 export const roomTypes = pgTable('room_types', {
   id: id(),

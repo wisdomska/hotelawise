@@ -120,7 +120,7 @@ async function variantByCode(db: AnyDb, code: string) {
 export async function freeByVariant(db: AnyDb, checkIn: IsoDate, checkOut: IsoDate, now: Date): Promise<Record<string, number>> {
   const res = await db.execute(sql`
     select v.code, count(r.id) filter (where
-             r.status not in ('maintenance', 'out_of_order')
+             r.status not in ('maintenance', 'out_of_order', 'retired')
          and not exists (select 1 from blackout_dates b
                           where b.starts < ${checkOut}::date and b.ends >= ${checkIn}::date
                             and (b.room_ids is null or r.id = any(b.room_ids)))
@@ -140,7 +140,7 @@ export async function soldOutNights(db: AnyDb, from: IsoDate, days: number, now:
       from generate_series(${from}::date, ${addDays(from, days - 1)}::date, interval '1 day') as n
      where not exists (
        select 1 from rooms r
-        where r.status not in ('maintenance', 'out_of_order')
+        where r.status not in ('maintenance', 'out_of_order', 'retired')
           and not exists (select 1 from blackout_dates b
                            where n::date between b.starts and b.ends
                              and (b.room_ids is null or r.id = any(b.room_ids)))
@@ -372,7 +372,7 @@ export async function reallocate(tx: AnyDb, b: typeof s.bookings.$inferSelect, n
   const res = await tx.execute(sql`
     select r.id from rooms r
      where r.rate_variant_id = ${b.rateVariantId}
-       and r.status not in ('maintenance', 'out_of_order')
+       and r.status not in ('maintenance', 'out_of_order', 'retired')
        and not exists (select 1 from blackout_dates x where x.starts < ${b.checkOut}::date and x.ends >= ${b.checkIn}::date
                          and (x.room_ids is null or r.id = any(x.room_ids)))
      order by r.number`);
@@ -677,7 +677,7 @@ export async function changeDatesByGuest(db: AnyDb, ref: string, checkIn: IsoDat
         select r.id from rooms r
           join rate_variants v on v.id = r.rate_variant_id
          where v.code = ${b.variantCode}
-           and r.status not in ('maintenance', 'out_of_order')
+           and r.status not in ('maintenance', 'out_of_order', 'retired')
            and not exists (select 1 from blackout_dates x where x.starts < ${checkOut}::date and x.ends >= ${checkIn}::date
                              and (x.room_ids is null or r.id = any(x.room_ids)))
          order by (r.id = ${alloc?.roomId ?? null}) desc, r.number`),
@@ -737,7 +737,7 @@ export async function previewDateChange(
   const res = await db.execute(sql`
     select count(*)::int as n from rooms r join rate_variants v on v.id = r.rate_variant_id
      where v.code = ${b.variantCode}
-       and r.status not in ('maintenance', 'out_of_order')
+       and r.status not in ('maintenance', 'out_of_order', 'retired')
        and not exists (select 1 from blackout_dates x where x.starts < ${checkOut}::date and x.ends >= ${checkIn}::date
                          and (x.room_ids is null or r.id = any(x.room_ids)))
        and not exists (select 1 from room_allocations a

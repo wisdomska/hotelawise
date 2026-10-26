@@ -61,7 +61,7 @@ async function candidateRooms(tx: AnyDb, rateVariantId: string, checkIn: IsoDate
     select r.id
       from ${schema.rooms} r
      where r.rate_variant_id = ${rateVariantId}
-       and r.status not in ('maintenance', 'out_of_order')
+       and r.status not in ('maintenance', 'out_of_order', 'retired')
        and not exists (
          select 1 from ${schema.blackoutDates} b
           where b.starts < ${checkOut} and ${checkIn} <= b.ends

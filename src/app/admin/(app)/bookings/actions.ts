@@ -60,7 +60,7 @@ export async function quoteDesk(input: { variant: string; checkIn: string; night
 }
 
 export async function loadRoom(number: string) {
-  if (!/^\d{3}$/.test(number)) return null;
+  if (!/^[0-9A-Z]{1,6}$/.test(number)) return null;
   return read('rooms.view', (d) => roomDetail(d, number, todayInAccra()));
 }
 
@@ -74,7 +74,7 @@ const deskSchema = z.object({
   checkIn: z.string().refine(isIsoDate),
   nights: z.number().int().min(1).max(60),
   guests: z.number().int().min(1).max(6),
-  room: z.string().regex(/^\d{3}$/),
+  room: z.string().regex(/^[0-9A-Z]{1,6}$/),
   source: z.enum(['walk_in', 'phone', 'whatsapp']),
   pay: z.union([method, z.literal('none')]),
   txn: z.string().max(60),
@@ -264,7 +264,7 @@ export async function setRoomStatusAction(number: string, status: string) {
       who,
       z
         .string()
-        .regex(/^\d{3}$/)
+        .regex(/^[0-9A-Z]{1,6}$/)
         .parse(number),
       st,
     );

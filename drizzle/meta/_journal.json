@@ -50,6 +50,13 @@
       "when": 1793036121618,
       "tag": "0006_reminders",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1793037138647,
+      "tag": "0007_retired_rooms",
+      "breakpoints": true
     }
   ]
 }

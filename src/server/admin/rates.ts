@@ -3,10 +3,11 @@
 // on the website straight away (callers revalidate the site) and writes one
 // audit row.
 import 'server-only';
-import { asc, count, desc, eq, inArray } from 'drizzle-orm';
+import { asc, count, desc, eq, inArray, ne, sql } from 'drizzle-orm';
 import { formatDayMonth, type IsoDate } from '@/lib/dates';
 import { formatGhs } from '@/lib/money';
 import * as s from '@/server/db/schema';
+import { rowsOf } from '@/server/db/rows';
 import { SEED_SETTINGS } from '@/server/content/defaults';
 import { audit } from '@/server/services/audit';
 import type { AnyDb } from '@/server/services/holds';
@@ -55,6 +56,7 @@ export async function roomTypeRows(db: AnyDb): Promise<RoomTypeRow[]> {
       .select({ number: s.rooms.number, code: s.rateVariants.code })
       .from(s.rooms)
       .innerJoin(s.rateVariants, eq(s.rateVariants.id, s.rooms.rateVariantId))
+      .where(ne(s.rooms.status, 'retired'))
       .orderBy(asc(s.rooms.number)),
   ]);
   return vs.map((v) => ({
@@ -287,7 +289,9 @@ export async function listBlackouts(db: AnyDb) {
 }
 
 export async function roomNumbers(db: AnyDb) {
-  return (await db.select({ number: s.rooms.number }).from(s.rooms).orderBy(asc(s.rooms.number))).map((r) => r.number);
+  return (await db.select({ number: s.rooms.number }).from(s.rooms).where(ne(s.rooms.status, 'retired')).orderBy(asc(s.rooms.number))).map(
+    (r) => r.number,
+  );
 }
 
 export async function addBlackout(db: AnyDb, by: Who, input: { starts: IsoDate; ends: IsoDate; room: string; reason: string }) {
@@ -361,4 +365,119 @@ export async function policies(db: AnyDb): Promise<Record<PolicyKey, string>> {
     .where(inArray(s.settings.key, [...POLICY_KEYS]));
   const got = new Map(rows.map((r) => [r.key, r.value]));
   return Object.fromEntries(POLICY_KEYS.map((k) => [k, String(got.get(k) ?? SEED_SETTINGS[k])])) as Record<PolicyKey, string>;
+}
+
+/* ───────────── rooms ───────────── */
+
+const ROOM_NUMBER = /^[0-9A-Z]{1,6}$/;
+
+/** Stays that still need this room: a guest in it now, or any booking from today on. */
+async function staysNeedingRoom(db: AnyDb, roomId: string, today: IsoDate) {
+  const [row] = await db
+    .execute(
+      sql`
+    select count(*)::int as n from room_allocations a
+     where a.room_id = ${roomId} and a.active and a.check_out > ${today}::date`,
+    )
+    .then((r) => rowsOf<{ n: number }>(r));
+  return row?.n ?? 0;
+}
+
+async function variantByCode(db: AnyDb, code: string) {
+  const [v] = await db
+    .select({ id: s.rateVariants.id, name: s.rateVariants.name })
+    .from(s.rateVariants)
+    .where(eq(s.rateVariants.code, code));
+  if (!v) throw new AdminError('Pick a room type.', { type: 'Pick a room type.' });
+  return v;
+}
+
+/** Adds a room, or brings back a removed one with the same number. */
+export async function addRoom(db: AnyDb, by: Who, input: { number: string; type: string }) {
+  const number = input.number.trim().toUpperCase();
+  if (!ROOM_NUMBER.test(number))
+    throw new AdminError('Use up to 6 letters or numbers, like 209.', { number: 'Use up to 6 letters or numbers, like 209.' });
+  const v = await variantByCode(db, input.type);
+  const [old] = await db.select().from(s.rooms).where(eq(s.rooms.number, number));
+  if (old && old.status !== 'retired') throw new AdminError(`Room ${number} already exists.`, { number: `Room ${number} already exists.` });
+  let id: string;
+  if (old) {
+    await db.update(s.rooms).set({ status: 'available', rateVariantId: v.id }).where(eq(s.rooms.id, old.id));
+    id = old.id;
+  } else {
+    const [row] = await db.insert(s.rooms).values({ number, rateVariantId: v.id }).returning({ id: s.rooms.id });
+    id = row!.id;
+  }
+  await audit(db, {
+    actor: by,
+    action: old ? 'Restored room' : 'Added room',
+    entity: 'room',
+    entityId: id,
+    target: number,
+    after: { type: v.name },
+  });
+  return { number, type: v.name, restored: !!old };
+}
+
+/** Moves a room to another type. Refused while it has a guest or upcoming stays. */
+export async function changeRoomType(db: AnyDb, by: Who, input: { number: string; type: string }, today: IsoDate) {
+  const [r] = await db
+    .select({ id: s.rooms.id, status: s.rooms.status, from: s.rateVariants.name, fromId: s.rateVariants.id })
+    .from(s.rooms)
+    .innerJoin(s.rateVariants, eq(s.rateVariants.id, s.rooms.rateVariantId))
+    .where(eq(s.rooms.number, input.number));
+  if (!r || r.status === 'retired') throw new AdminError('That room doesn’t exist.');
+  const v = await variantByCode(db, input.type);
+  if (v.id === r.fromId) return { number: input.number, type: v.name, changed: false };
+  const busy = await staysNeedingRoom(db, r.id, today);
+  if (busy)
+    throw new AdminError(
+      `Room ${input.number} has ${busy} stay${busy > 1 ? 's' : ''} booked as ${r.from}. Move ${busy > 1 ? 'them' : 'it'} to another room first.`,
+    );
+  await db.update(s.rooms).set({ rateVariantId: v.id }).where(eq(s.rooms.id, r.id));
+  await audit(db, {
+    actor: by,
+    action: 'Changed room type',
+    entity: 'room',
+    entityId: r.id,
+    target: input.number,
+    before: { type: r.from },
+    after: { type: v.name },
+  });
+  return { number: input.number, type: v.name, changed: true };
+}
+
+/**
+ * Takes a room out for good. A room that was never booked is deleted; one with
+ * history is marked removed, so past bookings and reports keep their room number.
+ */
+export async function removeRoom(db: AnyDb, by: Who, number: string, today: IsoDate) {
+  const [r] = await db.select().from(s.rooms).where(eq(s.rooms.number, number));
+  if (!r || r.status === 'retired') throw new AdminError('That room doesn’t exist.');
+  const busy = await staysNeedingRoom(db, r.id, today);
+  if (busy)
+    throw new AdminError(
+      `Room ${number} has ${busy} current or upcoming stay${busy > 1 ? 's' : ''}. Move ${busy > 1 ? 'them' : 'it'} to another room, or set it to Out of order for now.`,
+    );
+  const [{ n: history } = { n: 0 }] = await db.select({ n: count() }).from(s.bookings).where(eq(s.bookings.roomId, r.id));
+  const [{ n: allocs } = { n: 0 }] = await db.select({ n: count() }).from(s.roomAllocations).where(eq(s.roomAllocations.roomId, r.id));
+  const keep = Number(history) > 0 || Number(allocs) > 0;
+  if (keep) await db.update(s.rooms).set({ status: 'retired' }).where(eq(s.rooms.id, r.id));
+  else await db.delete(s.rooms).where(eq(s.rooms.id, r.id));
+  await audit(db, {
+    actor: by,
+    action: 'Removed room',
+    entity: 'room',
+    entityId: r.id,
+    target: number,
+    after: { kept: keep ? 'history kept' : 'deleted' },
+  });
+  return { kept: keep };
+}
+
+/** Rooms taken out with their history kept; they can be added back. */
+export async function removedRooms(db: AnyDb) {
+  return (await db.select({ number: s.rooms.number }).from(s.rooms).where(eq(s.rooms.status, 'retired')).orderBy(asc(s.rooms.number))).map(
+    (r) => r.number,
+  );
 }

@@ -50,6 +50,7 @@ export const ROOM_STATUS = {
   cleaning: 'Cleaning',
   maintenance: 'Maintenance',
   out_of_order: 'Out of order',
+  retired: 'Removed',
 } as const;
 export type RoomStatus = keyof typeof ROOM_STATUS;
 

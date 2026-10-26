@@ -139,3 +139,24 @@ test('rooms & rates: promo code and blocked dates', async ({ page }) => {
   await page.getByRole('dialog').getByRole('button', { name: 'Unblock' }).click();
   await expect(page.getByRole('row').filter({ hasText: 'Repainting test' })).toHaveCount(0);
 });
+
+test('rooms: add a room, then remove it', async ({ page }) => {
+  await signIn(page, false);
+  const number = `T${Date.now().toString(36).toUpperCase().slice(-4)}`;
+  await page.goto('/admin/rooms');
+  await page.getByRole('button', { name: 'Add room' }).click();
+  const d = page.getByRole('dialog');
+  await d.getByLabel('Room number').fill(number);
+  await d.getByRole('button', { name: 'Add room' }).click();
+  await expect(page.getByText(`Room ${number} added.`).first()).toBeVisible();
+  await page.getByRole('button', { name: new RegExp(`^Room ${number}, Available`) }).click();
+  const drawer = page.getByRole('dialog', { name: /room/i });
+  await drawer.getByRole('button', { name: 'Remove room' }).click();
+  await page
+    .getByRole('dialog')
+    .filter({ hasText: `Remove room ${number}?` })
+    .getByRole('button', { name: 'Remove room' })
+    .click();
+  await expect(page.getByText(`Room ${number} removed.`).first()).toBeVisible();
+  await expect(page.getByRole('button', { name: new RegExp(`^Room ${number},`) })).toHaveCount(0);
+});
