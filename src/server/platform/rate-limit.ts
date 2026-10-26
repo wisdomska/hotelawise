@@ -16,6 +16,10 @@ export const RULES = {
   guestOtp: { limit: 5, windowSeconds: 600 },
   hold: { limit: 20, windowSeconds: 600 },
   availability: { limit: 60, windowSeconds: 600 },
+  promo: { limit: 20, windowSeconds: 600 },
+  payment: { limit: 30, windowSeconds: 600 },
+  paymentStatus: { limit: 240, windowSeconds: 600 },
+  manage: { limit: 40, windowSeconds: 600 },
 } satisfies Record<string, Rule>;
 
 const memory = new Map<string, { count: number; resetAt: number }>();

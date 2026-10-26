@@ -4,7 +4,8 @@ import * as schema from '@/server/db/schema';
 import type { AnyDb } from './holds';
 
 export type AuditEntry = {
-  actor: { id: string; name: string } | 'system';
+  /** A signed-in user, a guest acting on their own booking online, or the system. */
+  actor: { id: string; name: string } | 'system' | 'guest';
   action: string;
   entity: string;
   entityId?: string | null;
@@ -30,8 +31,8 @@ export function diff(before: Record<string, unknown> | null | undefined, after: 
 
 export async function audit(db: AnyDb, e: AuditEntry): Promise<void> {
   await db.insert(schema.auditLog).values({
-    userId: e.actor === 'system' ? null : e.actor.id,
-    actorName: e.actor === 'system' ? 'System' : e.actor.name,
+    userId: typeof e.actor === 'string' ? null : e.actor.id,
+    actorName: e.actor === 'system' ? 'System' : e.actor === 'guest' ? 'Guest (online)' : e.actor.name,
     action: e.action,
     entity: e.entity,
     entityId: e.entityId ?? null,

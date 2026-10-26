@@ -17,3 +17,21 @@ export async function makeUser(input: { email: string; role: Role; password: str
     await close();
   }
 }
+
+/** Plants a known manage-booking code, as if the guest had received it by SMS. */
+export async function plantGuestCode(ref: string, code: string) {
+  const { createHash } = await import('node:crypto');
+  const schema = await import('../../../src/server/db/schema');
+  const { db, close } = createNodeDb(process.env.E2E_DATABASE_URL ?? process.env.DATABASE_URL!);
+  try {
+    const secret = process.env.REF_SECRET!;
+    await db.insert(schema.guestOtps).values({
+      ref,
+      channel: 'sms',
+      codeHash: createHash('sha256').update(`${code}:${ref}:${secret}`).digest('hex'),
+      expiresAt: new Date(Date.now() + 10 * 60_000),
+    });
+  } finally {
+    await close();
+  }
+}

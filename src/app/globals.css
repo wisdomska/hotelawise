@@ -502,3 +502,77 @@ html[data-banner-off] .aw-banner {
     transform: scale(1.03);
   }
 }
+
+/* Checkout pages (Checkout.dc.html): tighter padding and their own type scale. */
+:root:has(.aw-checkout) {
+  --pad: 20px;
+  --h1: 40px;
+  --h2: 34px;
+}
+.aw-checkout {
+  --c-main: minmax(0, 1fr);
+  --c-cal: 1fr;
+  --c-row: 72px minmax(0, 1fr) auto;
+  --c4m: 1fr 1fr;
+  --c-items: 1fr;
+  --sticky: static;
+  --item-ar: 16/9;
+}
+@media (min-width: 640px) {
+  :root:has(.aw-checkout) {
+    --pad: 32px;
+    --h1: clamp(48px, 7vw, 68px);
+    --h2: 48px;
+  }
+  .aw-checkout {
+    --c-cal: 1fr 1fr;
+    --c-row: 120px minmax(0, 1fr) auto;
+    --c4m: repeat(4, minmax(0, 1fr));
+    --c-items: repeat(auto-fill, minmax(240px, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  :root:has(.aw-checkout) {
+    --pad: 48px;
+    --h1: clamp(56px, 6.4vw, 104px);
+    --h2: clamp(40px, 4.2vw, 64px);
+  }
+  .aw-checkout {
+    --c-main: minmax(0, 1fr) 380px;
+    --sticky: sticky;
+    --item-ar: 4/3;
+  }
+}
+.aw-mobile-bar {
+  display: none;
+}
+@media (max-width: 1023px) {
+  .aw-mobile-bar {
+    display: flex;
+  }
+}
+@keyframes aw-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes aw-stamp {
+  from {
+    opacity: 0;
+    transform: scale(1.15) rotate(-8deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(-8deg);
+  }
+}
+@media (max-width: 639px) {
+  .aw-cal-second {
+    display: none !important;
+  }
+}

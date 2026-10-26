@@ -64,7 +64,8 @@ export function SiteHeader({ banner, phone, tel }: { banner: string | null; phon
     '--nl': solid ? 'rgba(0,0,99,0.12)' : 'rgba(255,255,255,0.3)',
   } as React.CSSProperties;
 
-  const showMobileBook = !pathname.startsWith('/rooms/') && !pathname.startsWith('/book') && !menu && (!isHome || pastHero);
+  const checkout = ['/book', '/manage', '/rent', '/venues'].some((p) => pathname === p || pathname.startsWith(`${p}/`));
+  const showMobileBook = !pathname.startsWith('/rooms/') && !checkout && !menu && (!isHome || pastHero);
 
   return (
     <>

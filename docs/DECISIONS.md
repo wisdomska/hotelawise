@@ -287,3 +287,25 @@ The prototype shows a full-screen Nyansapo loader ("Turning the key…") on firs
 **Conflict:** The brief asks for a new repo, `hotel-a-wise`.
 
 **Ruling:** The owner chose the existing private repo `wisdomska/hotelawise`. Package name: `hotel-a-wise`.
+
+## D-35 Receipts go by SMS and email, not WhatsApp
+
+**Conflict:** The prototype's copy says receipts arrive "by SMS and WhatsApp". Sending WhatsApp messages needs the WhatsApp Business API, which isn't part of v1.
+
+**Ruling:** Say only what happens: receipts go by SMS (once an SMS provider key is set) and by email when the guest gives one. The wording on step 2 and the confirmation page says exactly that.
+
+## D-36 Manage my booking asks for a code
+
+**Conflict:** The prototype finds a booking with the reference and phone alone, and shows a demo hint. The owner asked for the OTP to work, and there are no demos anywhere (D-04).
+
+**Ruling:** Reference + phone sends a 6-digit code to that phone (and email, if on file). The code lasts 10 minutes, allows 5 tries, and at most 3 codes go out per booking in 10 minutes. A correct code gives a signed pass for that one booking for 30 minutes. The demo hint is gone.
+
+## D-37 The payment sheet waits for Paystack, with no test buttons
+
+**Conflict:** The prototype's payment sheet has "Approve" and "Decline" buttons to simulate Paystack.
+
+**Ruling:** The sheet is real. MoMo sends a prompt to the guest's phone (Telecel's voucher step included), card payments open Paystack's own window, and the sheet polls until Paystack verifies. It gains a "No prompt? Close and try again" link, so nobody is stuck if a prompt never arrives. Confirmation still comes only from verified transactions (webhook, or the same check run on demand).
+
+## D-38 Hold countdowns use the time remaining, not the clock
+
+A phone with its clock set wrong would show a fresh hold as expired. The server returns how many milliseconds the hold has left, and the page counts down from when it received that.
