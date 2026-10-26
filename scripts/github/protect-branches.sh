@@ -20,8 +20,7 @@ for branch in main preview; do
       "Lint, format, typecheck, unit tests",
       "Integration tests (Postgres)",
       "Worker build and size",
-      "E2E (Playwright)",
-      "analyze"
+      "E2E (Playwright)"
     ]
   },
   "enforce_admins": true,

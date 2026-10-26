@@ -44,7 +44,7 @@ Add each key in **this cloud environment's settings**: the environment menu in t
 
 1. **Branch protection.** Repo → Settings → Branches → Add rule, once for `main` and once for `preview`:
    - Require a pull request
-   - Require status checks: "Lint, format, typecheck, unit tests", "Integration tests (Postgres)", "Worker build and size", "E2E (Playwright)", "analyze"
+   - Require status checks: "Lint, format, typecheck, unit tests", "Integration tests (Postgres)", "Worker build and size", "E2E (Playwright)"
    - Require linear history
    - Do not allow force pushes
 

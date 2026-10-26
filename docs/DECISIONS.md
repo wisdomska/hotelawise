@@ -255,6 +255,16 @@ The compressed Worker must stay under 3 MiB; it is 2,232 KiB after milestone 1. 
 - Admin-only libraries load with `dynamic()`.
 - If the full app outgrows it, `/admin` moves to its own Worker on `admin.hotelawise.com`, which is also free.
 
+## D-32 No CodeQL on the private repository
+
+GitHub code scanning (CodeQL) on a private repository needs GitHub Advanced Security, which is paid. The workflow is removed. Instead:
+
+- Dependabot (free) watches dependencies.
+- ESLint runs on every pull request.
+- The security pass in milestone 7 adds a dependency audit (`pnpm audit`) to CI.
+
+If the repository is ever made public, CodeQL can come back at no cost.
+
 ## D-27 Repository (owner ruling)
 
 **Conflict:** The brief asks for a new repo, `hotel-a-wise`.

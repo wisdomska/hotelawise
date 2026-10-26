@@ -84,7 +84,7 @@ Source-of-truth order (owner ruling, D-00): **rendered prototypes** → `Handoff
 
 Separate workflows:
 
-- `codeql.yml`
+- ~~`codeql.yml`~~ dropped: code scanning on a private repository needs paid GitHub Advanced Security (D-32)
 - `dependabot.yml` (npm + Actions, weekly)
 - `deploy.yml`: on push to `preview` or `main`, run `drizzle-kit migrate` against that environment's Neon branch, **then** `wrangler deploy --env <env>`. Migrations never run on page load.
 
@@ -102,7 +102,7 @@ As in the brief, with these additions:
 
 - `src/server/platform/` (Cloudflare adapters)
 - `src/emails/` (React Email templates)
-- `.github/workflows/{ci,deploy,codeql}.yml`
+- `.github/workflows/{ci,deploy,preview-version}.yml`
 
 `design/` stays read-only reference, together with `reference-screens/`.
 
