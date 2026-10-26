@@ -191,7 +191,7 @@ export async function abandonHold(db: AnyDb, token: string, sessionId: string) {
 
 /* ───────────── checkout ───────────── */
 
-async function upsertCustomer(tx: AnyDb, g: GuestDetails): Promise<string> {
+export async function upsertCustomer(tx: AnyDb, g: GuestDetails): Promise<string> {
   const [c] = await tx
     .insert(s.customers)
     .values({ name: g.name, phoneE164: g.phoneE164, email: g.email })
@@ -203,7 +203,7 @@ async function upsertCustomer(tx: AnyDb, g: GuestDetails): Promise<string> {
   return c!.id;
 }
 
-function chargeRows(bookingId: string, q: Quote) {
+export function chargeRows(bookingId: string, q: Quote) {
   return q.lines
     .filter((l) => l.kind !== 'promo')
     .map((l) => ({
@@ -367,7 +367,7 @@ export type SettleOutcome =
   | { kind: 'order_failed'; orderId: string; reason: string }
   | { kind: 'order_refund'; orderId: string; paymentId: string; refundId: string; amount: number; paystackRef: string };
 
-async function reallocate(tx: AnyDb, b: typeof s.bookings.$inferSelect, now: Date): Promise<boolean> {
+export async function reallocate(tx: AnyDb, b: typeof s.bookings.$inferSelect, now: Date): Promise<boolean> {
   await expireLapsedHolds(tx, now, { checkIn: b.checkIn, checkOut: b.checkOut });
   const res = await tx.execute(sql`
     select r.id from rooms r
@@ -642,7 +642,7 @@ export async function cancelByGuest(db: AnyDb, ref: string, now: Date = new Date
 
 export type DateChangeCheck = { ok: true; newTotal: number; due: number } | { ok: false; reason: 'range' | 'unchanged' | 'unavailable' };
 
-async function repriceFor(tx: AnyDb, b: GuestBooking, checkIn: IsoDate, checkOut: IsoDate, now: Date) {
+export async function repriceFor(tx: AnyDb, b: GuestBooking, checkIn: IsoDate, checkOut: IsoDate, now: Date) {
   const pricing = await loadPricing(tx);
   const [v] = await tx.select().from(s.rateVariants).where(eq(s.rateVariants.code, b.variantCode));
   const hadRoomService = b.lines.some((l) => l.label === 'ROOM SERVICE');

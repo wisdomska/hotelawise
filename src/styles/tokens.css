@@ -413,3 +413,25 @@
     grid-template-columns: repeat(var(--kpi-n), minmax(0, 1fr));
   }
 }
+/* Admin sign-in (Admin.dc.html): the navy panel shows from 1024px; below that the
+   form stands alone with the mark above it. */
+.aw-login {
+  grid-template-columns: 1fr;
+}
+.aw-login-brand {
+  display: none;
+}
+.aw-login-mark {
+  display: flex;
+}
+@media (min-width: 1024px) {
+  .aw-login {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .aw-login-brand {
+    display: flex;
+  }
+  .aw-login-mark {
+    display: none !important;
+  }
+}
