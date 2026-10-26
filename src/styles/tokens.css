@@ -1,0 +1,206 @@
+/*
+ * Design tokens, copied from the prototypes (design/*.dc.html), which outrank
+ * Handoff.md (docs/DECISIONS.md D-00). Breakpoints match the prototype's
+ * `ph` (<640px), `tab` (640–1023px) and desktop (>=1024px) switches.
+ */
+@import 'tailwindcss';
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+@custom-variant hover-hover {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      @slot;
+    }
+  }
+}
+
+@theme {
+  --breakpoint-tab: 640px;
+  --breakpoint-desk: 1024px;
+
+  --color-midnight: #000063;
+  --color-ink: #00003a;
+  --color-paper: #f5f2ea;
+  --color-mist: #e3e4f5;
+  --color-lamp: #f2b544;
+  --color-surface: #ffffff;
+  --color-success: #1f7a4d;
+  --color-error: #b42318;
+  --color-hairline: rgb(0 0 99 / 0.14);
+
+  --font-serif: var(--font-cormorant), 'Cormorant Garamond', Georgia, serif;
+  --font-sans: var(--font-geist), 'Geist', system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), 'Geist Mono', ui-monospace, monospace;
+
+  --radius-image: 2px;
+  --radius-control: 10px;
+  --radius-card: 12px;
+  --radius-sheet: 16px;
+  --radius-chip: 999px;
+
+  --shadow-lift: 0 18px 40px -24px rgb(0 0 58 / 0.45);
+  --shadow-overlay: 0 30px 60px -20px rgb(0 0 40 / 0.5);
+
+  --ease-enter: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-move: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  --animate-breathe: aw-breathe 2.4s ease-in-out infinite;
+  --animate-shimmer: aw-shimmer 1.4s ease-in-out infinite;
+}
+
+:root {
+  /* Public site layout (Website.dc.html). Checkout uses --pad-checkout. */
+  --pad: 20px;
+  --pad-checkout: 20px;
+  --sy: 72px;
+  --h1: 40px;
+  --h1-checkout: 40px;
+  --h2: 34px;
+  --h2s: 30px;
+  --h3: 26px;
+  --quote: 24px;
+  --hero-h: 720px;
+  --foot-btn: 108px;
+  --foot-h: 260px;
+  --foot-type-checkout: 40px;
+  --navgap: 10px;
+  --tap-min: 44px;
+
+  --grade: saturate(0.92) contrast(1.04);
+  --grade-night: saturate(0.8) brightness(0.72) contrast(1.1) sepia(0.12);
+
+  /* Hero palette; flipped by [data-night] (prototype night()). */
+  --hb: #f5f2ea;
+  --hf: #000063;
+  --hs: rgb(0 0 58 / 0.7);
+  --hl: rgb(0 0 99 / 0.16);
+  --hcard: #ffffff;
+}
+
+[data-night] {
+  --hb: #1a1712;
+  --hf: #f5f2ea;
+  --hs: rgb(245 242 234 / 0.72);
+  --hl: rgb(245 242 234 / 0.16);
+  --hcard: #000063;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --pad: 32px;
+    --pad-checkout: 32px;
+    --sy: 104px;
+    --h1: clamp(48px, 7vw, 68px);
+    --h1-checkout: clamp(48px, 7vw, 68px);
+    --h2: 48px;
+    --h3: 32px;
+    --quote: 32px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --pad: 56px;
+    --pad-checkout: 48px;
+    --sy: 136px;
+    --h1: clamp(52px, 6vw, 96px);
+    --h1-checkout: clamp(56px, 6.4vw, 104px);
+    --h2: clamp(40px, 4.6vw, 72px);
+    --h2s: clamp(36px, 3.6vw, 56px);
+    --quote: clamp(30px, 3vw, 44px);
+    --hero-h: min(92svh, 980px);
+    --foot-btn: clamp(130px, 11vw, 170px);
+    --foot-h: clamp(280px, 34vw, 420px);
+    --foot-type-checkout: clamp(52px, 6vw, 96px);
+    --navgap: max(20px, calc(var(--pad) - 16px));
+    --tap-min: 0px;
+  }
+}
+
+/* Admin theme (Admin.dc.html), light and dark. */
+.admin {
+  --bg: #faf9f7;
+  --panel: #ffffff;
+  --ink: #00003a;
+  --mute: rgb(0 0 58 / 0.62);
+  --line: rgb(0 0 99 / 0.09);
+  --line2: rgb(0 0 99 / 0.18);
+  --hover: rgb(0 0 99 / 0.03);
+  --lane: #f2f1ee;
+  --chip-bg: #e3e4f5;
+  --chip-fg: #000063;
+  --pri-bg: #000063;
+  --pri-fg: #f5f2ea;
+  --chart: #000063;
+  --chart-fill: rgb(0 0 99 / 0.07);
+  --amber-ink: #7a4e00;
+  --green: #1f7a4d;
+  --green-bg: rgb(31 122 77 / 0.12);
+  --red: #b42318;
+  --red-bg: rgb(180 35 24 / 0.1);
+  --tip-bg: #00003a;
+  --tip-fg: #f5f2ea;
+  --side: #00003a;
+  --side-line: rgb(245 242 234 / 0.08);
+  --admin-h1: 28px;
+  --admin-pad: 16px;
+}
+.admin[data-theme='dark'] {
+  --bg: #111113;
+  --panel: #1a1a1d;
+  --ink: #ededef;
+  --mute: rgb(237 237 239 / 0.6);
+  --line: rgb(255 255 255 / 0.08);
+  --line2: rgb(255 255 255 / 0.16);
+  --hover: rgb(255 255 255 / 0.04);
+  --lane: #151517;
+  --chip-bg: rgb(255 255 255 / 0.09);
+  --chip-fg: #e4e4e8;
+  --pri-bg: #e8e8ec;
+  --pri-fg: #111113;
+  --chart: #9a9ce0;
+  --chart-fill: rgb(154 156 224 / 0.14);
+  --amber-ink: #f2b544;
+  --green: #5bc08a;
+  --green-bg: rgb(91 192 138 / 0.14);
+  --red: #f2857a;
+  --red-bg: rgb(242 133 122 / 0.14);
+  --tip-bg: #ededef;
+  --tip-fg: #111113;
+  --side: #18181b;
+  --side-line: rgb(255 255 255 / 0.06);
+}
+@media (min-width: 640px) {
+  .admin {
+    --admin-h1: 36px;
+    --admin-pad: 24px;
+  }
+}
+@media (min-width: 1024px) {
+  .admin {
+    --admin-pad: 32px;
+  }
+}
+
+@keyframes aw-breathe {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.8); }
+}
+@keyframes aw-shimmer {
+  0% { opacity: 0.55; }
+  50% { opacity: 1; }
+  100% { opacity: 0.55; }
+}
+@keyframes aw-rise {
+  from { transform: translateY(105%); }
+  to { transform: translateY(0); }
+}
+@keyframes aw-pop {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes aw-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
