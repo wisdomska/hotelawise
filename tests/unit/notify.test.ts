@@ -187,3 +187,66 @@ describe('rental messages', () => {
     expect(sendSms.mock.calls[0]![1]).toContain('your payment of GHS 1,150 for AWR-NYMZ arrived after the 15-minute hold ended');
   });
 });
+
+describe('reminders and rental updates', () => {
+  const hours = { pickupFrom: 8, returnBy: 18 };
+
+  it('reminds the day before check-in, with any balance and the links', async () => {
+    expect(await n.checkInReminder(booking(), contact, '14:00')).toBe(true);
+    const sms = sendSms.mock.calls[0]![1] as string;
+    expect(sms).toContain('see you tomorrow, Kofi. Executive Plus Room, ref AW-7KQ2. Check-in from 14:00');
+    expect(sms).toContain('GHS 480 is due at the desk');
+    expect(sendEmail.mock.calls[0]![2]).toContain('https://hotelawise.com/manage?ref=AW-7KQ2');
+    sendSms.mockClear();
+    await n.checkInReminder(booking({ paid: 68000, email: null }), contact, '14:00');
+    expect(sendSms.mock.calls[0]![1]).not.toContain('due at the desk');
+  });
+
+  it('reports false when nothing could be sent, so the job tries again', async () => {
+    sendSms.mockResolvedValue(false);
+    expect(await n.checkInReminder(booking({ email: null }), contact, '14:00')).toBe(false);
+    sendEmail.mockRejectedValue(new Error('down'));
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    expect(await n.pickupReminder(order(), contact, hours)).toBe(false);
+    expect(await n.returnReminder(order(), contact, hours)).toBe(false);
+  });
+
+  it('reminds about pickup, with the 10am payment rule for pay-at-pickup', async () => {
+    await n.pickupReminder(order(), contact, hours);
+    expect(sendSms.mock.calls[0]![1]).toContain('ready to collect tomorrow from 8am');
+    expect(sendSms.mock.calls[0]![1]).toContain('Pay GHS 1,150 when you collect, by 10am');
+    sendSms.mockClear();
+    await n.pickupReminder(order({ paid: 115000, email: null }), contact, hours);
+    expect(sendSms.mock.calls[0]![1]).toContain('Just show your reference');
+    expect(sendEmail).toHaveBeenCalledTimes(1);
+  });
+
+  it('reminds about the return and the deposit', async () => {
+    await n.returnReminder(order({ email: null }), contact, hours);
+    expect(sendSms.mock.calls[0]![1]).toContain('bring rental AWR-NYMZ back tomorrow by 6pm');
+    expect(sendSms.mock.calls[0]![1]).toContain('GHS 200 deposit');
+    expect(sendEmail).not.toHaveBeenCalled();
+    await n.returnReminder(order(), contact, hours);
+    expect(sendEmail.mock.calls[0]![1]).toBe('Return tomorrow: AWR-NYMZ');
+  });
+
+  it('tells the customer an unpaid order was released', async () => {
+    await n.orderReleased(order(), contact);
+    await n.orderReleased(order({ email: null }), contact);
+    expect(sendSms.mock.calls[0]![1]).toContain("wasn't collected and paid by 10am");
+    expect(sendEmail).toHaveBeenCalledTimes(1);
+  });
+
+  it('sends a message for each forward status', async () => {
+    await n.rentalStatusChanged(order(), 'ready_for_pickup', contact, hours);
+    await n.rentalStatusChanged(order(), 'collected', contact, hours);
+    await n.rentalStatusChanged(order({ email: null }), 'completed', contact, hours, 15000);
+    await n.rentalStatusChanged(order({ email: null }), 'completed', contact, hours);
+    const texts = sendSms.mock.calls.map((c) => c[1] as string);
+    expect(texts[0]).toContain('is ready. Collect from No. 1 Wisepak Lane from 8am on');
+    expect(texts[1]).toContain('Please bring rental AWR-NYMZ back by 6pm on');
+    expect(texts[2]).toContain('GHS 150 of your deposit is on its way back');
+    expect(texts[3]).not.toContain('deposit');
+    expect(sendEmail).toHaveBeenCalledTimes(2);
+  });
+});

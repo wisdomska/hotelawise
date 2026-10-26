@@ -43,4 +43,8 @@ describe('scheduled jobs', () => {
     expect(sweep).not.toHaveBeenCalled();
     expect(remind).not.toHaveBeenCalled();
   });
+
+  it('ignores an unknown job', async () => {
+    expect(await run('nope' as never, AT)).toEqual({});
+  });
 });
