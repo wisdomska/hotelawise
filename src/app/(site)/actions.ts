@@ -2,6 +2,7 @@
 // Public-site server actions. Each one validates input with Zod, checks
 // Turnstile and a rate limit, and never trusts anything from the browser.
 import { z } from 'zod';
+import { checkContact, type ContactErrors } from '@/lib/contact-form';
 import { isIsoDate, nightsBetween } from '@/lib/dates';
 import * as schema from '@/server/db/schema';
 import { verifyTurnstile } from '@/server/integrations/turnstile';
@@ -56,4 +57,41 @@ export async function checkRoomAvailability(variant: string, checkIn: string, ch
   }
   const { freeRoomsForStay } = await import('@/server/services/tonight');
   return { ok: true, free: await freeRoomsForStay(await db(), q.data.variant, q.data.checkIn, q.data.checkOut, new Date()) };
+}
+
+export type ContactResult = { ok: true; title: string; body: string } | { ok: false; error?: string; errors?: ContactErrors };
+
+export async function sendContactMessage(_prev: ContactResult | null, form: FormData): Promise<ContactResult> {
+  const field = (k: string) => String(form.get(k) ?? '');
+  const checked = checkContact({
+    subject: field('subject'),
+    name: field('name'),
+    dialCode: field('dialCode'),
+    phone: field('phone'),
+    email: field('email'),
+    message: field('message'),
+  });
+  if (!checked.ok) return { ok: false, errors: checked.errors };
+  const ip = await clientIp();
+  if (!(await allow('contact', ip))) return { ok: false, error: 'Too many messages. Give it a few minutes, or call us.' };
+  if (!(await verifyTurnstile(field('cf-turnstile-response'), ip))) {
+    return { ok: false, error: 'We couldn’t confirm you’re not a bot. Refresh and try again.' };
+  }
+  const m = checked.value;
+  const database = await db();
+  await database.insert(schema.messages).values({
+    fromName: m.name,
+    contact: m.email ? `${m.phone} · ${m.email}` : m.phone,
+    subject: m.subject,
+    body: m.message,
+  });
+  try {
+    const { getSiteData, setting } = await import('@/server/content/site-data');
+    const { sendContactNotice } = await import('@/server/integrations/email');
+    await sendContactNotice(setting<string>(await getSiteData(), 'contact.email'), m);
+  } catch (err) {
+    // The message is saved in the inbox either way; a failed email must not lose it.
+    console.error('contact notice email failed', err);
+  }
+  return { ok: true, title: 'Message sent.', body: 'Reception will reply within the hour.' };
 }

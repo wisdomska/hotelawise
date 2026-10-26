@@ -494,3 +494,11 @@ html[data-banner-off] .aw-banner {
     display: none;
   }
 }
+.aw-gal-tile img {
+  transition: transform 400ms var(--ease-enter);
+}
+@media (hover: hover) and (pointer: fine) {
+  .aw-gal-tile:hover img {
+    transform: scale(1.03);
+  }
+}

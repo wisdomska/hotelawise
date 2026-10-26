@@ -37,7 +37,8 @@ export function contactFrom(data: SiteData): Contact {
     wa: `https://wa.me/${wa}`,
     email,
     mail: `mailto:${email}`,
-    address: setting<string>(data, 'contact.address'),
+    // Printed without the city, as the prototype does ("No. 1 Wisepak Lane, New Asofan").
+    address: setting<string>(data, 'contact.address').replace(/,?\s*Accra\.?$/, ''),
     mapsSearch: `https://www.google.com/maps/search/?api=1&query=${pin.lat},${pin.lng}`,
     mapsDirections: `https://www.google.com/maps/dir/?api=1&destination=${pin.lat},${pin.lng}`,
   };

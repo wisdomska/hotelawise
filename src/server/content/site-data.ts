@@ -112,7 +112,10 @@ export function defaultSiteData(): SiteData {
     })),
     faqs: FAQS.map(([q, a]) => ({ q, a })),
     testimonial: { quote: 'Nothing short of extraordinary. Spotless room, incredibly comfortable bed.', from: 'John & Mary P. · Achimota' },
-    gallery: GALLERY.map((g) => ({ image: { ...img(g.key), alt: g.alt ?? IMAGES[g.key].alt }, category: g.category })),
+    gallery: GALLERY.filter((g) => g.published !== false).map((g) => ({
+      image: { ...img(g.key), alt: g.alt ?? IMAGES[g.key].alt },
+      category: g.category,
+    })),
     comingSoon: [
       { key: 'breakfast', title: 'Breakfast', description: 'An all-day West African dining concept.', nowOpen: false },
       { key: 'summer_hut', title: 'Summer Hut', description: 'An open-air sundowner lounge.', nowOpen: false },

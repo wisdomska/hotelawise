@@ -27,3 +27,12 @@ export function sendPasswordResetCode(email: string, code: string) {
     `Your reset code is ${code}. It works for 10 minutes. If you didn't ask for this, you can ignore this email.`,
   );
 }
+
+/** Tells reception a website message has arrived (the full text is in Admin › Inbox). */
+export function sendContactNotice(to: string, m: { subject: string; name: string; phone: string; email: string | null; message: string }) {
+  return send(
+    to,
+    `New message: ${m.subject} from ${m.name}`,
+    `${m.name} wrote through the website.\n\nPhone: ${m.phone}${m.email ? `\nEmail: ${m.email}` : ''}\nSubject: ${m.subject}\n\n${m.message}\n\nReply from Admin › Inbox.`,
+  );
+}

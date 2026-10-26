@@ -148,11 +148,15 @@ async function main() {
         .onConflictDoNothing();
     }
     if (!(await tx.select().from(s.galleryItems)).length) {
-      await tx
-        .insert(s.galleryItems)
-        .values(
-          GALLERY.map((g, position) => ({ imageId: cloudinaryId(g.key), alt: g.alt ?? IMAGES[g.key].alt, category: g.category, position })),
-        );
+      await tx.insert(s.galleryItems).values(
+        GALLERY.map((g, position) => ({
+          imageId: cloudinaryId(g.key),
+          alt: g.alt ?? IMAGES[g.key].alt,
+          category: g.category,
+          position,
+          published: g.published !== false,
+        })),
+      );
     }
 
     for (const [key, value] of Object.entries(SEED_SETTINGS)) {

@@ -147,7 +147,7 @@ export function SiteFooter({ contact, photo, turnstileSiteKey }: { contact: Cont
           }}
         >
           <span style={{ fontFamily: 'var(--font-serif)', fontSize: 30, color: '#000063', letterSpacing: '-0.05em' }}>Contact info</span>
-          <div className="grid grid-cols-1 desk:grid-cols-3">
+          <div className="grid grid-cols-1 desk:grid-cols-[repeat(3,auto)]">
             <div className="aw-info-cell" style={{ display: 'flex', flexDirection: 'column', gap: 14, padding: '4px 32px 32px 0' }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 15, color: 'rgba(0,0,58,0.7)' }}>
                 <Icon name="pin" size={18} />

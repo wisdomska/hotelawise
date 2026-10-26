@@ -169,29 +169,30 @@ export const PHOTO_SLOTS: Record<string, ImageKey> = {
 };
 
 /** Gallery order and categories, from the prototype seed (store.js). */
-export const GALLERY: { key: ImageKey; category: 'Rooms' | 'Bathrooms' | 'Spaces' | 'Events'; alt?: string }[] = [
+export const GALLERY: { key: ImageKey; category: 'Rooms' | 'Bathrooms' | 'Spaces' | 'Events'; alt?: string; published?: false }[] = [
   { key: 'standardRoom', category: 'Rooms', alt: 'Standard Room' },
   { key: 'vipBathroom', category: 'Bathrooms', alt: 'VIP bathroom' },
-  { key: 'secondFloorPorch', category: 'Spaces' },
-  { key: 'secondFloorReceptionEvent1', category: 'Events' },
+  { key: 'secondFloorPorch', category: 'Spaces', alt: 'Second-floor porch' },
+  { key: 'secondFloorReceptionEvent1', category: 'Events', alt: 'Second-floor reception, dressed for dinner' },
   { key: 'vipRoom', category: 'Rooms', alt: 'VIP Room' },
   { key: 'hallway', category: 'Spaces', alt: 'The hallway' },
   { key: 'compoundWedding', category: 'Events', alt: 'Wedding in the compound' },
   { key: 'executiveRoom', category: 'Rooms', alt: 'Executive Room' },
   { key: 'executiveBathroom', category: 'Bathrooms', alt: 'Executive bathroom' },
-  { key: 'firstFloorPorch', category: 'Spaces' },
-  { key: 'conferenceRoom1', category: 'Spaces' },
+  { key: 'firstFloorPorch', category: 'Spaces', alt: 'First-floor porch' },
+  { key: 'conferenceRoom1', category: 'Spaces', alt: 'Conference room' },
   { key: 'doubleRoom', category: 'Rooms', alt: 'Double Room' },
-  { key: 'firstFloorReceptionEvent', category: 'Events' },
+  { key: 'firstFloorReceptionEvent', category: 'Events', alt: 'First-floor reception, event set-up' },
   { key: 'standardBathroom', category: 'Bathrooms', alt: 'Standard bathroom' },
-  { key: 'staircase', category: 'Spaces' },
+  { key: 'staircase', category: 'Spaces', alt: 'Staircase' },
   { key: 'vipRoomDetail', category: 'Rooms', alt: 'VIP Room, detail' },
-  { key: 'secondFloorReceptionEvent2', category: 'Events' },
-  { key: 'vipRainShower', category: 'Bathrooms' },
+  { key: 'secondFloorReceptionEvent2', category: 'Events', alt: 'Second-floor reception, round tables' },
+  { key: 'vipRainShower', category: 'Bathrooms', alt: 'VIP rain shower' },
   { key: 'compound', category: 'Spaces', alt: 'The compound' },
-  { key: 'conferenceRoom2', category: 'Spaces', alt: 'Conference room, second angle' },
+  // Seeded without a caption, so it stays unpublished until one is written (prototype store.js).
+  { key: 'conferenceRoom2', category: 'Spaces', alt: '', published: false },
   { key: 'executiveLinen', category: 'Rooms', alt: 'Our customised linen' },
   { key: 'frontDesk', category: 'Spaces', alt: 'Front desk' },
   { key: 'corridor', category: 'Spaces', alt: 'Corridor, first floor' },
-  { key: 'executiveBedroom', category: 'Rooms', alt: 'Executive bedroom' },
+  { key: 'executiveBedroom', category: 'Rooms', alt: 'Executive Room, morning light' },
 ];

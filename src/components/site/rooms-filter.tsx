@@ -25,7 +25,17 @@ const label: React.CSSProperties = {
   marginRight: 6,
 };
 
-function Chip({ active, onClick, mono, children }: { active: boolean; onClick: () => void; mono?: boolean; children: React.ReactNode }) {
+export function Chip({
+  active,
+  onClick,
+  mono,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  mono?: boolean;
+  children: React.ReactNode;
+}) {
   return (
     <button
       type="button"

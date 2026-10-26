@@ -76,11 +76,12 @@
   --hero-jc: space-between;
   --c4: repeat(4, 80%);
   --c3: 1fr;
-  --c55: 1fr;
-  --c2: 1fr;
+  --c55: minmax(0, 1fr);
+  --c2: minmax(0, 1fr);
   --c4g: 1fr;
-  --c-detail: 1fr;
+  --c-detail: minmax(0, 1fr);
   --c-gal: 1fr;
+  --gcols: 2;
   --ev-h: 320px;
   --fac-t: 18px;
   --tq-ar: 16/10;
@@ -111,6 +112,7 @@
     --c2: minmax(0, 1fr) minmax(0, 1fr);
     --c4g: repeat(auto-fill, minmax(250px, 1fr));
     --c-gal: minmax(0, 3fr) minmax(0, 1fr);
+    --gcols: 3;
     --ev-h: 460px;
     --pad: 32px;
     --pad-checkout: 32px;
@@ -266,5 +268,13 @@
   }
   to {
     opacity: 1;
+  }
+}
+@keyframes aw-sheet {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
   }
 }
