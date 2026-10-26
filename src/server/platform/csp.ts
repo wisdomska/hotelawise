@@ -14,7 +14,7 @@ export function wantsNonce(pathname: string): boolean {
   return NONCE_ROUTES.some((r) => r.test(pathname));
 }
 
-export function contentSecurityPolicy(nonce: string | null, opts: { dev?: boolean } = {}): string {
+export function contentSecurityPolicy(nonce: string | null, opts: { dev?: boolean; https?: boolean } = {}): string {
   const script = nonce ? [`'self'`, `'nonce-${nonce}'`, FIRST_VISIT_HASH] : [`'self'`, `'unsafe-inline'`];
   if (opts.dev) script.push(`'unsafe-eval'`);
   const d: Record<string, string[]> = {
@@ -47,7 +47,8 @@ export function contentSecurityPolicy(nonce: string | null, opts: { dev?: boolea
     'manifest-src': [`'self'`],
   };
   const parts = Object.entries(d).map(([k, v]) => `${k} ${v.join(' ')}`);
-  if (!opts.dev) parts.push('upgrade-insecure-requests');
+  // Only over HTTPS: Safari applies it to http://localhost too, which breaks local and CI runs.
+  if (opts.https ?? !opts.dev) parts.push('upgrade-insecure-requests');
   return parts.join('; ');
 }
 

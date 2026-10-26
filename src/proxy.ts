@@ -11,7 +11,7 @@ export function proxy(request: NextRequest) {
   if (blocked) return blocked;
   const dev = process.env.NODE_ENV === 'development';
   const nonce = wantsNonce(request.nextUrl.pathname) ? makeNonce() : null;
-  const csp = contentSecurityPolicy(nonce, { dev });
+  const csp = contentSecurityPolicy(nonce, { dev, https: request.nextUrl.protocol === 'https:' });
   // Next.js reads the nonce from the request's CSP header and stamps its scripts with it.
   const headers = new Headers(request.headers);
   if (nonce) {

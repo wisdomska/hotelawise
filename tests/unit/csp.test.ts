@@ -53,3 +53,10 @@ describe('outside sources the site needs', () => {
     for (const d of ['script-src', 'frame-src', 'connect-src']) expect(directive(csp, d)).toContain('https://challenges.cloudflare.com');
   });
 });
+
+describe('upgrade-insecure-requests', () => {
+  it('is sent over HTTPS only (Safari would upgrade http://localhost too)', () => {
+    expect(contentSecurityPolicy(null, { https: true })).toContain('upgrade-insecure-requests');
+    expect(contentSecurityPolicy(null, { https: false })).not.toContain('upgrade-insecure-requests');
+  });
+});
