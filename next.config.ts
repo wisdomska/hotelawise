@@ -31,7 +31,7 @@ const nextConfig: NextConfig = {
     authInterrupts: true, // forbidden() → 403 page for screens a role can't use
   },
   async headers() {
-    // CSP with nonces is set in src/proxy.ts; these are static and safe for every response.
+    // The Content-Security-Policy is set per request in src/proxy.ts; these are the same for every response.
     return [
       {
         source: '/:path*',
