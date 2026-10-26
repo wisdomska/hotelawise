@@ -1,6 +1,6 @@
 # Hotel A-Wise: production build plan
 
-Status: **draft, waiting for approval.** Nothing below is built yet. Approve it, or mark changes, and milestone 1 starts.
+Status: **approved** by WISDOMSKA(SENYA) on 26 Oct 2026, with D-00 (prototype first), D-01 (pickup only), D-04 (no demos anywhere) and D-11 (manage-booking OTP) confirmed.
 
 Inputs read:
 - `design/Handoff.md`
@@ -68,10 +68,10 @@ Source-of-truth order (owner ruling, D-00): **rendered prototypes** → `Handoff
 1. `pnpm install --frozen-lockfile` (cached)
 2. lint → format check → typecheck
 3. unit tests with coverage gates: ≥90% lines/branches on `src/server/services` and `src/lib`
-4. integration tests against the Neon `ci` branch (reset from `preview` each run)
+4. integration tests against the Neon `ci` branch (recreated from `main`'s schema each run; test users and fixtures are created by the tests and never reach `preview` or `main`)
 5. `opennextjs-cloudflare build` + bundle-size report
-6. `wrangler versions upload --env preview`, which posts the version preview URL as a PR comment
-7. Playwright e2e + axe + visual regression against that URL
+6. Playwright e2e + axe + visual regression against the built Worker running in CI (`opennextjs-cloudflare preview`) wired to the `ci` Neon branch, so test accounts never exist on a deployed site
+7. `wrangler versions upload --env preview`, which posts the version preview URL as a PR comment for manual review
 8. Lighthouse CI (mobile) budgets
 9. authorship audit
 
@@ -262,8 +262,8 @@ The server enforces it in **every** action and query through `requirePermission(
 - Better Auth's CSRF/origin checks, plus same-origin checks on Server Actions.
 - Rate limits on login (5 attempts, then a 30 s lock, per Handoff), OTP, forms and lookups. Turnstile on public forms.
 - Upload URLs are signed. Secrets are revealed only after fresh 2FA.
-- No demo accounts on production. `scripts/create-super-admin.ts` reads `SUPER_ADMIN_EMAIL` and `SUPER_ADMIN_TEMP_PASSWORD`, and forces a password change plus TOTP enrolment on first login.
-- "Reset demo data" and the demo accounts exist only when `APP_ENV=preview`.
+- **No demo accounts and no "Reset demo data" on any deployed site, production or preview** (D-04). On each environment, the first Super Admin comes from `scripts/create-super-admin.ts`, which reads `SUPER_ADMIN_EMAIL` and `SUPER_ADMIN_TEMP_PASSWORD` and forces a password change plus TOTP enrolment on first login. Staff are invited from Users & permissions.
+- Both environments are seeded with the real catalogue only (rooms, rates, venues, rental items, content, photos). No fake guests, bookings or revenue.
 - The OWASP ASVS L2 checklist is tracked in `docs/SECURITY.md`.
 
 ---
@@ -316,10 +316,10 @@ Each milestone ends with a short summary, the preview URL, test results and bloc
 
 | # | Conflict | Ruling |
 |---|---|---|
-| D-01 | Checkout prototype has delivery, zones, `#track` | Pickup only, no tracking page; zones kept in the model, disabled (your ruling 1) |
+| D-01 | Checkout prototype has delivery, zones, `#track` | Pickup only, no tracking page; zones kept in the model, disabled (owner ruling, reconfirmed) |
 | D-02 | "Reminder the day before delivery" | Read as **pickup** (ruling 2) |
 | D-03 | Spec bundles with delivery/setup fees | Bundles kept, delivery dropped, setup only on venue quotes (ruling 3) |
-| D-04 | Demo login `admin@123` | Preview only (ruling 4) |
+| D-04 | Demo login `admin@123`, "Reset demo data" | Removed everywhere: not on production, not on preview (owner ruling) |
 | D-05 | Vercel/Supabase in docs | Cloudflare Workers + Neon + Cloudinary (ruling 5) |
 | D-06 | Rental order statuses (spec: delivery stages) | Handoff stages: Reserved → Ready for pickup → Collected → Returned → Completed |
 | D-00 | Handoff vs prototype | **Prototype wins** (owner ruling) |

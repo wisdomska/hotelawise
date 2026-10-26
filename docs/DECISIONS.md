@@ -11,7 +11,7 @@ Source-of-truth order: **rendered prototypes** (`design/*.dc.html`) → `design/
 
 Each entry gives the conflict, the ruling and why. Entries marked **(owner ruling)** come straight from the owner, WISDOMSKA(SENYA). Entries marked **(open)** have a default but are waiting on an answer.
 
-## D-01 Rentals are pickup only (owner ruling)
+## D-01 Rentals are pickup only (owner ruling, reconfirmed 26 Oct)
 **Conflict:** `Checkout.dc.html` still carries delivery, zone and `#track` code. The Handoff says reserve and collect, with no delivery and no public tracking page.
 
 **Ruling:** Follow the Handoff.
@@ -26,9 +26,11 @@ Reminder jobs run the day before check-in, the day before pickup, and on the mor
 - Delivery fees are dropped.
 - The setup fee (GHS 150) appears only as a line in venue quotes.
 
-## D-04 Demo credentials are preview only (owner ruling)
-- `admin@hotelawise.com / admin@123` and `kojo@hotelawise.com / staff@123` are seeded only when `APP_ENV=preview`. "Reset demo data" exists only there.
-- Production has no default accounts. The first Super Admin comes from `scripts/create-super-admin.ts` and must change the password and enrol TOTP on first sign-in.
+## D-04 No demo accounts or demo data anywhere (owner ruling)
+- The prototype's `admin@hotelawise.com / admin@123` and `kojo@hotelawise.com / staff@123` logins, and the "Reset demo data" button, do not exist on **production or preview**.
+- On every environment, the first Super Admin is created with `scripts/create-super-admin.ts`, then must change the password and enrol TOTP on first sign-in. Other users are invited.
+- Deployed databases hold only the real catalogue (rooms, rates, venues, rental items, content, photos). The prototype's sample guests, bookings, orders and revenue are not seeded.
+- Automated tests create their own users and fixtures on a throwaway Neon `ci` branch, against a Worker built and run inside CI.
 
 ## D-05 Hosting: Cloudflare + Neon instead of Vercel + Supabase (owner ruling)
 | Docs say | Replaced by |
@@ -76,7 +78,7 @@ Correctness never depends on cron timing: expired holds are treated as expired i
 ## D-11 Manage booking needs a one-time code
 **Conflict:** The Handoff says ref + phone. The brief adds an OTP.
 
-**Ruling:** This is an addition to the prototype, required by the brief. It is styled in the prototype's manage-booking visual language. Use ref + phone + a 6-digit OTP, sent by email (SMS when enabled). It expires after 10 minutes, allows 5 attempts and is rate-limited.
+**Ruling (owner-confirmed 26 Oct):** This is an addition to the prototype, required by the brief. It is styled in the prototype's manage-booking visual language. Use ref + phone + a 6-digit OTP, sent by email (SMS when enabled). It expires after 10 minutes, allows 5 attempts and is rate-limited.
 
 **Why:** References are short, and a phone number is often known to others. This is standard practice for self-service changes involving money.
 
@@ -149,7 +151,7 @@ The Handoff says customers get SMS updates. SMS is off by default (no budget), s
 - Icon buttons are labelled.
 - The "Nothing here" empty state is kept.
 
-**Production:** there is no "Reset demo data" (D-04).
+**Every environment:** there is no "Reset demo data" (D-04).
 
 ## D-18 Contact numbers (confirm with the hotel)
 **Conflict:** The spec says reception is +233 55 555 7090, with +233 54 012 0400 and +233 55 555 7033 as the other numbers. The old site's footer lists +233 54 012 0400.
