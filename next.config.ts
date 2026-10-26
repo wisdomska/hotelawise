@@ -1,3 +1,4 @@
+import path from 'node:path';
 import type { NextConfig } from 'next';
 import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
 
@@ -5,7 +6,15 @@ import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
 const workerBuild = process.env.HOTELAWISE_WORKER_BUILD === '1';
 
 const nextConfig: NextConfig = {
-  turbopack: workerBuild ? { resolveAlias: { '@/server/db/node': './src/server/db/node-stub.ts' } } : {},
+  // The Worker is built with webpack (open-next.config.ts), which shares server
+  // code between pages and route handlers; Turbopack bundles it twice.
+  webpack(config) {
+    if (workerBuild) {
+      const stub = path.resolve('src/server/db/node-stub.ts');
+      config.resolve.alias = { ...config.resolve.alias, '@/server/db/node$': stub, [path.resolve('src/server/db/node.ts')]: stub };
+    }
+    return config;
+  },
   reactStrictMode: true,
   poweredByHeader: false,
   // typedRoutes is switched on once every linked route exists (milestone 5).

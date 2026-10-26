@@ -309,3 +309,7 @@ The prototype shows a full-screen Nyansapo loader ("Turning the key…") on firs
 ## D-38 Hold countdowns use the time remaining, not the clock
 
 A phone with its clock set wrong would show a fresh hold as expired. The server returns how many milliseconds the hold has left, and the page counts down from when it received that.
+
+## D-39 The Worker is built with webpack
+
+Turbopack bundles server code once for pages and again for route handlers (auth, Paystack webhook, calendar files), which put the Worker at 2.66 MiB of the free plan's 3 MiB. A webpack build shares those modules and comes to 2.30 MiB with the same routes. Local development and the e2e server keep Turbopack; only `pnpm cf:build` (set in `open-next.config.ts`) uses webpack.
