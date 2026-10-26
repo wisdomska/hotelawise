@@ -718,3 +718,17 @@ export async function setRoomStatus(db: AnyDb, by: Who, number: string, status: 
     });
   });
 }
+
+/** Every room with its rate name, for the Rooms-by-day rows. */
+export async function roomRows(db: AnyDb) {
+  return db
+    .select({ number: s.rooms.number, name: s.rateVariants.name })
+    .from(s.rooms)
+    .innerJoin(s.rateVariants, eq(s.rateVariants.id, s.rooms.rateVariantId))
+    .orderBy(asc(s.rooms.number));
+}
+
+/** Every visible booking, oldest stay first, for the CSV export. */
+export async function allBookingRows(db: AnyDb) {
+  return (await baseRows(db).where(VISIBLE).orderBy(asc(s.bookings.checkIn), asc(s.bookings.ref))).map(toRow);
+}

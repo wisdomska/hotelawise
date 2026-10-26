@@ -11,7 +11,9 @@ import { Toaster } from 'sonner';
 import { Icon, type AnyIconName } from '@/components/ui/icon';
 import { authClient } from '@/lib/auth/client';
 import type { Capability } from '@/server/auth/permissions';
+import { QuickBooking } from './bookings/modals';
 import { AdminProvider, useAdmin, type Me } from './context';
+import { BlackoutModal } from './rooms/modals';
 import { DrawerHost } from './drawer-host';
 import { ModalHost } from './modal';
 import { Palette } from './palette';
@@ -50,7 +52,7 @@ function setCookie(name: string, value: string) {
 function Frame(p: Props) {
   const router = useRouter();
   const path = usePathname();
-  const { me, drawer, modal, closeDrawer, closeModal } = useAdmin();
+  const { me, drawer, modal, closeDrawer, closeModal, openModal } = useAdmin();
   const [collapsed, setCollapsed] = useState(p.collapsed);
   const [side, setSide] = useState(false);
   const [dark, setDark] = useState(p.theme === 'dark');
@@ -78,8 +80,7 @@ function Frame(p: Props) {
     router.replace('/admin/login');
     router.refresh();
   }, [router]);
-  // The desk booking modal arrives with the bookings screen.
-  const newBooking = useCallback(() => router.push('/admin/bookings?action=new'), [router]);
+  const newBooking = useCallback(() => openModal(<QuickBooking />), [openModal]);
 
   // Close the phone sidebar after navigating.
   const [lastPath, setLastPath] = useState(path);
@@ -144,7 +145,7 @@ function Frame(p: Props) {
   const runQuick = (k: QuickKey) => {
     if (k === 'newBooking') newBooking();
     else if (k === 'newRental') window.open('/rent', '_blank', 'noopener');
-    else if (k === 'blockDates') router.push('/admin/rooms?tab=Blocked+dates&action=block');
+    else if (k === 'blockDates') openModal(<BlackoutModal />);
     else router.push('/admin/inventory?action=add');
   };
 

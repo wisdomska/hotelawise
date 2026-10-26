@@ -38,7 +38,7 @@ test('first sign-in: new password, then TOTP enrolment, then the dashboard', asy
   await page.getByLabel('I’ve saved my backup codes somewhere safe.').check();
   await page.getByLabel('6-digit code').fill(totp(secret));
   await page.getByRole('button', { name: 'Turn on two-step sign-in' }).click();
-  await expect(page.getByRole('heading', { name: /Good to see you, Esi/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Good (morning|afternoon|evening), Esi/ })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Screens' }).getByRole('link')).toHaveCount(14);
 });
 
@@ -56,7 +56,7 @@ test('later sign-ins ask for the TOTP code', async ({ page }) => {
   await page.getByLabel('6-digit code').fill('000000');
   await expect(page.locator('main [role=alert]')).toBeVisible();
   await page.getByLabel('6-digit code').fill(totp(secret));
-  await expect(page.getByRole('heading', { name: /Good to see you/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Good (morning|afternoon|evening)/ })).toBeVisible();
 });
 
 test('staff see only their screens, and are refused a Super Admin URL', async ({ page }) => {
@@ -71,7 +71,7 @@ test('staff see only their screens, and are refused a Super Admin URL', async ({
   await page.getByLabel('New password', { exact: true }).fill('adinkra2026');
   await page.getByLabel('Confirm new password', { exact: true }).fill('adinkra2026');
   await page.getByRole('button', { name: 'Save password' }).click();
-  await expect(page.getByRole('heading', { name: /Good to see you, Kojo/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Good (morning|afternoon|evening), Kojo/ })).toBeVisible();
   const links = page.getByRole('navigation', { name: 'Screens' }).getByRole('link');
   await expect(links).toHaveCount(8);
   await expect(links.filter({ hasText: 'Audit log' })).toHaveCount(0);
@@ -92,5 +92,5 @@ test('with two-step not required, a new Super Admin goes straight in after choos
   await page.getByLabel('New password', { exact: true }).fill('akwaaba2026');
   await page.getByLabel('Confirm new password', { exact: true }).fill('akwaaba2026');
   await page.getByRole('button', { name: 'Save password' }).click();
-  await expect(page.getByRole('heading', { name: /Good to see you/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Good (morning|afternoon|evening)/ })).toBeVisible();
 });
