@@ -1,110 +1,127 @@
 # Hotel A-Wise
 
-The website, booking engine and admin CMS for Hotel A-Wise, No. 1 Wisepak Lane, New Asofan, Accra.
+Website, booking engine and admin for **Hotel A-Wise**, No. 1 Wisepak Lane, New Asofan, Accra.
 
-- **Guests** book rooms and pay by Mobile Money or card, manage their booking, reserve event rentals for pickup, and send venue enquiries.
-- **Staff** run the hotel from `/admin`. Super Admins can see and change everything; Staff see only what their role allows.
+- **Guests** book a room and pay by Mobile Money or card, manage the booking with a texted code, reserve event rentals to collect, and send venue enquiries.
+- **Staff** run the hotel from `/admin`: bookings, rooms, rentals, inventory, venues, payments, customers, content, reports and users. Every change is written to an audit log.
 
-| Area       | Choice                                                                      |
-| ---------- | --------------------------------------------------------------------------- |
-| App        | Next.js 16 (App Router, Server Actions), TypeScript                         |
-| Hosting    | Cloudflare Workers via OpenNext (`wrangler.jsonc`: `production`, `preview`) |
-| Database   | Neon Postgres with Drizzle (`drizzle/` migrations)                          |
-| Admin auth | Better Auth, with TOTP two-factor sign-in                                   |
-| Payments   | Paystack (MoMo and card, GHS)                                               |
-| Images     | Cloudinary                                                                  |
-| Email      | Resend                                                                      |
+## Status
 
-Plans and decisions are in `docs/`:
+| Milestone                                              | State       |
+| ------------------------------------------------------ | ----------- |
+| M1 Foundations: schema, auth, CI/CD, Worker build      | Done        |
+| M2 Public site: home, rooms, gallery, contact          | Done        |
+| M3 Room booking: holds, Paystack, confirmation, manage | Done        |
+| M4 Rentals (reserve and collect) and venue enquiries   | Done        |
+| M5 Admin: 14 screens, roles and permissions, audit     | In progress |
+| M6 Notifications, scheduled jobs, reports, exports     | Planned     |
+| M7 Release: QA report, security pass, runbook, v1.0.0  | Planned     |
 
-- [PLAN](docs/PLAN.md)
-- [DECISIONS](docs/DECISIONS.md)
-- [ARCHITECTURE](docs/ARCHITECTURE.md)
+The plan is in [docs/PLAN.md](docs/PLAN.md). Hotel facts that still need the owner's confirmation are in [docs/HOTEL-FACTS.md](docs/HOTEL-FACTS.md).
 
-The visual reference is `design/`. That folder holds the prototypes, plus `reference-screens/` captured at 1440 and 390 px wide.
+## Stack
 
-## Local development
+| Area       | Choice                                                                 |
+| ---------- | ---------------------------------------------------------------------- |
+| App        | Next.js 16 (App Router, Server Actions), React 19, TypeScript          |
+| Hosting    | Cloudflare Workers (free plan) through OpenNext                        |
+| Database   | Postgres 16 (Neon in deployed environments) with Drizzle ORM           |
+| Admin auth | Better Auth: email and password, TOTP two-step for Super Admins        |
+| Payments   | Paystack: MoMo (MTN, Telecel, AirtelTigo) and card, in GHS             |
+| Messages   | Resend (email), Arkesel (SMS, optional)                                |
+| Images     | Cloudinary                                                             |
+| Bot checks | Cloudflare Turnstile                                                   |
+| Tests      | Vitest (unit and integration), Playwright with axe (e2e, a11y, visual) |
 
-Requires Node 22, pnpm 10 and a Postgres 16 server (local, or a Neon branch).
+How the parts fit together: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Why things are the way they are: [docs/DECISIONS.md](docs/DECISIONS.md).
+
+## Getting started
+
+You need Node 22 (see `.nvmrc`), pnpm 10 and a Postgres 16 server, either local or a Neon branch.
 
 ```bash
 pnpm install
-cp .env.example .env.local          # fill in DATABASE_URL, BETTER_AUTH_SECRET, REF_SECRET
+cp .env.example .env.local     # set DATABASE_URL, BETTER_AUTH_SECRET and REF_SECRET at least
 pnpm db:migrate
-pnpm db:seed                        # real catalogue only; no demo data
-SUPER_ADMIN_EMAIL=you@example.com SUPER_ADMIN_TEMP_PASSWORD=change-me-1 pnpm admin:create
-pnpm dev                            # http://localhost:3000, admin at /admin
+pnpm db:seed                   # the real catalogue; no demo data
+SUPER_ADMIN_EMAIL=you@example.com SUPER_ADMIN_TEMP_PASSWORD='choose-a-temp-one' pnpm admin:create
+pnpm dev                       # http://localhost:3000, admin at /admin
 ```
 
-When you first sign in to the admin, you must set a new password. Super Admins must also turn on two-step sign-in with an authenticator app.
+On first sign-in you must set a new password, and a Super Admin must also turn on two-step sign-in.
 
-### Commands
+Services you haven't configured stay off and the site says so plainly. Without Paystack keys, guests are offered pay-at-hotel or a phone number. Without Resend, emails print to the console in development.
 
-| Command                                        | What it does                                                                                                           |
-| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `pnpm lint` / `pnpm format` / `pnpm typecheck` | Static checks (CI runs all three)                                                                                      |
-| `pnpm test:unit` / `pnpm test:coverage`        | Unit tests / the whole suite with the 90% coverage gate on `src/lib` and `src/server/services` (needs Postgres)        |
-| `pnpm test:integration`                        | Database tests. They need Postgres at `TEST_DATABASE_URL` (default `postgres://postgres@localhost:5433/postgres`)      |
-| `pnpm build && pnpm test:e2e`                  | Playwright end-to-end tests against a production build                                                                 |
-| `pnpm cf:build` / `pnpm cf:preview`            | Build the Cloudflare Worker, or build and run it locally                                                               |
-| `pnpm cf:deploy:preview`                       | Deploy the preview Worker by hand: builds with its wrangler vars and with `.env.local` set aside (OpenNext bundles it) |
-| `pnpm db:generate` / `pnpm db:migrate`         | Create migrations from `src/server/db/schema.ts`, or apply them                                                        |
-| `pnpm images:import`                           | Upload the hotel photos to Cloudinary under their corrected names                                                      |
-| `pnpm design:capture`                          | Re-capture the prototype reference screenshots                                                                         |
+### Environment variables
 
-## Branches and releases
+Every variable is listed with a comment in [`.env.example`](.env.example). The main ones:
 
-| Branch                       | Purpose                    | Deploys to                    |
-| ---------------------------- | -------------------------- | ----------------------------- |
-| `main`                       | Production                 | `hotelawise.com`              |
-| `preview`                    | Staging, behind a password | `preview.hotelawise.com`      |
-| `feat/*`, `fix/*`, `chore/*` | Feature work               | A pull request into `preview` |
+| Variable                                                   | Needed for                                          |
+| ---------------------------------------------------------- | --------------------------------------------------- |
+| `DATABASE_URL` (+ `DATABASE_DRIVER=pg` for local Postgres) | Everything that reads or writes data                |
+| `BETTER_AUTH_SECRET`, `REF_SECRET`                         | Admin sessions; booking references and guest codes  |
+| `PAYSTACK_SECRET_KEY`, `NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY`   | Online payments (test keys anywhere but production) |
+| `RESEND_API_KEY`, `EMAIL_FROM`                             | Confirmation and staff emails                       |
+| `CLOUDINARY_*`                                             | Photo uploads from the admin                        |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`   | Bot checks on holds, orders and forms               |
+| `SMS_PROVIDER`, `SMS_API_KEY`, `SMS_SENDER_ID`             | Texted receipts and manage-booking codes            |
 
-- A release is a pull request from `preview` into `main`.
-- Commits follow Conventional Commits. The `commit-msg` hook rejects tool attribution lines.
-- CI checks that every commit is authored by WISDOMSKA(SENYA).
+Deployed Workers get public values from `wrangler.jsonc` and secrets from `wrangler secret put`. Never commit a real value.
 
-## Confirm with the hotel
+## Commands
 
-These are seed values, not facts from the hotel. Each one can be edited in the admin; please confirm them before launch.
+| Command                              | What it does                                                                                       |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| `pnpm dev`                           | Local development server                                                                           |
+| `pnpm lint` · `format` · `typecheck` | Static checks (CI runs all three)                                                                  |
+| `pnpm test:unit`                     | Unit tests                                                                                         |
+| `pnpm test:integration`              | Database tests against `TEST_DATABASE_URL` (default `postgres://postgres@localhost:5433/postgres`) |
+| `pnpm test:coverage`                 | Whole Vitest suite with the 90% coverage gate on `src/lib` and `src/server/services`               |
+| `pnpm build && pnpm test:e2e`        | Playwright against a production build (Chromium, WebKit, Pixel 7, iPhone 14)                       |
+| `pnpm db:generate` · `db:migrate`    | Create a migration from `src/server/db/schema.ts` · apply migrations                               |
+| `pnpm db:seed`                       | Load the catalogue (rooms, rentals, venues, FAQs, paused offers)                                   |
+| `pnpm admin:create`                  | Create the first Super Admin                                                                       |
+| `pnpm cf:build` · `cf:preview`       | Build the Cloudflare Worker · build and run it locally                                             |
+| `pnpm cf:deploy:preview`             | Deploy the preview Worker by hand (sets `.env.local` aside so it isn't bundled)                    |
+| `pnpm images:import`                 | Upload the hotel photos to Cloudinary                                                              |
+| `pnpm design:capture`                | Re-capture the prototype reference screenshots                                                     |
 
-**Rooms**
+## Project layout
 
-- Room numbers: Standard 101–106, Double 107–108, Executive 201/202/205, Executive Plus 203/204, VIP 206–208 (16 rooms).
+```
+src/
+  app/            routes: (site) public pages, (site)/(checkout) booking and rentals, admin, api
+  components/     site, checkout, admin, ui and motion components
+  server/
+    services/     business rules: bookings, holds, pricing, rentals, payments, notifications
+    integrations/ Paystack, Resend, SMS and Turnstile clients
+    db/           Drizzle schema and clients
+    auth/         Better Auth setup, roles and permissions
+    platform/     env, database access, rate limits, preview gate
+  lib/            pure helpers shared by browser and server (dates, money, forms, .ics)
+  worker/         Worker entry: scheduled jobs
+drizzle/          SQL migrations
+design/           Prototypes and reference screens (the visual source of truth)
+tests/            unit, integration and e2e (incl. a11y and visual)
+scripts/          migrations, seed, admin setup, build helpers
+docs/             plan, architecture, decisions, setup checklist, runbook, hotel facts
+```
 
-**Times, fees and policies**
+## Environments and deploys
 
-- Check-in 14:00, check-out 12:00. Breakfast GHS 50 per guest per day. Room service GHS 20.
-- Free cancellation up to 48 hours before check-in. The deposit is 30%. A no-show is charged the first night.
-- Ghana levies (VAT 15%, NHIL 2.5%, GETFund 2.5%, Tourism 1%) are treated as already included in prices.
+| Branch    | Environment | Address                                                          |
+| --------- | ----------- | ---------------------------------------------------------------- |
+| `main`    | production  | `hotelawise.com` once the domain is registered                   |
+| `preview` | preview     | `hotel-a-wise-preview.wisdomska.workers.dev`, password-protected |
 
-**Contact numbers**
+A push to `preview` or `main` migrates that environment's database and then deploys its Worker (`.github/workflows/deploy.yml`). Every pull request into `preview` also uploads a preview version and links it in the PR. Deploys, rollbacks and incident steps are in [docs/RUNBOOK.md](docs/RUNBOOK.md).
 
-- Reception +233 55 555 7090 (from the spec).
-- Other numbers +233 54 012 0400 and +233 55 555 7033. The old website listed +233 54 012 0400 as the main number.
+The Worker has to stay under the free plan's 3 MiB (gzip). CI measures it on every pull request.
 
-**Rentals**
+## Contributing
 
-- Daily prices (GHS): canopy 250, long table 40, short table 25, foldable chair 5, regular chair 3, tablecloth 15, chair cover 4.
-- Refundable deposit per unit (GHS): canopy 100, long table 20, short table 15, foldable chair 2, regular chair 1, tablecloth 5, chair cover 1.
-- Stock: 12 canopies, 30 long tables, 40 short tables, 300 foldable chairs, 400 regular chairs, 60 tablecloths, 200 chair covers.
-- Packs: Wedding pack 10% off, Funeral pack 10% off, Party pack 8% off.
-
-**Venues**
-
-- Hire, as a starting point for quotes: compound GHS 2,500, conference room GHS 800. Setup GHS 150, offered only for venue bookings.
-
-**Offers (seeded paused)**
-
-- Christmas & New Year +15%; Weekend nights on the Double +GHS 30; Long stay (7+ nights) −10%; Independence Day +10%.
-- Promo codes AWISE3 (free breakfast on 3+ nights) and NIGHTOWL (GHS 20 off).
-- The site banner "Book 3 nights, get breakfast on us" is off until the AWISE3 offer is confirmed.
-
-**Photos**
-
-- The regular plastic chair has no photo yet.
-- The Summer Hut concept image shows a pool A-Wise doesn't have. Replace it before launch; the admin flags it.
+Read [CONTRIBUTING.md](CONTRIBUTING.md) for branches, commit style and the checks a pull request must pass. To report a security problem, see [SECURITY.md](SECURITY.md).
 
 ## License
 
-Proprietary. © WISDOMSKA(SENYA). All rights reserved.
+Proprietary. © 2026 WISDOMSKA(SENYA). All rights reserved. See [LICENSE](LICENSE).
