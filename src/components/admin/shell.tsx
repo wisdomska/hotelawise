@@ -166,6 +166,7 @@ function Frame(p: Props) {
           aria-label={mini ? 'Expand sidebar' : 'Collapse sidebar'}
           aria-expanded={!mini}
           data-tip={`${mini ? 'Expand sidebar' : 'Collapse sidebar'} (Ctrl B)`}
+          data-tip-side="right"
           className="aw-press"
           style={{
             display: 'var(--dflex)',
@@ -263,6 +264,7 @@ function Frame(p: Props) {
                     aria-current={current ? 'page' : undefined}
                     aria-label={it.label + (it.badge ? `, ${it.badge} to do` : '')}
                     data-tip={mini ? it.label + (it.badge ? ` · ${it.badge}` : '') : undefined}
+                    data-tip-side="right"
                     className="aw-nav-btn"
                     style={{
                       position: 'relative',
@@ -615,6 +617,7 @@ function UserMenu(p: { me: Me; mini: boolean; stats: UmStat[]; quick: QuickKey[]
         aria-expanded={!!open}
         aria-label={`Account menu for ${p.me.name}`}
         data-tip={p.mini && !open ? p.me.name : undefined}
+        data-tip-side="right"
         style={{
           width: '100%',
           display: 'flex',

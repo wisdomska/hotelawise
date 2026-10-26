@@ -1,7 +1,7 @@
 'use client';
 // Charts from Admin.dc.html: sparkline, stacked bars, smoothed line with a
 // reference line, donut split and ranked bars, with the same hover tooltips.
-import { useId, useState, type ReactNode } from 'react';
+import { useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { EASE, mono, panel } from './ui';
 
 export function ChartGrid({ children }: { children: ReactNode }) {
@@ -94,13 +94,29 @@ function TipBox({
   lines: { label: string; value: string; color: string }[];
   dot: 'sq' | 'round';
 }) {
+  const ref = useRef<HTMLDivElement>(null);
+  // Flipping at the midpoint isn't enough on a narrow chart: measure the card and
+  // nudge it back inside its chart panel and the window.
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.transform = `translateX(${shift})`;
+    const r = el.getBoundingClientRect();
+    const panel = el.closest('section')?.getBoundingClientRect();
+    const lo = Math.max(panel ? panel.left + 4 : 0, 8);
+    const hi = Math.min(panel ? panel.right - 4 : Infinity, document.documentElement.clientWidth - 8);
+    const dx = r.left < lo ? lo - r.left : r.right > hi ? Math.max(lo - r.left, hi - r.right) : 0;
+    if (dx) el.style.transform = `translateX(calc(${shift} + ${Math.round(dx)}px))`;
+  }, [x, shift, title]);
   return (
     <div
+      ref={ref}
       style={{
         position: 'absolute',
         top: 4,
         left: x,
         transform: `translateX(${shift})`,
+        maxWidth: 'calc(100vw - 16px)',
         minWidth: 150,
         padding: '10px 12px',
         borderRadius: 10,
