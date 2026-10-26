@@ -7,17 +7,17 @@ Website, booking engine and admin for **Hotel A-Wise**, No. 1 Wisepak Lane, New 
 
 ## Status
 
-| Milestone                                              | State       |
-| ------------------------------------------------------ | ----------- |
-| M1 Foundations: schema, auth, CI/CD, Worker build      | Done        |
-| M2 Public site: home, rooms, gallery, contact          | Done        |
-| M3 Room booking: holds, Paystack, confirmation, manage | Done        |
-| M4 Rentals (reserve and collect) and venue enquiries   | Done        |
-| M5 Admin: 14 screens, roles and permissions, audit     | In progress |
-| M6 Notifications, scheduled jobs, reports, exports     | Planned     |
-| M7 Release: QA report, security pass, runbook, v1.0.0  | Planned     |
+| Milestone                                              | State                                                                  |
+| ------------------------------------------------------ | ---------------------------------------------------------------------- |
+| M1 Foundations: schema, auth, CI/CD, Worker build      | Done                                                                   |
+| M2 Public site: home, rooms, gallery, contact          | Done                                                                   |
+| M3 Room booking: holds, Paystack, confirmation, manage | Done                                                                   |
+| M4 Rentals (reserve and collect) and venue enquiries   | Done                                                                   |
+| M5 Admin: 14 screens, roles and permissions, audit     | Done                                                                   |
+| M6 Notifications, scheduled jobs, reports, exports     | Done                                                                   |
+| M7 Release: QA report, security pass, runbook, v1.0.0  | Done on preview; production launch waiting on the steps in the runbook |
 
-The plan is in [docs/PLAN.md](docs/PLAN.md). Hotel facts that still need the owner's confirmation are in [docs/HOTEL-FACTS.md](docs/HOTEL-FACTS.md).
+The plan is in [docs/PLAN.md](docs/PLAN.md). The release QA is in [docs/QA-REPORT.md](docs/QA-REPORT.md) and the security review in [docs/SECURITY.md](docs/SECURITY.md). Hotel facts that still need the owner's confirmation are in [docs/HOTEL-FACTS.md](docs/HOTEL-FACTS.md).
 
 ## Stack
 
@@ -26,7 +26,7 @@ The plan is in [docs/PLAN.md](docs/PLAN.md). Hotel facts that still need the own
 | App        | Next.js 16 (App Router, Server Actions), React 19, TypeScript          |
 | Hosting    | Cloudflare Workers (free plan) through OpenNext                        |
 | Database   | Postgres 16 (Neon in deployed environments) with Drizzle ORM           |
-| Admin auth | Better Auth: email and password, TOTP two-step for Super Admins        |
+| Admin auth | Better Auth: email and password, optional TOTP two-step (a setting)    |
 | Payments   | Paystack: MoMo (MTN, Telecel, AirtelTigo) and card, in GHS             |
 | Messages   | Resend (email), Arkesel (SMS, optional)                                |
 | Images     | Cloudinary                                                             |
@@ -48,7 +48,7 @@ SUPER_ADMIN_EMAIL=you@example.com SUPER_ADMIN_TEMP_PASSWORD='choose-a-temp-one' 
 pnpm dev                       # http://localhost:3000, admin at /admin
 ```
 
-On first sign-in you must set a new password, and a Super Admin must also turn on two-step sign-in.
+On first sign-in you must set a new password. When Settings › Security › "Require two-step sign-in" is on, Super Admins also set up an authenticator app.
 
 Services you haven't configured stay off and the site says so plainly. Without Paystack keys, guests are offered pay-at-hotel or a phone number. Without Resend, emails print to the console in development.
 
@@ -109,10 +109,10 @@ docs/             plan, architecture, decisions, setup checklist, runbook, hotel
 
 ## Environments and deploys
 
-| Branch    | Environment | Address                                                          |
-| --------- | ----------- | ---------------------------------------------------------------- |
-| `main`    | production  | `hotelawise.com` once the domain is registered                   |
-| `preview` | preview     | `hotel-a-wise-preview.wisdomska.workers.dev`, password-protected |
+| Branch    | Environment | Address                                                            |
+| --------- | ----------- | ------------------------------------------------------------------ |
+| `main`    | production  | `hotel-a-wise.wisdomska.workers.dev`, then `hotelawise.com`        |
+| `preview` | preview     | `hotel-a-wise-preview.wisdomska.workers.dev`, open but not indexed |
 
 A push to `preview` or `main` migrates that environment's database and then deploys its Worker (`.github/workflows/deploy.yml`). Every pull request into `preview` also uploads a preview version and links it in the PR. Deploys, rollbacks and incident steps are in [docs/RUNBOOK.md](docs/RUNBOOK.md).
 

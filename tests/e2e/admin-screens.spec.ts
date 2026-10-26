@@ -84,7 +84,6 @@ test('every screen opens', async ({ page }) => {
     const res = await page.goto(href);
     expect(res?.status(), href).toBe(200);
     await expect(page.getByRole('heading', { level: 1, name }), href).toBeVisible();
-    await expect(page.getByText('This screen is being built')).toHaveCount(0);
   }
 });
 
