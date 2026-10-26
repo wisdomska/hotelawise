@@ -8,9 +8,11 @@ import { Icon } from '@/components/ui/icon';
 import { priceLabel } from '@/components/site/key-card';
 import { ReserveCard } from '@/components/site/room/reserve-card';
 import { RoomGallery } from '@/components/site/room/room-gallery';
+import { JsonLd } from '@/components/site/json-ld';
 import { SiteImage } from '@/components/site/site-image';
 import { leftTonight } from '@/server/content/availability';
 import { contactFrom } from '@/server/content/contact';
+import { roomJsonLd, shareImage } from '@/server/content/seo';
 import { getSiteData, setting, type SiteData, type SiteImage as SiteImageT } from '@/server/content/site-data';
 
 type Params = { code: string };
@@ -55,7 +57,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     title: `${room.name} Room`,
     description: `${room.blurb} From GHS ${priceLabel(room)} a night, up to ${room.sleeps} guests.`,
     alternates: { canonical: `/rooms/${room.code.toLowerCase()}` },
-    openGraph: photo ? { images: [{ url: photo.id, alt: photo.alt }] } : undefined,
+    openGraph: photo ? { images: [shareImage(photo)] } : undefined,
   };
 }
 
@@ -104,6 +106,7 @@ export default async function RoomPage({ params, searchParams }: { params: Promi
 
   return (
     <main id="main" style={{ paddingTop: 84 }}>
+      <JsonLd data={roomJsonLd(data, room)} />
       <section data-noreveal="" data-screen-label="Room detail" style={{ padding: '28px var(--pad) var(--sy)' }}>
         <nav
           aria-label="Breadcrumb"

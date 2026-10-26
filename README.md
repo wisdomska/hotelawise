@@ -40,17 +40,17 @@ When you first sign in to the admin, you must set a new password. Super Admins m
 
 ### Commands
 
-| Command                                        | What it does                                                                                                      |
-| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `pnpm lint` / `pnpm format` / `pnpm typecheck` | Static checks (CI runs all three)                                                                                 |
-| `pnpm test:unit` / `pnpm test:coverage`        | Unit tests / the whole suite with the 90% coverage gate on `src/lib` and `src/server/services` (needs Postgres)   |
-| `pnpm test:integration`                        | Database tests. They need Postgres at `TEST_DATABASE_URL` (default `postgres://postgres@localhost:5433/postgres`) |
-| `pnpm build && pnpm test:e2e`                  | Playwright end-to-end tests against a production build                                                            |
-| `pnpm cf:build` / `pnpm cf:preview`            | Build the Cloudflare Worker, or build and run it locally                                                          |
-| `pnpm cf:deploy:preview`                       | Deploy the preview Worker by hand. Builds with `.env.local` set aside, because OpenNext bundles `.env*` values    |
-| `pnpm db:generate` / `pnpm db:migrate`         | Create migrations from `src/server/db/schema.ts`, or apply them                                                   |
-| `pnpm images:import`                           | Upload the hotel photos to Cloudinary under their corrected names                                                 |
-| `pnpm design:capture`                          | Re-capture the prototype reference screenshots                                                                    |
+| Command                                        | What it does                                                                                                           |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `pnpm lint` / `pnpm format` / `pnpm typecheck` | Static checks (CI runs all three)                                                                                      |
+| `pnpm test:unit` / `pnpm test:coverage`        | Unit tests / the whole suite with the 90% coverage gate on `src/lib` and `src/server/services` (needs Postgres)        |
+| `pnpm test:integration`                        | Database tests. They need Postgres at `TEST_DATABASE_URL` (default `postgres://postgres@localhost:5433/postgres`)      |
+| `pnpm build && pnpm test:e2e`                  | Playwright end-to-end tests against a production build                                                                 |
+| `pnpm cf:build` / `pnpm cf:preview`            | Build the Cloudflare Worker, or build and run it locally                                                               |
+| `pnpm cf:deploy:preview`                       | Deploy the preview Worker by hand: builds with its wrangler vars and with `.env.local` set aside (OpenNext bundles it) |
+| `pnpm db:generate` / `pnpm db:migrate`         | Create migrations from `src/server/db/schema.ts`, or apply them                                                        |
+| `pnpm images:import`                           | Upload the hotel photos to Cloudinary under their corrected names                                                      |
+| `pnpm design:capture`                          | Re-capture the prototype reference screenshots                                                                         |
 
 ## Branches and releases
 

@@ -37,6 +37,6 @@ jobs:
       - run: pnpm install --frozen-lockfile
       # Migrations run here, before the new code goes live — never on page load.
       - run: pnpm db:migrate
-      - run: pnpm cf:build
+      - run: node scripts/cf-clean-build.mjs --env "$TARGET"
       # Uploads the Worker, populates the KV page cache and creates the D1 tag table.
       - run: pnpm exec opennextjs-cloudflare deploy --env "$TARGET"

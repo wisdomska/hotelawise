@@ -2,6 +2,7 @@
 import type { Metadata } from 'next';
 import { ContactForm } from '@/components/site/contact-form';
 import { FaqList } from '@/components/site/faq-list';
+import { JsonLd } from '@/components/site/json-ld';
 import { Icon, type AnyIconName } from '@/components/ui/icon';
 import { contactFrom } from '@/server/content/contact';
 import { getSiteData } from '@/server/content/site-data';
@@ -81,7 +82,7 @@ export default async function ContactPage() {
   };
   return (
     <main id="main" style={{ paddingTop: 84 }}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd).replace(/</g, '\\u003c') }} />
+      <JsonLd data={faqLd} />
       <section data-screen-label="Contact">
         <div style={{ padding: 'calc(var(--sy) * 0.6) var(--pad) var(--sy)', display: 'grid', gridTemplateColumns: 'var(--c55)', gap: 56 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>

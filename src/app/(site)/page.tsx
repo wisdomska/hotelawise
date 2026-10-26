@@ -1,14 +1,17 @@
 // Home (Website.dc.html › HOME): hero with booking bar, rooms key-card strip,
 // What's here, rentals, events, testimonial and getting here.
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { BookingBar } from '@/components/site/home/booking-bar';
 import { WhatsHere } from '@/components/site/home/whats-here';
+import { JsonLd } from '@/components/site/json-ld';
 import { KeyCard } from '@/components/site/key-card';
 import { SiteImage } from '@/components/site/site-image';
 import { Icon, type AnyIconName } from '@/components/ui/icon';
 import { formatGhs } from '@/lib/money';
 import { leftTonight } from '@/server/content/availability';
 import { contactFrom } from '@/server/content/contact';
+import { hotelJsonLd, shareImage } from '@/server/content/seo';
 import { getSiteData } from '@/server/content/site-data';
 
 export const revalidate = 300;
@@ -52,6 +55,23 @@ const IN_EVERY_ROOM: [AnyIconName, string][] = [
   ['sparkle', 'Fresh linen'],
 ];
 
+export async function generateMetadata(): Promise<Metadata> {
+  const data = await getSiteData();
+  const hero = data.photos.hero;
+  return {
+    alternates: { canonical: '/' },
+    openGraph: {
+      type: 'website',
+      siteName: 'Hotel A-Wise',
+      locale: 'en_GH',
+      title: 'Hotel A-Wise · Open all night, every night',
+      description: data.content['home.heroSub'],
+      images: hero ? [shareImage(hero)] : undefined,
+    },
+    twitter: { card: 'summary_large_image' },
+  };
+}
+
 export default async function HomePage() {
   const data = await getSiteData();
   const left = await leftTonight(data);
@@ -69,6 +89,7 @@ export default async function HomePage() {
 
   return (
     <main id="main" style={{ paddingTop: 0 }}>
+      <JsonLd data={hotelJsonLd(data)} />
       <section
         data-noreveal=""
         data-screen-label="Home · Hero"

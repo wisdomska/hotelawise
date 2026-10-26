@@ -37,7 +37,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
         if: steps.secrets.outputs.ready == 'true'
-      - run: pnpm cf:build
+      - run: node scripts/cf-clean-build.mjs --env preview
         if: steps.secrets.outputs.ready == 'true'
       - id: upload
         if: steps.secrets.outputs.ready == 'true'
