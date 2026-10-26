@@ -10,15 +10,63 @@ import * as s from '@/server/db/schema';
 import { refundTransaction, verifyTransaction } from '@/server/integrations/paystack';
 import { bookingBy, settlePayment, type SettleOutcome } from './bookings';
 import type { AnyDb } from './holds';
-import { bookingConfirmed, lateRefund, staffAlert } from './notify';
+import { bookingConfirmed, lateRefund, rentalConfirmed, rentalLateRefund, staffAlert } from './notify';
+import { orderBy } from './rentals';
 
 export async function contactAndTemplate() {
   const data = await getSiteData();
   const ct = contactFrom(data);
-  return { contact: { phone: ct.phone, email: ct.email }, smsTemplate: setting<string>(data, 'notify.smsTemplate') };
+  return {
+    contact: { phone: ct.phone, email: ct.email },
+    smsTemplate: setting<string>(data, 'notify.smsTemplate'),
+    hours: { pickupFrom: setting<number>(data, 'rentals.pickupFromHour'), returnBy: setting<number>(data, 'rentals.returnByHour') },
+  };
+}
+
+async function refundAutomatically(db: AnyDb, refundId: string, paystackRef: string, amount: number, note: string): Promise<boolean> {
+  let status: 'refunded' | 'failed' = 'failed';
+  let id: string | null = null;
+  try {
+    const r = await refundTransaction(paystackRef, amount, note);
+    status = 'refunded';
+    id = String(r.id);
+  } catch (err) {
+    console.error('automatic refund failed', err);
+  }
+  await db.update(s.refunds).set({ status, paystackRefundId: id }).where(eq(s.refunds.id, refundId));
+  return status === 'refunded';
 }
 
 export async function afterSettle(db: AnyDb, out: SettleOutcome) {
+  if (out.kind === 'order_confirmed' && out.firstTime) {
+    const o = await orderBy(db, { id: out.orderId });
+    if (o) {
+      const { contact, hours } = await contactAndTemplate();
+      await rentalConfirmed(o, contact, hours);
+    }
+    return;
+  }
+  if (out.kind === 'order_refund') {
+    const ok = await refundAutomatically(
+      db,
+      out.refundId,
+      out.paystackRef,
+      out.amount,
+      'Paid after the hold expired; items no longer available',
+    );
+    const o = await orderBy(db, { id: out.orderId });
+    const { contact } = await contactAndTemplate();
+    if (o) {
+      if (ok) await rentalLateRefund(o, out.amount, contact);
+      await staffAlert(
+        contact.email,
+        ok ? `Late rental payment refunded: ${o.ref}` : `ACTION NEEDED: refund failed for ${o.ref}`,
+        `${o.collectorName} (${o.phone}) paid GHS ${out.amount / 100} after the hold lapsed and some items had gone. ` +
+          (ok ? 'Paystack is refunding it in full.' : 'The automatic refund failed: refund it by hand from Payments.'),
+      );
+    }
+    return;
+  }
   if (out.kind === 'confirmed' && out.firstTime) {
     const b = await bookingBy(db, await tokenOf(db, out.bookingId));
     if (b) {
@@ -27,16 +75,14 @@ export async function afterSettle(db: AnyDb, out: SettleOutcome) {
     }
   }
   if (out.kind === 'refund') {
-    let status: 'refunded' | 'failed' = 'failed';
-    let refundId: string | null = null;
-    try {
-      const r = await refundTransaction(out.paystackRef, out.amount, 'Paid after the hold expired; room no longer available');
-      status = 'refunded';
-      refundId = String(r.id);
-    } catch (err) {
-      console.error('automatic refund failed', err);
-    }
-    await db.update(s.refunds).set({ status, paystackRefundId: refundId }).where(eq(s.refunds.id, out.refundId));
+    const ok = await refundAutomatically(
+      db,
+      out.refundId,
+      out.paystackRef,
+      out.amount,
+      'Paid after the hold expired; room no longer available',
+    );
+    const status = ok ? 'refunded' : 'failed';
     const { contact } = await contactAndTemplate();
     const b = await bookingBy(db, await tokenOf(db, out.bookingId));
     if (b) {

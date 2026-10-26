@@ -1,13 +1,14 @@
 // Guest and staff messages. Sending never decides whether a booking succeeds:
 // every function here logs and swallows delivery errors.
 import 'server-only';
-import { formatDayMonth, formatShortDate } from '@/lib/dates';
+import { addDays, formatDayMonth, formatShortDate } from '@/lib/dates';
 import { formatGhs } from '@/lib/money';
 import { formatPhone, formatPhoneLocal } from '@/lib/phone';
 import { sendEmail } from '@/server/integrations/email';
 import { sendSms } from '@/server/integrations/sms';
 import { env } from '@/server/platform/env';
 import type { GuestBooking } from './bookings';
+import type { GuestOrder } from './rentals';
 
 type Contact = { phone: string; email: string };
 
@@ -122,4 +123,46 @@ export async function guestCode(phone: string, email: string | null, code: strin
     email ? safely('code email', () => sendEmail(email, `Your Hotel A-Wise code: ${code}`, text)) : Promise.resolve(false),
   ]);
   return [...(bySms ? [maskPhone(phone)] : []), ...(byEmail && email ? [maskEmail(email)] : [])];
+}
+
+const hourLabel = (h: number) => `${h % 12 || 12}${h < 12 ? 'am' : 'pm'}`;
+
+/** The rental confirmation wording from Checkout.dc.html (rDoneNote). */
+export function rentalNote(o: GuestOrder, hours: { pickupFrom: number; returnBy: number }): string {
+  const returnDay = addDays(o.ends, 1);
+  return (
+    `Reference ${o.ref}. Collect from No. 1 Wisepak Lane, New Asofan, from ${hourLabel(hours.pickupFrom)} on ${formatShortDate(o.starts)}, ` +
+    `and bring everything back by ${hourLabel(hours.returnBy)} on ${formatShortDate(returnDay)}. ` +
+    (o.payMode === 'online'
+      ? "You're fully paid, so just show your reference."
+      : `Pay ${formatGhs(o.total)} at the desk when you collect: cash, MoMo or card.`)
+  );
+}
+
+export async function rentalConfirmed(o: GuestOrder, contact: Contact, hours: { pickupFrom: number; returnBy: number }) {
+  const note = rentalNote(o, hours);
+  const text = [
+    `Hi ${firstName(o.collectorName)},`,
+    '',
+    'Your rental is reserved at Hotel A-Wise.',
+    '',
+    note,
+    '',
+    ...o.lines.map((l) => `${l.name} × ${l.qty}: ${formatGhs(l.amount)}`),
+    ...(o.discount ? [`Pack discount: −${formatGhs(o.discount)}`] : []),
+    `Refundable deposit: ${formatGhs(o.deposit)}`,
+    `Total: ${formatGhs(o.total)}`,
+    '',
+    `Your order: ${env().APP_URL}/rent/confirmation/${o.token}`,
+    `Questions? ${contact.phone}`,
+  ].join('\n');
+  await Promise.all([
+    safely('rental SMS', () => sendSms(o.phone, `Hotel A-Wise: ${note}`)),
+    o.email ? safely('rental email', () => sendEmail(o.email!, `Reserved: ${o.ref}`, text)) : Promise.resolve(),
+  ]);
+}
+
+export async function rentalLateRefund(o: GuestOrder, amount: number, contact: Contact) {
+  const msg = `Hotel A-Wise: your payment of ${formatGhs(amount)} for ${o.ref} arrived after the 15-minute hold ended and some items had gone, so we've refunded it in full. Call ${contact.phone} and we'll see what we can do.`;
+  await safely('rental refund SMS', () => sendSms(o.phone, msg));
 }

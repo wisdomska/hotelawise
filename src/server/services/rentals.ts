@@ -138,3 +138,205 @@ export async function createRentalOrder(db: AnyDb, input: RentalOrderInput) {
     return order!;
   });
 }
+
+/** Units of each item free on every day of [from, to + 1] (the day after is kept for returns). */
+export async function stockForRange(db: AnyDb, from: IsoDate, to: IsoDate, now: Date): Promise<Record<string, number>> {
+  const items = await db
+    .select({
+      id: schema.rentalItems.id,
+      slug: schema.rentalItems.slug,
+      total: schema.rentalItems.stockTotal,
+      repair: schema.rentalItems.unitsInRepair,
+    })
+    .from(schema.rentalItems)
+    .where(sql`not ${schema.rentalItems.archived}`);
+  if (!items.length) return {};
+  const lastDay = addDays(to, 1);
+  const committed = await committedUnits(
+    db,
+    items.map((i) => i.id),
+    from,
+    lastDay,
+    now,
+  );
+  const out: Record<string, number> = {};
+  for (const it of items) {
+    let free = Infinity;
+    for (let d = from; d <= lastDay; d = addDays(d, 1)) free = Math.min(free, it.total - it.repair - (committed.get(`${it.id}|${d}`) ?? 0));
+    out[it.slug] = Math.max(0, free);
+  }
+  return out;
+}
+
+/**
+ * Online payment arrived for an order: is its stock still there? Its own hold may
+ * have lapsed (then it no longer counts as committed), so this re-checks under row locks.
+ */
+export async function orderStillFits(tx: AnyDb, orderId: string, now: Date): Promise<boolean> {
+  const [order] = await tx
+    .select()
+    .from(schema.rentalOrders)
+    .where(sql`${schema.rentalOrders.id} = ${orderId}`);
+  if (!order) return false;
+  const lines = await tx
+    .select()
+    .from(schema.orderLines)
+    .where(sql`${schema.orderLines.orderId} = ${orderId}`);
+  const itemIds = [...new Set(lines.map((l) => l.itemId))].sort();
+  const items = await tx
+    .select()
+    .from(schema.rentalItems)
+    .where(inArray(schema.rentalItems.id, itemIds))
+    .orderBy(schema.rentalItems.id)
+    .for('update');
+  const lastDay = addDays(order.ends, 1);
+  const committed = await committedUnits(tx, itemIds, order.starts, lastDay, now);
+  const live = !(order.holdUntil && order.holdUntil <= now);
+  for (const item of items) {
+    const mine = lines.filter((l) => l.itemId === item.id).reduce((s, l) => s + l.qty, 0);
+    for (let d = order.starts; d <= lastDay; d = addDays(d, 1)) {
+      // While our hold is live our own units are already counted in `committed`.
+      const others = (committed.get(`${item.id}|${d}`) ?? 0) - (live ? mine : 0);
+      if (item.stockTotal - item.unitsInRepair - others < mine) return false;
+    }
+  }
+  return true;
+}
+
+export type PlaceOrderInput = {
+  starts: IsoDate;
+  ends: IsoDate;
+  cart: Record<string, number>;
+  packs: string[];
+  collector: { name: string; phoneE164: string; email: string | null };
+  occasion: string;
+  payMode: 'online' | 'at_pickup';
+  publicToken: string;
+  refSecret: string;
+  now?: Date;
+};
+
+/** The guest's checkout: prices and pack discounts come from the database, never the browser. */
+export async function placeRentalOrder(db: AnyDb, input: PlaceOrderInput) {
+  const slugs = Object.keys(input.cart).filter((k) => (input.cart[k] ?? 0) > 0);
+  const items = slugs.length
+    ? await db
+        .select()
+        .from(schema.rentalItems)
+        .where(and(inArray(schema.rentalItems.slug, slugs), sql`not ${schema.rentalItems.archived}`))
+    : [];
+  if (items.length !== slugs.length) throw new RangeError('One of those items is no longer available.');
+  const packRows = await db
+    .select()
+    .from(schema.bundles)
+    .where(sql`${schema.bundles.active}`);
+  const packItems = packRows.length
+    ? await db
+        .select({ bundleId: schema.bundleItems.bundleId, qty: schema.bundleItems.qty, slug: schema.rentalItems.slug })
+        .from(schema.bundleItems)
+        .innerJoin(schema.rentalItems, sql`${schema.rentalItems.id} = ${schema.bundleItems.itemId}`)
+    : [];
+  const { quoteRental } = await import('./rental-quote');
+  const allItems = await db.select().from(schema.rentalItems);
+  const q = quoteRental({
+    items: allItems.map((i) => ({ slug: i.slug, name: i.name, price: i.pricePerDayPesewas, deposit: i.depositPerUnitPesewas })),
+    packs: packRows.map((b) => ({
+      name: b.name,
+      pctOff: b.pctOff,
+      items: Object.fromEntries(packItems.filter((x) => x.bundleId === b.id).map((x) => [x.slug, x.qty])),
+    })),
+    cart: input.cart,
+    packsOn: input.packs,
+    from: input.starts,
+    to: input.ends,
+  });
+  const [customer] = await db
+    .insert(schema.customers)
+    .values({ name: input.collector.name, phoneE164: input.collector.phoneE164, email: input.collector.email })
+    .onConflictDoUpdate({
+      target: schema.customers.phoneE164,
+      set: { name: input.collector.name, email: sql`coalesce(${input.collector.email}, ${schema.customers.email})`, updatedAt: sql`now()` },
+    })
+    .returning({ id: schema.customers.id });
+  const firstPack = packRows.find((b) => q.packsApplied.includes(b.name));
+  return createRentalOrder(db, {
+    customerId: customer!.id,
+    starts: input.starts,
+    ends: input.ends,
+    occasion: input.occasion,
+    payMode: input.payMode,
+    collectorName: input.collector.name,
+    collectorPhoneE164: input.collector.phoneE164,
+    lines: items.map((i) => ({ itemId: i.id, qty: input.cart[i.slug]! })),
+    bundleId: firstPack?.id ?? null,
+    discountPesewas: q.discount,
+    publicToken: input.publicToken,
+    refSecret: input.refSecret,
+    now: input.now,
+  });
+}
+
+export type GuestOrder = {
+  id: string;
+  ref: string;
+  token: string;
+  status: (typeof schema.rentalStatusEnum.enumValues)[number];
+  payMode: 'online' | 'at_pickup';
+  starts: IsoDate;
+  ends: IsoDate;
+  days: number;
+  collectorName: string;
+  phone: string;
+  email: string | null;
+  occasion: string;
+  lines: { name: string; qty: number; amount: number }[];
+  subtotal: number;
+  discount: number;
+  deposit: number;
+  total: number;
+  paid: number;
+};
+
+export async function orderBy(db: AnyDb, where: { token?: string; id?: string }): Promise<GuestOrder | null> {
+  const cond = where.token
+    ? sql`${schema.rentalOrders.publicToken} = ${where.token}`
+    : sql`${schema.rentalOrders.id} = ${where.id ?? null}`;
+  const [row] = await db
+    .select({ o: schema.rentalOrders, email: schema.customers.email })
+    .from(schema.rentalOrders)
+    .innerJoin(schema.customers, sql`${schema.customers.id} = ${schema.rentalOrders.customerId}`)
+    .where(cond);
+  if (!row) return null;
+  const o = row.o;
+  const lines = await db
+    .select({
+      name: schema.rentalItems.name,
+      qty: schema.orderLines.qty,
+      unit: schema.orderLines.unitPesewas,
+      days: schema.orderLines.days,
+    })
+    .from(schema.orderLines)
+    .innerJoin(schema.rentalItems, sql`${schema.rentalItems.id} = ${schema.orderLines.itemId}`)
+    .where(sql`${schema.orderLines.orderId} = ${o.id}`)
+    .orderBy(schema.rentalItems.position);
+  return {
+    id: o.id,
+    ref: o.ref,
+    token: o.publicToken,
+    status: o.status,
+    payMode: o.payMode,
+    starts: o.starts,
+    ends: o.ends,
+    days: rentalDays(o.starts, o.ends),
+    collectorName: o.collectorName,
+    phone: o.collectorPhoneE164,
+    email: row.email,
+    occasion: o.occasion,
+    lines: lines.map((l) => ({ name: l.name, qty: l.qty, amount: l.qty * l.unit * l.days })),
+    subtotal: o.subtotalPesewas,
+    discount: o.discountPesewas,
+    deposit: o.depositPesewas,
+    total: o.totalPesewas,
+    paid: o.paidPesewas,
+  };
+}

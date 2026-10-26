@@ -1,13 +1,11 @@
 'use server';
 // Booking page actions: live availability, the 15-minute hold, promo codes,
 // checkout and payment. Every amount is recomputed on the server.
-import { eq } from 'drizzle-orm';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
 import { checkGuest, checkMomo, type GuestErrors, type PayMethod } from '@/lib/booking-form';
 import { addDays, isIsoDate, nightsBetween, todayInAccra } from '@/lib/dates';
 import { contactFrom } from '@/server/content/contact';
-import * as schema from '@/server/db/schema';
 import { getSiteData } from '@/server/content/site-data';
 import {
   chargeMomo,
@@ -17,7 +15,6 @@ import {
   PaystackError,
   PaystackNotConfiguredError,
   paystackConfigured,
-  submitOtp,
   type ChargeResult,
 } from '@/server/integrations/paystack';
 import { verifyTurnstile } from '@/server/integrations/turnstile';
@@ -273,59 +270,5 @@ export async function submitBooking(raw: z.input<typeof submitSchema>): Promise<
       };
     if (e instanceof RangeError) return { ok: false, error: e.message };
     throw e;
-  }
-}
-
-export type PayState =
-  { state: 'pending' } | { state: 'confirmed'; token: string } | { state: 'failed'; error: string } | { state: 'refunded'; error: string };
-
-/** Asks Paystack how the payment went; the webhook does the same independently. */
-export async function paymentState(payRef: string, method: 'momo' | 'card'): Promise<PayState> {
-  if (!/^AWP-[A-Z0-9]{4,16}$/.test(payRef)) return { state: 'failed', error: 'Payment not found.' };
-  if (!(await allow('paymentStatus', await clientIp()))) return { state: 'pending' };
-  try {
-    const out = await withTransactionDb((tx) => checkAndSettle(tx, payRef));
-    if (out.kind === 'confirmed' || out.kind === 'already') {
-      const b = await bookingBy(await db(), await tokenFor(out.bookingId));
-      return b ? { state: 'confirmed', token: b.token } : { state: 'pending' };
-    }
-    if (out.kind === 'refund')
-      return { state: 'refunded', error: 'The room went while the payment was on its way, so we’ve refunded you in full.' };
-    if (
-      out.kind === 'failed' &&
-      out.reason !== 'pending' &&
-      out.reason !== 'ongoing' &&
-      out.reason !== 'processing' &&
-      out.reason !== 'queued'
-    ) {
-      return { state: 'failed', error: failureReason(out.reason, method) };
-    }
-    return { state: 'pending' };
-  } catch (e) {
-    if (e instanceof PaystackError) return { state: 'pending' };
-    throw e;
-  }
-}
-
-async function tokenFor(bookingId: string) {
-  const [b] = await (
-    await db()
-  )
-    .select({ token: schema.bookings.publicToken })
-    .from(schema.bookings)
-    .where(eq(schema.bookings.id, bookingId));
-  return { token: b?.token };
-}
-
-/** Telecel Cash: the voucher code the payer generated on their phone. */
-export async function sendMomoCode(payRef: string, otp: string): Promise<{ ok: true; display: string } | { ok: false; error: string }> {
-  if (!/^AWP-[A-Z0-9]{4,16}$/.test(payRef) || !/^\d{4,8}$/.test(otp.trim())) return { ok: false, error: 'Enter the code from your phone.' };
-  if (!(await allow('payment', await clientIp()))) return { ok: false, error: 'Too many tries. Give it a few minutes.' };
-  try {
-    const c = await submitOtp(payRef, otp.trim());
-    if (c.status === 'failed') return { ok: false, error: failureReason(c.gateway_response, 'momo') };
-    return { ok: true, display: c.display_text || 'Approve the payment on your phone.' };
-  } catch {
-    return { ok: false, error: 'That code didn’t work. Check it and try again.' };
   }
 }

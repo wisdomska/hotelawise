@@ -2,7 +2,20 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
-const PAGES = ['/', '/rooms', '/rooms/std', '/rooms/exe', '/gallery', '/contact', '/no-such-page'];
+const PAGES = [
+  '/',
+  '/rooms',
+  '/rooms/std',
+  '/rooms/exe',
+  '/gallery',
+  '/contact',
+  '/no-such-page',
+  '/book',
+  '/manage',
+  '/rent',
+  '/rent/checkout',
+  '/venues',
+];
 
 async function audit(page: Page) {
   // The first-visit loader fades out; audit the page, not a frame of that animation.

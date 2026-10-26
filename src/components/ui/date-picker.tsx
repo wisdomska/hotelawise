@@ -413,7 +413,7 @@ export function DatePicker(p: DatePickerProps) {
             cursor: 'pointer',
           }}
         >
-          <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', opacity: v ? 1 : 0.5 }}>{display}</span>
+          <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', opacity: v ? 1 : 0.68 }}>{display}</span>
           <svg
             aria-hidden="true"
             viewBox="0 0 16 16"

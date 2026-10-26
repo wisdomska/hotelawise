@@ -10,7 +10,7 @@ function stayDates(seed: number) {
 }
 
 test('book a room, pay at the hotel, then manage it with a texted code', async ({ page, isMobile }, info) => {
-  const { ci, co } = stayDates(info.parallelIndex + info.repeatEachIndex + (isMobile ? 7 : 0) + info.project.name.length);
+  const { ci, co } = stayDates([...info.project.name].reduce((a, ch) => a * 31 + ch.charCodeAt(0), 7) % 997);
   await page.goto(`/book?ci=${ci}&co=${co}&g=2&room=STD`);
   const continueBtn = isMobile
     ? page.locator('.aw-mobile-bar button')

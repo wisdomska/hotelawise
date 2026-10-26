@@ -3,7 +3,7 @@
 // asks the server (which asks Paystack) until the booking is confirmed.
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { paymentState } from '@/app/(site)/(checkout)/book/actions';
+import { paymentState } from '@/app/(site)/(checkout)/pay-actions';
 import { KnotSpinner } from './pay-sheet';
 
 export function ConfirmPoller({ payRef, tel, phone }: { payRef: string; tel: string; phone: string }) {

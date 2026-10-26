@@ -29,7 +29,16 @@ export type SiteRoom = {
   from: number;
   roomNumbers: string[];
 };
-export type SiteRentalItem = { slug: string; name: string; spec: string; price: number; deposit: number; image: SiteImage | null };
+export type SiteRentalItem = {
+  slug: string;
+  name: string;
+  spec: string;
+  price: number;
+  deposit: number;
+  image: SiteImage | null;
+  custom: boolean;
+  stockTotal: number;
+};
 export type SiteBundle = { name: string; pctOff: number; description: string; items: Record<string, number> };
 export type SiteVenue = {
   slug: string;
@@ -99,6 +108,8 @@ export function defaultSiteData(): SiteData {
       price: GHS(r.price),
       deposit: GHS(r.deposit),
       image: r.image ? img(r.image) : null,
+      custom: 'custom' in r && !!r.custom,
+      stockTotal: r.stock,
     })),
     bundles: BUNDLES.map((b) => ({ name: b.name, pctOff: b.pctOff, description: b.description, items: { ...b.items } })),
     venues: VENUES.map((v) => ({
@@ -210,6 +221,8 @@ async function loadFromDatabase(): Promise<SiteData> {
       price: i.pricePerDayPesewas,
       deposit: i.depositPerUnitPesewas,
       image: i.imageId ? { id: i.imageId, alt: i.imageAlt ?? i.name, concept: false } : null,
+      custom: i.isCustom,
+      stockTotal: i.stockTotal,
     })),
     bundles: bundleRows.map((b) => ({
       name: b.name,
@@ -246,7 +259,7 @@ async function loadFromDatabase(): Promise<SiteData> {
   };
 }
 
-const cachedSiteData = unstable_cache(loadFromDatabase, ['site-data-v2'], { tags: [SITE_TAG], revalidate: 3600 });
+const cachedSiteData = unstable_cache(loadFromDatabase, ['site-data-v3'], { tags: [SITE_TAG], revalidate: 3600 });
 
 export async function getSiteData(): Promise<SiteData> {
   if (!process.env.DATABASE_URL) return defaultSiteData();

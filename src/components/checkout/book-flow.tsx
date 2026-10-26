@@ -4,15 +4,8 @@
 // goes through Paystack, and the server confirms only what Paystack verifies.
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  bookingAvailability,
-  holdRoom,
-  lookupPromo,
-  paymentState,
-  releaseRoom,
-  sendMomoCode,
-  submitBooking,
-} from '@/app/(site)/(checkout)/book/actions';
+import { bookingAvailability, holdRoom, lookupPromo, releaseRoom, submitBooking } from '@/app/(site)/(checkout)/book/actions';
+import { paymentState, sendMomoCode } from '@/app/(site)/(checkout)/pay-actions';
 import { Icon, type AnyIconName } from '@/components/ui/icon';
 import { Select } from '@/components/ui/select';
 import { notify } from '@/components/ui/toaster';
@@ -351,7 +344,7 @@ export function BookFlow(p: BookFlowProps) {
         tries++;
         const s = await paymentState(payRef, kind);
         if (s.state === 'confirmed') {
-          router.push(`/book/confirmation/${s.token}`);
+          router.push(s.href);
           return;
         }
         if (s.state === 'failed' || s.state === 'refunded') {
@@ -681,7 +674,7 @@ export function BookFlow(p: BookFlowProps) {
                     >
                       <span style={{ fontFamily: 'var(--font-serif)', fontSize: 20 }}>{mo.label}</span>
                       <div
-                        role="grid"
+                        role="group"
                         aria-label={mo.label}
                         style={{ display: 'grid', gridTemplateColumns: 'repeat(7,minmax(0,1fr))', rowGap: 2 }}
                       >

@@ -330,7 +330,10 @@ export async function checkout(db: AnyDb, input: CheckoutInput): Promise<Checkou
 /** Creates the pending payment row for an online payment attempt. */
 export async function createPendingPayment(
   db: AnyDb,
-  input: { bookingId: string; amount: number; method: 'mtn' | 'telecel' | 'airteltigo' | 'card' },
+  input: ({ bookingId: string; orderId?: never } | { orderId: string; bookingId?: never }) & {
+    amount: number;
+    method: 'mtn' | 'telecel' | 'airteltigo' | 'card';
+  },
 ): Promise<string> {
   const ref = `AWP-${newToken(9)
     .toUpperCase()
@@ -338,7 +341,8 @@ export async function createPendingPayment(
     .slice(0, 12)}`;
   await db.insert(s.payments).values({
     ref,
-    bookingId: input.bookingId,
+    bookingId: input.bookingId ?? null,
+    orderId: input.orderId ?? null,
     amountPesewas: input.amount,
     method: input.method,
     channel: 'paystack',
@@ -357,7 +361,11 @@ export type SettleOutcome =
   | { kind: 'already'; bookingId: string }
   | { kind: 'failed'; bookingId: string | null; reason: string }
   | { kind: 'refund'; bookingId: string; paymentId: string; refundId: string; amount: number; paystackRef: string }
-  | { kind: 'ignored'; reason: string };
+  | { kind: 'ignored'; reason: string }
+  | { kind: 'order_confirmed'; orderId: string; firstTime: boolean }
+  | { kind: 'order_already'; orderId: string }
+  | { kind: 'order_failed'; orderId: string; reason: string }
+  | { kind: 'order_refund'; orderId: string; paymentId: string; refundId: string; amount: number; paystackRef: string };
 
 async function reallocate(tx: AnyDb, b: typeof s.bookings.$inferSelect, now: Date): Promise<boolean> {
   await expireLapsedHolds(tx, now, { checkIn: b.checkIn, checkOut: b.checkOut });
@@ -397,6 +405,7 @@ export async function settlePayment(db: AnyDb, v: Verified, now: Date = new Date
   return db.transaction(async (tx) => {
     const [p] = await tx.select().from(s.payments).where(eq(s.payments.paystackRef, v.reference)).for('update');
     if (!p) return { kind: 'ignored', reason: 'unknown reference' } as const;
+    if (p.orderId) return settleOrder(tx, p, v, now);
     if (!p.bookingId) return { kind: 'ignored', reason: 'not a booking payment' } as const;
     if (p.status === 'success') return { kind: 'already', bookingId: p.bookingId } as const;
     if (v.status !== 'success') {
@@ -741,3 +750,56 @@ export async function previewDateChange(
 }
 
 export { NoRoomAvailableError };
+
+/** The rental-order side of settlePayment (same transaction, payment row locked). */
+async function settleOrder(tx: AnyDb, p: typeof s.payments.$inferSelect, v: Verified, now: Date): Promise<SettleOutcome> {
+  const orderId = p.orderId!;
+  if (p.status === 'success') return { kind: 'order_already', orderId };
+  if (v.status !== 'success') {
+    if (['failed', 'abandoned', 'reversed'].includes(v.status))
+      await tx.update(s.payments).set({ status: 'failed' }).where(eq(s.payments.id, p.id));
+    return { kind: 'order_failed', orderId, reason: v.status };
+  }
+  if (v.amount !== p.amountPesewas || v.currency !== 'GHS') {
+    await tx
+      .update(s.payments)
+      .set({ status: 'failed', externalTxnId: `mismatch:${v.amount}${v.currency}` })
+      .where(eq(s.payments.id, p.id));
+    return { kind: 'order_failed', orderId, reason: 'amount mismatch' };
+  }
+  await tx
+    .update(s.payments)
+    .set({ status: 'success', paidAt: v.paidAt ? new Date(v.paidAt) : now })
+    .where(eq(s.payments.id, p.id));
+  const [o] = await tx.select().from(s.rentalOrders).where(eq(s.rentalOrders.id, orderId)).for('update');
+  const paid = o!.paidPesewas + p.amountPesewas;
+  const firstTime = o!.status === 'pending_payment';
+  if (firstTime) {
+    const { orderStillFits } = await import('./rentals');
+    if (!(await orderStillFits(tx, orderId, now))) {
+      await tx
+        .update(s.rentalOrders)
+        .set({ status: 'cancelled', paidPesewas: paid, holdUntil: null })
+        .where(eq(s.rentalOrders.id, orderId));
+      await tx
+        .insert(s.orderStatusEvents)
+        .values({ orderId, from: 'pending_payment', to: 'cancelled', reason: 'Paid after the hold lapsed; stock gone' });
+      const [r] = await tx
+        .insert(s.refunds)
+        .values({
+          paymentId: p.id,
+          amountPesewas: p.amountPesewas,
+          reason: 'Paid after the hold expired and the items were taken',
+          status: 'processing',
+        })
+        .returning({ id: s.refunds.id });
+      return { kind: 'order_refund', orderId, paymentId: p.id, refundId: r!.id, amount: p.amountPesewas, paystackRef: v.reference };
+    }
+    await tx.insert(s.orderStatusEvents).values({ orderId, from: 'pending_payment', to: 'reserved', reason: 'Paid online' });
+  }
+  await tx
+    .update(s.rentalOrders)
+    .set({ paidPesewas: paid, status: firstTime ? 'reserved' : o!.status, holdUntil: firstTime ? null : o!.holdUntil })
+    .where(eq(s.rentalOrders.id, orderId));
+  return { kind: 'order_confirmed', orderId, firstTime };
+}
