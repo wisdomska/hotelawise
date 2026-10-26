@@ -41,6 +41,17 @@ if (!vars) {
 }
 
 const LOCAL = ['.env.local', '.env.production.local', '.env.development.local'];
+// Values from those files may also be in this shell (e.g. after `set -a; . ./.env.local`);
+// drop every key they define so local settings can't leak into the Worker build.
+const leaked = new Set();
+for (const f of LOCAL) {
+  if (!fs.existsSync(f)) continue;
+  for (const line of fs.readFileSync(f, 'utf8').split('\n')) {
+    const m = line.match(/^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=/);
+    if (m) leaked.add(m[1]);
+  }
+}
+const cleanEnv = Object.fromEntries(Object.entries(process.env).filter(([k]) => !leaked.has(k)));
 const moved = [];
 try {
   for (const f of LOCAL) {
@@ -50,7 +61,7 @@ try {
     }
   }
   console.log(`building the ${target} Worker for ${vars.APP_URL}`);
-  const r = spawnSync('pnpm', ['run', 'cf:build'], { stdio: 'inherit', env: { ...process.env, ...vars } });
+  const r = spawnSync('pnpm', ['run', 'cf:build'], { stdio: 'inherit', env: { ...cleanEnv, ...vars } });
   process.exitCode = r.status ?? 1;
 } finally {
   for (const f of moved) fs.renameSync(`${f}.aside`, f);
