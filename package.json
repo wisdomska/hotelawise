@@ -1,0 +1,21 @@
+{
+  "name": "hotel-a-wise",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Hotel A-Wise website, booking engine and admin CMS",
+  "author": "WISDOMSKA(SENYA)",
+  "license": "UNLICENSED",
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "prepare": "husky",
+    "design:capture": "node scripts/design/capture-reference.mjs"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
+    "husky": "^9.1.7"
+  }
+}
