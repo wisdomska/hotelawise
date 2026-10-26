@@ -6,6 +6,7 @@ import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
 const workerBuild = process.env.HOTELAWISE_WORKER_BUILD === '1';
 
 const nextConfig: NextConfig = {
+  turbopack: {},
   // The Worker is built with webpack (open-next.config.ts), which shares server
   // code between pages and route handlers; Turbopack bundles it twice.
   webpack(config) {

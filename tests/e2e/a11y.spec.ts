@@ -40,6 +40,15 @@ test('no axe violations with the lightbox open', async ({ page }) => {
     await page.getByRole('button', { name: 'Open photo gallery' }).click();
     await expect(page.getByRole('dialog', { name: 'Photo viewer' })).toBeVisible({ timeout: 1000 });
   }).toPass();
+  // Let the open animation settle so contrast is measured on the final frame.
+  await page.getByRole('dialog', { name: 'Photo viewer' }).evaluate((el) =>
+    Promise.all(
+      el
+        .getAnimations({ subtree: true })
+        .filter((a) => a.effect?.getTiming().iterations !== Infinity)
+        .map((a) => a.finished),
+    ),
+  );
   await audit(page);
 });
 

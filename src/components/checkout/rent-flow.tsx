@@ -408,7 +408,7 @@ export function RentFlow(p: RentFlowProps) {
                 </h2>
                 <span style={{ fontSize: 13, color: 'rgba(0,0,58,0.6)' }}>Adds everything at once. Adjust quantities after.</span>
               </div>
-              <div data-stagger="" style={{ display: 'grid', gridTemplateColumns: 'var(--c3)', gap: 12 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'var(--c3)', gap: 12 }}>
                 {p.packs.map((b) => {
                   const full = Object.entries(b.items).reduce(
                     (t, [slug, n]) => t + n * (p.items.find((i) => i.slug === slug)?.price ?? 0),
@@ -494,7 +494,7 @@ export function RentFlow(p: RentFlowProps) {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               <h2 style={{ margin: 0, fontFamily: 'var(--font-serif)', fontWeight: 400, fontSize: 30 }}>Everything, by the unit</h2>
-              <div data-stagger="" style={{ display: 'grid', gridTemplateColumns: 'var(--c-items)', gap: 12 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'var(--c-items)', gap: 12 }}>
                 {loading
                   ? [1, 2, 3, 4].map((x) => (
                       <div

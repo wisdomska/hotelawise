@@ -61,7 +61,7 @@ export function Lightbox({
         position: 'fixed',
         inset: 0,
         zIndex: 90,
-        background: 'rgba(0,0,30,0.6)',
+        background: 'rgba(0,0,30,0.72)',
         WebkitBackdropFilter: 'blur(24px)',
         backdropFilter: 'blur(24px)',
         display: 'flex',

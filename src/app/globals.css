@@ -550,6 +550,10 @@ html[data-banner-off] .aw-banner {
   .aw-mobile-bar {
     display: flex;
   }
+  /* Keep focused and scrolled-to controls clear of the fixed bottom bar. */
+  :root:has(.aw-mobile-bar) {
+    scroll-padding-bottom: calc(100px + env(safe-area-inset-bottom));
+  }
 }
 @keyframes aw-up {
   from {
