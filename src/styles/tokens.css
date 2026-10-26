@@ -77,6 +77,8 @@
   --c4: repeat(4, 80%);
   --c3: 1fr;
   --c55: 1fr;
+  --c2: 1fr;
+  --c4g: 1fr;
   --ev-h: 320px;
   --fac-t: 18px;
   --tq-ar: 16/10;
@@ -104,6 +106,8 @@
   :root {
     --c4: repeat(4, 44%);
     --c3: repeat(auto-fit, minmax(220px, 1fr));
+    --c2: minmax(0, 1fr) minmax(0, 1fr);
+    --c4g: repeat(auto-fill, minmax(250px, 1fr));
     --ev-h: 460px;
     --pad: 32px;
     --pad-checkout: 32px;
