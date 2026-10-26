@@ -81,3 +81,195 @@ iframe {
     animation-name: aw-fade !important;
   }
 }
+
+/* ── Motion layer (port of design/motion.js). Hovers only on fine pointers. ── */
+@keyframes awdp-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes awdp-sheet {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes awdp-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes aw-menu {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes aw-menu-item {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes aw-toast {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes aw-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.aw-press {
+  transition: transform 160ms var(--ease-enter);
+}
+.aw-press:active {
+  transform: scale(0.97);
+}
+
+[data-mi-img] {
+  transition: scale 900ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-mi-tag] {
+  transition: rotate 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-mi-arrow] {
+  transition:
+    rotate 280ms var(--ease-enter),
+    translate 280ms var(--ease-enter);
+}
+[data-mi-ul] {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 100% 100%;
+  background-size: 0 1px;
+  transition: background-size 300ms var(--ease-enter);
+}
+[data-mi-ul][aria-current='page'] {
+  background-position: 0 100%;
+  background-size: 100% 1px;
+}
+[data-mi-nudge] {
+  transition: translate 220ms var(--ease-enter);
+}
+[data-mi-icon] {
+  display: inline-block;
+  transition:
+    translate 240ms var(--ease-enter),
+    rotate 300ms var(--ease-enter),
+    scale 240ms var(--ease-enter);
+}
+[data-mi-btn] {
+  transition:
+    transform 160ms var(--ease-enter),
+    translate 220ms var(--ease-enter),
+    box-shadow 240ms var(--ease-enter),
+    filter 220ms var(--ease-enter),
+    background-color 200ms var(--ease-enter),
+    color 200ms var(--ease-enter),
+    border-color 200ms var(--ease-enter),
+    opacity 200ms var(--ease-enter);
+}
+[data-mi-btn]:active {
+  transform: scale(0.97);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  [data-mi-card]:hover [data-mi-img] {
+    scale: 1.03;
+  }
+  [data-mi-card]:hover [data-mi-tag] {
+    rotate: -4deg;
+  }
+  [data-mi-arrow-host]:hover [data-mi-arrow] {
+    rotate: 45deg;
+  }
+  [data-mi-ul]:hover {
+    background-position: 0 100%;
+    background-size: 100% 1px;
+  }
+  [data-mi-nudge-host]:hover [data-mi-nudge] {
+    translate: 3px 0;
+  }
+  [data-mi-btn='fill']:not(:disabled):hover {
+    translate: 0 -1px;
+    filter: brightness(1.07) saturate(1.05);
+    box-shadow: 0 8px 20px -10px rgba(0, 0, 40, 0.55);
+  }
+  [data-mi-btn='ghost']:not(:disabled):hover {
+    translate: 0 -1px;
+    box-shadow: inset 0 0 0 999px rgba(0, 0, 99, 0.06);
+  }
+  [data-mi-btn='ghost-dark']:not(:disabled):hover {
+    translate: 0 -1px;
+    box-shadow: inset 0 0 0 999px rgba(255, 255, 255, 0.12);
+  }
+  [data-mi-btn='chip']:not(:disabled):hover {
+    box-shadow: inset 0 0 0 999px rgba(0, 0, 99, 0.06);
+  }
+  [data-mi-btn]:not(:disabled):active {
+    translate: 0 0;
+  }
+  [data-mi-icon-host]:hover [data-mi-icon='right'] {
+    translate: 3px 0;
+  }
+  [data-mi-icon-host]:hover [data-mi-icon='left'] {
+    translate: -3px 0;
+  }
+  [data-mi-icon-host]:hover [data-mi-icon='diag'] {
+    translate: 2px -2px;
+  }
+  [data-mi-icon-host]:hover [data-mi-icon='down'] {
+    translate: 0 2px;
+  }
+  .aw-day:hover {
+    background: rgba(242, 181, 68, 0.35) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-mi-img],
+  [data-mi-tag],
+  [data-mi-arrow],
+  [data-mi-ul],
+  [data-mi-nudge],
+  [data-mi-btn],
+  [data-mi-icon] {
+    transition: none !important;
+    translate: none !important;
+    rotate: none !important;
+    scale: none !important;
+  }
+  /* Opacity-only versions of the entrance animations (DECISIONS D-19). */
+  [style*='awdp-sheet'],
+  [style*='awdp-pop'],
+  [style*='aw-menu'],
+  [style*='aw-toast'] {
+    animation-name: aw-fade !important;
+  }
+}
