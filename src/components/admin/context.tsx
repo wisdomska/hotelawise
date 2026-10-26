@@ -33,8 +33,10 @@ type Ctx = {
   modal: ReactNode;
   openModal: (m: ReactNode) => void;
   closeModal: () => void;
-  /** Re-runs the server components for the current screen. */
+  /** Re-runs the server components for the current screen (and reloads open drawers). */
   refresh: () => void;
+  /** Bumped by every refresh, so client-loaded panels know to reload. */
+  version: number;
 };
 
 const AdminContext = createContext<Ctx | null>(null);
@@ -44,7 +46,11 @@ export function AdminProvider({ me, capabilities, children }: { me: Me; capabili
   const [drawer, setDrawer] = useState<DrawerSpec | null>(null);
   const [modal, setModal] = useState<ReactNode>(null);
   const caps = useMemo(() => new Set(capabilities), [capabilities]);
-  const refresh = useCallback(() => router.refresh(), [router]);
+  const [version, setVersion] = useState(0);
+  const refresh = useCallback(() => {
+    setVersion((v) => v + 1);
+    router.refresh();
+  }, [router]);
   const value = useMemo<Ctx>(
     () => ({
       me,
@@ -60,8 +66,9 @@ export function AdminProvider({ me, capabilities, children }: { me: Me; capabili
       openModal: (m) => setModal(m),
       closeModal: () => setModal(null),
       refresh,
+      version,
     }),
-    [me, caps, drawer, modal, refresh],
+    [me, caps, drawer, modal, refresh, version],
   );
   return <AdminContext.Provider value={value}>{children}</AdminContext.Provider>;
 }
