@@ -1,5 +1,7 @@
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import { clearSignInLimits, makeUser, setSetting } from './support/db';
+import { ownAddress } from './support/ip';
+import { totp } from './support/totp';
 
 // Every admin screen renders for a Super Admin, and the desk's main jobs work
 // end to end against the real database.
@@ -9,7 +11,12 @@ test.skip(({ browserName, isMobile }) => browserName !== 'chromium' || isMobile,
 const email = `daniel+${Date.now()}@hotelawise.com`;
 const PASSWORD = 'akwaaba2026';
 
+let secret = '';
+
+// Another test file switches "require two-step sign-in" on and off while this
+// one runs, so whichever step the login asks for next is handled.
 async function signIn(page: Page, first: boolean) {
+  await ownAddress(page);
   await page.goto('/admin/login');
   await page.getByLabel('Work email').fill(email);
   await page.getByLabel('Password', { exact: true }).fill(first ? 'temporary1' : PASSWORD);
@@ -20,7 +27,21 @@ async function signIn(page: Page, first: boolean) {
     await page.getByLabel('Confirm new password', { exact: true }).fill(PASSWORD);
     await page.getByRole('button', { name: 'Save password' }).click();
   }
-  await expect(page.getByRole('heading', { level: 1, name: /Good (morning|afternoon|evening)/ })).toBeVisible();
+  const home = page.getByRole('heading', { level: 1, name: /Good (morning|afternoon|evening)/ });
+  const enrol = page.getByRole('heading', { name: 'Set up two-step sign-in' });
+  const code = page.getByRole('heading', { name: 'Enter your code' });
+  await expect(home.or(enrol).or(code)).toBeVisible();
+  if (await enrol.isVisible()) {
+    await page.getByLabel('Password', { exact: true }).fill(PASSWORD);
+    await page.getByRole('button', { name: 'Continue' }).click();
+    secret = (await page.locator('code').innerText()).replace(/\s/g, '');
+    await page.getByLabel('I’ve saved my backup codes somewhere safe.').check();
+    await page.getByLabel('6-digit code').fill(totp(secret));
+    await page.getByRole('button', { name: 'Turn on two-step sign-in' }).click();
+  } else if (await code.isVisible()) {
+    await page.getByLabel('6-digit code').fill(totp(secret));
+  }
+  await expect(home).toBeVisible();
 }
 
 /** The admin uses its own listbox select, not a native <select>. */

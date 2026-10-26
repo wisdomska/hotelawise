@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { makeUser, setSetting } from './support/db';
+import { ownAddress } from './support/ip';
 import { totp } from './support/totp';
 
 test.describe.configure({ mode: 'serial' });
@@ -13,6 +14,7 @@ const email = `esi+${Date.now()}@hotelawise.com`;
 let secret = '';
 
 test('first sign-in: new password, then TOTP enrolment, then the dashboard', async ({ page }) => {
+  await ownAddress(page);
   await makeUser({ email, role: 'super_admin', password: 'temporary1' });
   await page.goto('/admin');
   await expect(page).toHaveURL(/\/admin\/login/);
@@ -43,6 +45,7 @@ test('first sign-in: new password, then TOTP enrolment, then the dashboard', asy
 });
 
 test('later sign-ins ask for the TOTP code', async ({ page }) => {
+  await ownAddress(page);
   test.skip(!secret, 'needs the enrolled account');
   await page.goto('/admin/login');
   await page.getByLabel('Work email').fill(email);
@@ -60,6 +63,7 @@ test('later sign-ins ask for the TOTP code', async ({ page }) => {
 });
 
 test('staff see only their screens, and are refused a Super Admin URL', async ({ page }) => {
+  await ownAddress(page);
   const staffEmail = `kojo+${Date.now()}@hotelawise.com`;
   await makeUser({ email: staffEmail, role: 'staff', password: 'temporary1' });
   await page.goto('/admin/login');
@@ -81,6 +85,7 @@ test('staff see only their screens, and are refused a Super Admin URL', async ({
 });
 
 test('with two-step not required, a new Super Admin goes straight in after choosing a password', async ({ page }) => {
+  await ownAddress(page);
   await setSetting('security.requireTwoFactor', false);
   const e = `ama+${Date.now()}@hotelawise.com`;
   await makeUser({ email: e, role: 'super_admin', password: 'temporary1' });
