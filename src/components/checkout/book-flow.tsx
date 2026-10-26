@@ -4,7 +4,14 @@
 // goes through Paystack, and the server confirms only what Paystack verifies.
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { bookingAvailability, holdRoom, lookupPromo, releaseRoom, submitBooking } from '@/app/(site)/(checkout)/book/actions';
+import {
+  bookingAvailability,
+  holdRoom,
+  lookupPromo,
+  onlinePaymentOn,
+  releaseRoom,
+  submitBooking,
+} from '@/app/(site)/(checkout)/book/actions';
 import { paymentState, sendMomoCode } from '@/app/(site)/(checkout)/pay-actions';
 import { Icon, type AnyIconName } from '@/components/ui/icon';
 import { Select } from '@/components/ui/select';
@@ -160,6 +167,21 @@ export function BookFlow(p: BookFlowProps) {
   const [gf, setGf] = useState({ name: '', dialCode: '+233', phone: '', email: '', arrival: 'Not sure yet', notes: '' });
   const [ge, setGe] = useState<GuestErrors>({});
   const [plan, setPlan] = useState<Plan>('deposit');
+  // Until Paystack keys are set on the Worker, only "Pay at the hotel" is offered.
+  const [onlineOn, setOnlineOn] = useState(true);
+  useEffect(() => {
+    let live = true;
+    void onlinePaymentOn()
+      .then((on) => {
+        if (!live || on) return;
+        setOnlineOn(false);
+        setPlan('at_hotel');
+      })
+      .catch(() => undefined);
+    return () => {
+      live = false;
+    };
+  }, []);
   const [method, setMethod] = useState<PayMethod>('mtn');
   const [momo, setMomo] = useState('');
   const [momoErr, setMomoErr] = useState<string | null>(null);
@@ -498,9 +520,13 @@ export function BookFlow(p: BookFlowProps) {
   const rangeShort = `${formatDayMonth(ci)} – ${formatDayMonth(co)}`;
   const rangeLong = `${long(ci)} → ${long(co)} · ${nights} night${nights === 1 ? '' : 's'}`;
   const plans: [Plan, string, string, string, AnyIconName][] = [
-    ['full', 'Pay in full', 'Done and dusted. Nothing to pay at the desk.', ghs0(total), 'wallet'],
-    ['deposit', `Pay a ${p.depositPercent}% deposit`, 'The rest at check-in, cash or MoMo.', ghs0(deposit), 'cash'],
-    ...(p.payAtHotel
+    ...(onlineOn
+      ? ([
+          ['full', 'Pay in full', 'Done and dusted. Nothing to pay at the desk.', ghs0(total), 'wallet'],
+          ['deposit', `Pay a ${p.depositPercent}% deposit`, 'The rest at check-in, cash or MoMo.', ghs0(deposit), 'cash'],
+        ] as [Plan, string, string, string, AnyIconName][])
+      : []),
+    ...(p.payAtHotel || !onlineOn
       ? ([['at_hotel', 'Pay at the hotel', 'We hold the room. Pay when you arrive.', 'GHS 0', 'building']] as [
           Plan,
           string,

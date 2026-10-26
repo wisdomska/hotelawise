@@ -15,10 +15,13 @@ Please don't open a public issue. Use GitHub's private vulnerability reporting (
 - Payment confirmation comes only from Paystack verification. Webhooks are checked with HMAC-SHA512 and processed idempotently.
 - Prices, stock and availability are recomputed on the server for every booking and order.
 - Guests manage a booking only with a 6-digit code sent to the phone or email on file. Codes are hashed, expire after 10 minutes, and allow 5 tries.
-- Admin passwords use Better Auth's default hashing. Super Admins must use TOTP two-step sign-in. Sessions time out when idle.
+- Admin passwords are hashed with bcrypt (cost 12) inside Postgres. Two-step sign-in (TOTP) is a setting (Settings › Security): anyone who has enrolled is always asked for a code, and it should be required before live payments (DECISIONS D-42). Sessions end after the idle time set in Settings, enforced on the server.
+- Every money action (payments, refunds, approvals) and every account change re-asks for the signed-in user's password, with its own attempt limit.
 - Roles and permissions are enforced on the server for every page and action. Forbidden requests get a 403.
 - Holds, orders, sign-in and every form are rate-limited, and public forms use Cloudflare Turnstile.
-- The preview site sits behind a password and is never indexed.
+- A strict Content-Security-Policy (per-request nonces on the admin and checkout), HSTS, and no framing. The preview site is open but never indexed (DECISIONS D-41).
+
+The full checklist, and what was found and fixed in the release review, is in [docs/SECURITY.md](docs/SECURITY.md).
 
 ## Secrets
 

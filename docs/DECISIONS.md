@@ -337,3 +337,15 @@ The Worker's `scheduled()` handler is bundled by Wrangler outside Next.js, so se
 ## D-44 Super Admins add, retype and remove rooms
 
 The owner asked for rooms to be changeable from the admin, since the building will change. Rooms & rates › Room status has **Add room** (a number and a room type); the room drawer has **Change type** and **Remove room**. Changing type or removing is refused while the room has a guest or any stay from today on, so no booking is left without a room. A room that was never booked is deleted. One with history gets the new `retired` status instead: it leaves the board, the website and every availability count, but past bookings, invoices and reports keep its number. Adding the same number again brings it back.
+
+## D-45 Content-Security-Policy: nonces where pages render per request
+
+The plan called for a strict nonce-based CSP. A nonce has to be in the HTML, but the marketing pages are pre-rendered and cached (which keeps them fast and inside the free plan's CPU budget), so they can't carry one. The admin, booking, manage and confirmation pages (always rendered per request, and the ones with money and personal data) get a fresh nonce on every response: only scripts Next.js stamps can run. The cached pages allow inline scripts but keep every other rule. Everywhere: scripts only from the site and Paystack, frames only from Paystack and Google Maps, no plugins, no framing of our pages, forms post only to us. The root layout's one inline script is allowed by its hash. `tests/e2e/security.spec.ts` fails on any policy violation.
+
+## D-46 Public forms never change an existing customer's details
+
+Customers are matched by phone number. Public booking, rental and venue forms used to update an existing customer's name and email, which let someone who knew a guest's phone and booking reference redirect that guest's manage-booking code to their own email. Now public forms only create new customers; an existing customer's name and email change only at the front desk, where staff see the guest. A returning guest who types a new email keeps the one on file until the desk updates it.
+
+## D-47 Idle sign-out enforced on the server, at most 30 minutes
+
+Settings › Security › "Sign out after" was only applied in the browser. The server now ends a session idle for longer than the setting. Better Auth's own session lasts 30 minutes from the last activity, so the setting now runs from 5 to 30 minutes.

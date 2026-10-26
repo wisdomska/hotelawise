@@ -224,3 +224,8 @@ export async function payForOrder(input: { token: string; method: PayMethod; mom
     throw e;
   }
 }
+
+/** Whether online payment is switched on; checked at run time so cached pages follow the Worker's keys. */
+export async function onlinePaymentOn(): Promise<boolean> {
+  return paystackConfigured();
+}

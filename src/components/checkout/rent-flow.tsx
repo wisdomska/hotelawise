@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { paymentState, sendMomoCode } from '@/app/(site)/(checkout)/pay-actions';
-import { payForOrder, placeOrder, rentalStock } from '@/app/(site)/(checkout)/rent/actions';
+import { onlinePaymentOn, payForOrder, placeOrder, rentalStock } from '@/app/(site)/(checkout)/rent/actions';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Icon, type AnyIconName } from '@/components/ui/icon';
 import { Select } from '@/components/ui/select';
@@ -135,6 +135,21 @@ export function RentFlow(p: RentFlowProps) {
   const [rf, setRf] = useState({ name: '', phone: '', email: '', occasion: 'Wedding' });
   const [re, setRe] = useState<CollectorErrors>({});
   const [plan, setPlan] = useState<'online' | 'at_pickup'>('online');
+  // Until Paystack keys are set on the Worker, only "Pay when you collect" is offered.
+  const [onlineOn, setOnlineOn] = useState(true);
+  useEffect(() => {
+    let live = true;
+    void onlinePaymentOn()
+      .then((on) => {
+        if (!live || on) return;
+        setOnlineOn(false);
+        setPlan('at_pickup');
+      })
+      .catch(() => undefined);
+    return () => {
+      live = false;
+    };
+  }, []);
   const [method, setMethod] = useState<PayMethod>('mtn');
   const [momo, setMomo] = useState('');
   const [momoErr, setMomoErr] = useState<string | null>(null);
@@ -940,7 +955,15 @@ export function RentFlow(p: RentFlowProps) {
   }
 
   const planOpts: ['online' | 'at_pickup', string, string, string, AnyIconName][] = [
-    ['online', 'Pay online now', 'MoMo or card. At pickup, just show your reference.', formatGhs(q.total), 'smartphone'],
+    ...(onlineOn
+      ? ([['online', 'Pay online now', 'MoMo or card. At pickup, just show your reference.', formatGhs(q.total), 'smartphone']] as [
+          'online',
+          string,
+          string,
+          string,
+          AnyIconName,
+        ][])
+      : []),
     [
       'at_pickup',
       'Pay when you collect',
