@@ -1,5 +1,5 @@
 import { expect, test, type Locator, type Page } from '@playwright/test';
-import { clearSignInLimits, makeUser, setSetting } from './support/db';
+import { clearSignInLimits, makeUser, releaseTestStays } from './support/db';
 import { ownAddress } from './support/ip';
 import { totp } from './support/totp';
 
@@ -51,8 +51,8 @@ async function pick(page: Page, scope: Locator, label: string, option: string) {
 }
 
 test.beforeAll(async () => {
-  await setSetting('security.requireTwoFactor', false);
   await clearSignInLimits();
+  await releaseTestStays('+233244123456');
   await makeUser({ email, role: 'super_admin', password: 'temporary1' });
 });
 
