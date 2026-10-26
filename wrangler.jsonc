@@ -18,10 +18,12 @@
   "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "hotel-a-wise-dev" }],
   "vars": { "APP_ENV": "development", "APP_URL": "http://localhost:3000" },
 
+  // APP_URL: "ACCOUNT" is replaced with the Cloudflare account's workers.dev subdomain at first deploy.
   "env": {
     "preview": {
       "name": "hotel-a-wise-preview",
-      "routes": [{ "pattern": "preview.hotelawise.com", "custom_domain": true }],
+      // Until a domain is registered (docs/SETUP-CHECKLIST.md §1), the Worker is served on workers.dev.
+      "workers_dev": true,
       "triggers": { "crons": ["*/15 * * * *", "0 7 * * *", "0 2 * * *"] },
       "kv_namespaces": [{ "binding": "NEXT_INC_CACHE_KV", "id": "00000000000000000000000000000000" }],
       // database_id is filled in once the D1 database exists in the hotel's Cloudflare account (RUNBOOK).
@@ -34,14 +36,12 @@
       ],
       "durable_objects": { "bindings": [{ "name": "NEXT_CACHE_DO_QUEUE", "class_name": "DOQueueHandler" }] },
       "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "hotel-a-wise-preview" }],
-      "vars": { "APP_ENV": "preview", "APP_URL": "https://preview.hotelawise.com" },
+      "vars": { "APP_ENV": "preview", "APP_URL": "https://hotel-a-wise-preview.ACCOUNT.workers.dev" },
     },
     "production": {
       "name": "hotel-a-wise",
-      "routes": [
-        { "pattern": "hotelawise.com", "custom_domain": true },
-        { "pattern": "www.hotelawise.com", "custom_domain": true },
-      ],
+      // Add custom-domain routes here once the domain exists (hotelawise.com, www.hotelawise.com).
+      "workers_dev": true,
       "triggers": { "crons": ["*/15 * * * *", "0 7 * * *", "0 2 * * *"] },
       "kv_namespaces": [{ "binding": "NEXT_INC_CACHE_KV", "id": "00000000000000000000000000000000" }],
       "d1_databases": [
@@ -49,7 +49,7 @@
       ],
       "durable_objects": { "bindings": [{ "name": "NEXT_CACHE_DO_QUEUE", "class_name": "DOQueueHandler" }] },
       "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "hotel-a-wise" }],
-      "vars": { "APP_ENV": "production", "APP_URL": "https://hotelawise.com" },
+      "vars": { "APP_ENV": "production", "APP_URL": "https://hotel-a-wise.ACCOUNT.workers.dev" },
     },
   },
 }
