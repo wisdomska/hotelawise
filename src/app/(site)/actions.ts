@@ -12,6 +12,10 @@ import { clientIp } from '@/server/platform/request';
 
 export type FormResult = { ok: true; title: string; body?: string } | { ok: false; error: string; field?: string };
 
+// Shown when the database can't be reached (or isn't connected yet): the visitor
+// still has a way through, and nothing is silently lost.
+const UNSAVED = 'We couldn’t send that just now. Please call or WhatsApp us instead.';
+
 const email = z.string().trim().toLowerCase().email('Enter a valid email address.').max(254);
 
 export async function subscribeNewsletter(_prev: FormResult | null, form: FormData): Promise<FormResult> {
@@ -22,12 +26,19 @@ export async function subscribeNewsletter(_prev: FormResult | null, form: FormDa
   if (!(await verifyTurnstile(String(form.get('cf-turnstile-response') ?? ''), ip))) {
     return { ok: false, error: 'We couldn’t confirm you’re not a bot. Refresh and try again.' };
   }
-  const database = await db();
-  const added = await database
-    .insert(schema.newsletterSubscribers)
-    .values({ email: parsed.data, source: 'footer' })
-    .onConflictDoNothing()
-    .returning({ id: schema.newsletterSubscribers.id });
+  let added: { id: string }[];
+  try {
+    added = await (
+      await db()
+    )
+      .insert(schema.newsletterSubscribers)
+      .values({ email: parsed.data, source: 'footer' })
+      .onConflictDoNothing()
+      .returning({ id: schema.newsletterSubscribers.id });
+  } catch (err) {
+    console.error('newsletter signup failed', err);
+    return { ok: false, error: 'We couldn’t add you just now. Try again in a little while.' };
+  }
   return added.length
     ? { ok: true, title: 'You’re on the list.', body: 'One letter a month, at most.' }
     : { ok: true, title: 'You’re already on the list.', body: 'Nothing more to do.' };
@@ -78,13 +89,17 @@ export async function sendContactMessage(_prev: ContactResult | null, form: Form
     return { ok: false, error: 'We couldn’t confirm you’re not a bot. Refresh and try again.' };
   }
   const m = checked.value;
-  const database = await db();
-  await database.insert(schema.messages).values({
-    fromName: m.name,
-    contact: m.email ? `${m.phone} · ${m.email}` : m.phone,
-    subject: m.subject,
-    body: m.message,
-  });
+  try {
+    await (await db()).insert(schema.messages).values({
+      fromName: m.name,
+      contact: m.email ? `${m.phone} · ${m.email}` : m.phone,
+      subject: m.subject,
+      body: m.message,
+    });
+  } catch (err) {
+    console.error('contact message not saved', err);
+    return { ok: false, error: UNSAVED };
+  }
   try {
     const { getSiteData, setting } = await import('@/server/content/site-data');
     const { sendContactNotice } = await import('@/server/integrations/email');
