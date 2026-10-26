@@ -43,7 +43,7 @@ When you first sign in to the admin, you must set a new password. Super Admins m
 | Command                                        | What it does                                                                                                      |
 | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | `pnpm lint` / `pnpm format` / `pnpm typecheck` | Static checks (CI runs all three)                                                                                 |
-| `pnpm test:unit` / `pnpm test:coverage`        | Unit tests; coverage gate is 90% on `src/lib` and `src/server/services`                                           |
+| `pnpm test:unit` / `pnpm test:coverage`        | Unit tests / the whole suite with the 90% coverage gate on `src/lib` and `src/server/services` (needs Postgres)   |
 | `pnpm test:integration`                        | Database tests. They need Postgres at `TEST_DATABASE_URL` (default `postgres://postgres@localhost:5433/postgres`) |
 | `pnpm build && pnpm test:e2e`                  | Playwright end-to-end tests against a production build                                                            |
 | `pnpm cf:build` / `pnpm cf:preview`            | Build the Cloudflare Worker, or build and run it locally                                                          |

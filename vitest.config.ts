@@ -9,7 +9,8 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: ['src/lib/**', 'src/server/services/**', 'src/server/auth/permissions.ts', 'src/server/platform/preview-gate.ts'],
-      exclude: ['src/lib/cloudinary-loader.ts'],
+      // Browser-only wiring, exercised by the Playwright tests instead.
+      exclude: ['src/lib/cloudinary-loader.ts', 'src/lib/auth/client.ts'],
       thresholds: { lines: 90, branches: 90, functions: 90, statements: 90 },
     },
   },

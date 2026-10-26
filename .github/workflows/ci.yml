@@ -36,7 +36,7 @@ jobs:
       - run: pnpm lint --max-warnings=0
       - run: pnpm format
       - run: pnpm typecheck
-      - run: pnpm test:coverage
+      - run: pnpm test:unit
 
   integration:
     name: Integration tests (Postgres)
@@ -59,7 +59,9 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm test:integration
+      # Coverage is measured here, over unit and integration tests together: the
+      # transactional services (holds, rentals, references) are covered by tests that need Postgres.
+      - run: pnpm test:coverage
 
   worker:
     name: Worker build and size
