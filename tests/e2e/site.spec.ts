@@ -72,5 +72,5 @@ test('an unknown address shows the 404 with the four rooms', async ({ page }) =>
   const res = await page.goto('/no-such-page');
   expect(res?.status()).toBe(404);
   await expect(page.getByRole('heading', { level: 1 })).toContainText("This room doesn't exist.");
-  await expect(page.getByRole('link', { name: /Room, GHS/ })).toHaveCount(4);
+  await expect(page.getByRole('link', { name: /GHS [0-9 /]+ \/night/ })).toHaveCount(4);
 });

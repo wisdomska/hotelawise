@@ -176,7 +176,8 @@ export function DatePicker(p: DatePickerProps) {
   const display = v
     ? fmt(v, { weekday: 'short', day: 'numeric', month: 'short', ...(p.withYear ? { year: 'numeric' } : {}) })
     : (p.placeholder ?? 'Pick a date');
-  const ariaLabel = `${p.label ?? 'Date'}: ${display}`;
+  // Starts with the visible label and value, so voice control can say what it sees.
+  const ariaLabel = `${p.label ?? 'Date'} ${display}`;
   const viewKey = view ?? `${(v || today).slice(0, 7)}-01`;
   const vd = new Date(`${viewKey}T00:00:00Z`);
   const y = vd.getUTCFullYear();
@@ -243,7 +244,8 @@ export function DatePicker(p: DatePickerProps) {
     onClick: () => (open ? close() : openIt()),
     'aria-haspopup': 'dialog' as const,
     'aria-expanded': open,
-    'aria-label': ariaLabel,
+    // The bare trigger shows its label and date as text, which already names it.
+    'aria-label': variant === 'bare' ? undefined : ariaLabel,
   };
 
   const fieldBorder = p.error

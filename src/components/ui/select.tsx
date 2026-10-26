@@ -220,7 +220,7 @@ export function Select(p: SelectProps) {
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={open ? listId : undefined}
-        aria-label={p.ariaLabel ?? p.label ?? 'Choose'}
+        aria-label={`${p.ariaLabel ?? p.label ?? 'Choose'} ${cur ? cur.label : (p.placeholder ?? 'Choose…')}`}
         style={{
           ...trig,
           width: '100%',

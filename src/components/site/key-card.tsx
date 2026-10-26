@@ -28,7 +28,6 @@ export function KeyCard({ room, image, left, sizes }: { room: SiteRoom; image: S
     <Link
       data-mi-card=""
       href={`/rooms/${room.code.toLowerCase()}`}
-      aria-label={`${room.name} Room, GHS ${price} per night, ${room.sleeps} guests${label ? `, ${label.toLowerCase()}` : ''}`}
       className="aw-keycard"
       style={{
         scrollSnapAlign: 'start',
@@ -124,7 +123,7 @@ export function KeyCard({ room, image, left, sizes }: { room: SiteRoom; image: S
         <span style={{ fontFamily: 'var(--font-serif)', fontSize: 28, lineHeight: 1, letterSpacing: '-0.05em' }}>{room.name}</span>
         <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13, whiteSpace: 'nowrap' }}>
           GHS {price}
-          <span style={{ opacity: 0.55 }}> /night</span>
+          <span style={{ color: 'rgba(0,0,58,0.66)' }}> /night</span>
         </span>
       </div>
       <span style={{ marginTop: -6, display: 'flex', gap: 14, flexWrap: 'wrap', fontSize: 13, color: 'rgba(0,0,58,0.68)' }}>
