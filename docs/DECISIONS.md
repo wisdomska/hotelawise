@@ -325,3 +325,11 @@ The owner asked for the preview to open without a password. `PREVIEW_GATE=off` i
 ## D-42 Two-step sign-in for Super Admins is a setting, off for now
 
 The brief made authenticator codes mandatory for Super Admins. The owner asked to turn that off. It is now the `security.requireTwoFactor` setting (default off; Settings › Security will show it). Anyone who has already set up an authenticator is still asked for a code. Trade-off, stated plainly: with it off, a Super Admin password alone opens everything, including refunds and user management, so it should be turned on again before real money flows.
+
+## D-43 Cron jobs run inside the app, through an internal request
+
+The Worker's `scheduled()` handler is bundled by Wrangler outside Next.js, so server code that relies on Next.js (the settings cache, `server-only` modules, the database setup) can't run there. When a Cron Trigger fires, the handler now calls the app's own fetch handler with `POST /api/cron/<job>`. The request never leaves the Worker and carries a key derived from `BETTER_AUTH_SECRET`; anything else gets a 404. The jobs:
+
+- every 15 minutes: release lapsed booking holds; mark unpaid pay-at-pickup orders cancelled after 10:00 on pickup day (stock was already free; this tells the desk and the customer).
+- 07:00: day-before reminders for check-in, rental pickup and rental return, at most 60 a run (Resend's free plan sends 100 emails a day). Each is stamped when sent, so a retried run sends nothing twice.
+- 02:00: housekeeping. Spent guest and sign-in codes, finished rate-limit windows, expired sessions, and sign-in history older than 180 days. Bookings, orders, payments and the audit log are never pruned.

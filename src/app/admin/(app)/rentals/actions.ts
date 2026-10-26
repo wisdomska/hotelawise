@@ -26,6 +26,10 @@ import {
 import { isUploadedId } from '@/server/admin/cloudinary';
 import { issueRefund } from '@/server/admin/refunds';
 import * as s from '@/server/db/schema';
+import { db } from '@/server/platform/db';
+import { rentalStatusChanged } from '@/server/services/notify';
+import { contactAndTemplate } from '@/server/services/payment-flow';
+import { orderBy } from '@/server/services/rentals';
 
 const ref = z.string().regex(/^AWR-[A-Z0-9]{3,8}$/);
 const eref = z.string().regex(/^EQ-[A-Z0-9]{3,8}$/);
@@ -40,11 +44,29 @@ export async function loadOrder(r: string) {
   });
 }
 
+/** Tells the customer about a status change, after the change has committed. */
+async function tellCustomer(id: string, to: 'ready_for_pickup' | 'collected' | 'completed', refund = 0) {
+  try {
+    const o = await orderBy(await db(), { id });
+    if (!o) return;
+    const { contact, hours } = await contactAndTemplate();
+    await rentalStatusChanged(o, to, contact, hours, refund);
+  } catch (e) {
+    console.error('rental status message failed', e);
+  }
+}
+
 export async function advanceOrderAction(r: string) {
-  return act('rentals.status', async (tx, who) => {
-    const { to } = await advanceOrder(tx, who, ref.parse(r));
-    return done(`${r}: ${RENTAL_STATUS[to]}.`, 'Customer notified by SMS.');
+  const res = await act('rentals.status', async (tx, who) => {
+    const { to, id } = await advanceOrder(tx, who, ref.parse(r));
+    return done(`${r}: ${RENTAL_STATUS[to]}.`, 'The customer gets a message.', { to, id });
   });
+  if (res.ok) {
+    const { to, id } = res.data as { to: string; id: string };
+    if (to === 'ready_for_pickup' || to === 'collected') await tellCustomer(id, to);
+    return { ...res, data: undefined };
+  }
+  return res;
 }
 
 export async function orderBackAction(r: string, reason: string) {
@@ -78,11 +100,12 @@ export async function returnChecklistAction(raw: {
     .max(50)
     .parse(raw.rows);
   // Super Admins refund on the spot, so they confirm their password; staff only submit for approval.
-  return act(
+  const res = await act(
     'rentals.checklist',
     async (tx, who) => {
       const { isSuper } = (await read('rentals.checklist', async (_d, w) => w))!;
       const out = await completeReturn(tx, { ...who, isSuper }, { ref: ref.parse(raw.ref), rows });
+      const data = { to: out.to, id: out.id, refund: out.failed ? 0 : out.refund };
       if (isSuper)
         return done(
           'Order completed.',
@@ -91,11 +114,22 @@ export async function returnChecklistAction(raw: {
             : out.refund
               ? `${formatGhs(out.refund)} refunded to the customer.`
               : 'No deposit to refund.',
+          data,
         );
-      return done('Checklist submitted.', out.refund ? `Refund of ${formatGhs(out.refund)} sent for approval.` : 'No deposit to refund.');
+      return done(
+        'Checklist submitted.',
+        out.refund ? `Refund of ${formatGhs(out.refund)} sent for approval.` : 'No deposit to refund.',
+        data,
+      );
     },
     raw.password ? { password: raw.password } : {},
   );
+  if (res.ok) {
+    const d = res.data as { to: string; id: string; refund: number };
+    if (d.to === 'completed') await tellCustomer(d.id, 'completed', d.refund);
+    return { ...res, data: undefined };
+  }
+  return res;
 }
 
 export async function cancelOrderAction(r: string) {

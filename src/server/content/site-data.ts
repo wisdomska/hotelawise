@@ -266,6 +266,12 @@ export async function getSiteData(): Promise<SiteData> {
   return cachedSiteData();
 }
 
+/** Straight from the database, for scheduled jobs that run outside a Next.js request. */
+export async function getSiteDataFresh(): Promise<SiteData> {
+  if (!process.env.DATABASE_URL) return defaultSiteData();
+  return loadFromDatabase();
+}
+
 /** A typed setting with its seeded default. */
 export function setting<T>(data: SiteData, key: keyof typeof SEED_SETTINGS): T {
   return (data.settings[key] ?? SEED_SETTINGS[key]) as T;

@@ -28,7 +28,9 @@ import {
 } from '@/server/admin/bookings';
 import { issueRefund } from '@/server/admin/refunds';
 import { contactAndTemplate } from '@/server/services/payment-flow';
-import { bookingCancelled, datesChanged } from '@/server/services/notify';
+import { bookingCancelled, bookingConfirmed, datesChanged } from '@/server/services/notify';
+import { bookingBy } from '@/server/services/bookings';
+import { db } from '@/server/platform/db';
 import { env } from '@/server/platform/env';
 
 const ref = z.string().regex(/^AW-[A-Z0-9]{3,8}$/);
@@ -89,7 +91,7 @@ export async function createBookingAction(raw: z.input<typeof deskSchema>) {
   const paying = i.pay !== 'none';
   if (paying && i.pay !== 'cash' && i.txn.trim().length < 4)
     return { ok: false as const, error: 'Enter the transaction ID.', fields: { txn: 'Enter the transaction ID.' } };
-  return act(
+  const res = await act(
     paying ? 'bookings.payment.desk' : 'bookings.create',
     async (tx, who) => {
       const r = await createDeskBooking(tx, who, {
@@ -103,10 +105,21 @@ export async function createBookingAction(raw: z.input<typeof deskSchema>) {
         pay: paying ? { method: i.pay as Method, txn: i.txn.trim() } : null,
         refSecret: env().REF_SECRET,
       });
-      return done(`${r.ref} created.`, `Room ${i.room} · ${formatGhs(r.total)}`, { ref: r.ref });
+      return done(`${r.ref} created.`, `Room ${i.room} · ${formatGhs(r.total)}. The guest gets a confirmation.`, { ref: r.ref });
     },
     paying ? { password: i.password } : {},
   );
+  if (res.ok) {
+    // Phone and WhatsApp guests need the reference; walk-ins get it for their records.
+    try {
+      const b = await bookingBy(await db(), { ref: (res.data as { ref: string }).ref });
+      const { contact, smsTemplate } = await contactAndTemplate();
+      if (b) await bookingConfirmed(b, contact, smsTemplate);
+    } catch (e) {
+      console.error('desk booking confirmation failed', e);
+    }
+  }
+  return res;
 }
 
 export async function recordPaymentAction(raw: { ref: string; amount: string; method: string; txn: string; password: string }) {

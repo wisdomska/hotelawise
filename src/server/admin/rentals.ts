@@ -223,7 +223,7 @@ export async function advanceOrder(db: AnyDb, by: Who, ref: string) {
       throw new BookingStateError(`${formatGhs(o.totalPesewas - o.paidPesewas)} is due before handover. Take payment first.`);
     await tx.update(s.rentalOrders).set({ status: to, holdUntil: null }).where(eq(s.rentalOrders.id, o.id));
     await logStatus(tx, by, o, o.status, to);
-    return { to };
+    return { to, id: o.id };
   });
 }
 
@@ -370,7 +370,7 @@ export async function completeReturn(
     if (by.isSuper) failed = (await issueRefund(db, by, { target: { orderId: res.order.id }, label, amount: res.refund, reason })).failed;
     else await requestRefund(db, by, { target: { orderId: res.order.id }, label, amount: res.refund, reason });
   }
-  return { refund: res.refund, deduction: res.deduction, to: res.to, failed };
+  return { refund: res.refund, deduction: res.deduction, to: res.to, failed, id: res.order.id };
 }
 
 /* ───────────── inventory ───────────── */

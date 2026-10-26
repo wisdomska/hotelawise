@@ -9,6 +9,6 @@ export { DOQueueHandler } from '../../.open-next/worker.js';
 export default {
   fetch: openNext.fetch,
   async scheduled(controller: ScheduledController, env: CloudflareEnv, ctx: ExecutionContext) {
-    ctx.waitUntil(runScheduled(controller.cron, new Date(controller.scheduledTime), env));
+    ctx.waitUntil(runScheduled(controller.cron, new Date(controller.scheduledTime), env, ctx, openNext.fetch));
   },
 } satisfies ExportedHandler<CloudflareEnv>;

@@ -4,8 +4,8 @@
 // and the owner can open the preview with PREVIEW_GATE=off (DECISIONS D-41); pages
 // still carry noindex and robots.txt still disallows everything.
 
-/** Paths that must stay reachable on preview: payment webhooks and the health check. */
-const OPEN_PATHS = [/^\/api\/paystack\/webhook$/, /^\/api\/health$/];
+/** Paths that must stay reachable on preview: payment webhooks, the health check and cron (key-checked). */
+const OPEN_PATHS = [/^\/api\/paystack\/webhook$/, /^\/api\/health$/, /^\/api\/cron\/[a-z0-9]+$/];
 
 function safeEqual(a: string, b: string): boolean {
   if (a.length !== b.length) return false;

@@ -49,13 +49,15 @@ When a key is exposed, or a person with access leaves:
 
 ## Scheduled jobs
 
-Defined in `wrangler.jsonc`, run by `src/worker/scheduled.ts`:
+Defined in `wrangler.jsonc`. `src/worker/scheduled.ts` turns each Cron Trigger into an internal `POST /api/cron/<job>` (DECISIONS D-43), which runs `src/server/services/jobs.ts`:
 
-| Schedule (UTC = Accra time) | Job                                                            |
-| --------------------------- | -------------------------------------------------------------- |
-| every 15 minutes            | Release expired holds                                          |
-| 07:00 daily                 | Guest and pickup reminders (milestone 6)                       |
-| 02:00 daily                 | Housekeeping: old rate-limit rows, expired codes (milestone 6) |
+| Schedule (UTC = Accra time) | Job                                                                                                        |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| every 15 minutes            | Release expired booking holds; cancel pay-at-pickup orders not paid by 10:00 on pickup day (customer told) |
+| 07:00 daily                 | Day-before reminders: check-in, rental pickup, rental return (max 60 a run)                                |
+| 02:00 daily                 | Housekeeping: spent codes, finished rate-limit windows, expired sessions, sign-in history over 180 days    |
+
+Each run logs its counts, e.g. `{"checkIn":2,"pickup":1,"returns":0}`. Reminders are stamped on the booking or order when sent, so re-running a job is safe. To try a job locally: `pnpm exec wrangler dev --env preview --test-scheduled`, then open `http://localhost:8787/__scheduled?cron=0+7+*+*+*`.
 
 To see recent runs: Cloudflare dashboard → Workers → the Worker → Logs, or `pnpm exec wrangler tail --env production`.
 

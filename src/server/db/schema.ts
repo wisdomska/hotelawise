@@ -330,6 +330,7 @@ export const bookings = pgTable(
     paidPesewas: integer('paid_pesewas').notNull().default(0),
     promoCodeId: uuid('promo_code_id').references(() => promoCodes.id),
     holdExpiresAt: timestamp('hold_expires_at', { withTimezone: true }),
+    reminderSentAt: timestamp('reminder_sent_at', { withTimezone: true }), // the day-before check-in message
     holdSessionId: text('hold_session_id'),
     breakfast: boolean('breakfast').notNull().default(false),
     notes: text('notes').notNull().default(''),
@@ -489,6 +490,8 @@ export const rentalOrders = pgTable(
     collectorPhoneE164: text('collector_phone_e164').notNull(),
     status: rentalStatusEnum('status').notNull(),
     holdUntil: timestamp('hold_until', { withTimezone: true }), // pay-at-pickup: released at 10:00 on pickup day
+    pickupReminderAt: timestamp('pickup_reminder_at', { withTimezone: true }),
+    returnReminderAt: timestamp('return_reminder_at', { withTimezone: true }),
     subtotalPesewas: integer('subtotal_pesewas').notNull(),
     discountPesewas: integer('discount_pesewas').notNull().default(0),
     depositPesewas: integer('deposit_pesewas').notNull(),

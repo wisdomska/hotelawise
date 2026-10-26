@@ -166,3 +166,84 @@ export async function rentalLateRefund(o: GuestOrder, amount: number, contact: C
   const msg = `Hotel A-Wise: your payment of ${formatGhs(amount)} for ${o.ref} arrived after the 15-minute hold ended and some items had gone, so we've refunded it in full. Call ${contact.phone} and we'll see what we can do.`;
   await safely('rental refund SMS', () => sendSms(o.phone, msg));
 }
+
+/* ───────────── reminders and status updates ───────────── */
+
+/** The day before check-in. */
+export async function checkInReminder(b: GuestBooking, contact: Contact, checkInHour: string) {
+  const due = Math.max(0, b.total - b.paid);
+  const msg =
+    `Hotel A-Wise: see you tomorrow, ${firstName(b.guestName)}. ${b.variantName} Room, ref ${b.ref}. ` +
+    `Check-in from ${checkInHour}; the desk is open all night.` +
+    (due ? ` ${formatGhs(due)} is due at the desk.` : '') +
+    ` No. 1 Wisepak Lane, New Asofan. ${contact.phone}`;
+  const sent = await Promise.all([
+    safely('check-in reminder SMS', () => sendSms(b.phone, msg)),
+    b.email
+      ? safely('check-in reminder email', () =>
+          sendEmail(
+            b.email!,
+            `See you tomorrow: ${b.ref}`,
+            `${msg}\n\nYour booking: ${confirmUrl(b.token)}\nChange or cancel: ${manageUrl(b.ref ?? '')}`,
+          ),
+        )
+      : Promise.resolve(false),
+  ]);
+  return sent.some(Boolean);
+}
+
+/** The day before pickup (DECISIONS D-02). */
+export async function pickupReminder(o: GuestOrder, contact: Contact, hours: { pickupFrom: number; returnBy: number }) {
+  const due = Math.max(0, o.total - o.paid);
+  const msg =
+    `Hotel A-Wise: your rental ${o.ref} is ready to collect tomorrow from ${hourLabel(hours.pickupFrom)} at No. 1 Wisepak Lane.` +
+    (due ? ` Pay ${formatGhs(due)} when you collect, by 10am, or the items go back on sale.` : ' Just show your reference.') +
+    ` ${contact.phone}`;
+  const sent = await Promise.all([
+    safely('pickup reminder SMS', () => sendSms(o.phone, msg)),
+    o.email ? safely('pickup reminder email', () => sendEmail(o.email!, `Collect tomorrow: ${o.ref}`, msg)) : Promise.resolve(false),
+  ]);
+  return sent.some(Boolean);
+}
+
+/** The day before items are due back. */
+export async function returnReminder(o: GuestOrder, contact: Contact, hours: { pickupFrom: number; returnBy: number }) {
+  const msg = `Hotel A-Wise: please bring rental ${o.ref} back tomorrow by ${hourLabel(hours.returnBy)}. We count everything with you and refund your ${formatGhs(o.deposit)} deposit. ${contact.phone}`;
+  const sent = await Promise.all([
+    safely('return reminder SMS', () => sendSms(o.phone, msg)),
+    o.email ? safely('return reminder email', () => sendEmail(o.email!, `Return tomorrow: ${o.ref}`, msg)) : Promise.resolve(false),
+  ]);
+  return sent.some(Boolean);
+}
+
+/** A pay-at-pickup order that wasn't paid by 10:00 on pickup day. */
+export async function orderReleased(o: GuestOrder, contact: Contact) {
+  const msg = `Hotel A-Wise: rental ${o.ref} wasn't collected and paid by 10am, so the items have gone back on sale. Call ${contact.phone} and we'll check what's still free.`;
+  await Promise.all([
+    safely('release SMS', () => sendSms(o.phone, msg)),
+    o.email ? safely('release email', () => sendEmail(o.email!, `Released: ${o.ref}`, msg)) : Promise.resolve(),
+  ]);
+}
+
+/** Order moved forward at the desk (DECISIONS D-16: email every step, SMS when on). */
+export async function rentalStatusChanged(
+  o: GuestOrder,
+  to: 'ready_for_pickup' | 'collected' | 'completed',
+  contact: Contact,
+  hours: { pickupFrom: number; returnBy: number },
+  refund = 0,
+) {
+  const msg =
+    to === 'ready_for_pickup'
+      ? `Hotel A-Wise: rental ${o.ref} is ready. Collect from No. 1 Wisepak Lane from ${hourLabel(hours.pickupFrom)} on ${formatShortDate(o.starts)}.`
+      : to === 'collected'
+        ? `Hotel A-Wise: enjoy your event! Please bring rental ${o.ref} back by ${hourLabel(hours.returnBy)} on ${formatShortDate(addDays(o.ends, 1))}.`
+        : `Hotel A-Wise: thanks for returning rental ${o.ref}.` +
+          (refund > 0 ? ` ${formatGhs(refund)} of your deposit is on its way back.` : '');
+  await Promise.all([
+    safely('rental status SMS', () => sendSms(o.phone, `${msg} ${contact.phone}`)),
+    o.email
+      ? safely('rental status email', () => sendEmail(o.email!, `Rental ${o.ref}`, `${msg}\n\nQuestions? ${contact.phone}`))
+      : Promise.resolve(),
+  ]);
+}
