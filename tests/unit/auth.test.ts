@@ -13,6 +13,7 @@ const base: ActorRecord = {
   grants: [],
   active: true,
   twoFactorEnabled: true,
+  twoFactorRequired: true,
   mustChangePassword: false,
 };
 
@@ -31,6 +32,7 @@ describe('authorize', () => {
   it('requires TOTP for Super Admins and a new password after a reset', () => {
     expect(pendingSetup({ ...base, twoFactorEnabled: false })).toBe('enrol-2fa');
     expect(pendingSetup({ ...base, role: 'staff', twoFactorEnabled: false })).toBeNull();
+    expect(pendingSetup({ ...base, twoFactorEnabled: false, twoFactorRequired: false })).toBeNull();
     expect(pendingSetup({ ...base, mustChangePassword: true })).toBe('change-password');
     expect(() => authorize({ ...base, twoFactorEnabled: false }, 'dashboard.view')).toThrow(SetupRequiredError);
   });

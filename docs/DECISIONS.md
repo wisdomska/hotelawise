@@ -321,3 +321,7 @@ Upstash is blocked on the owner's network (Sophos), and adding another service o
 ## D-41 The preview site is open to anyone with the link
 
 The owner asked for the preview to open without a password. `PREVIEW_GATE=off` in `wrangler.jsonc` turns the Basic-auth gate off; every page still sends `X-Robots-Tag: noindex, nofollow` and robots.txt disallows everything, so search engines stay away. Payments on preview use Paystack test keys only. Setting `PREVIEW_GATE` to `on` brings the password back.
+
+## D-42 Two-step sign-in for Super Admins is a setting, off for now
+
+The brief made authenticator codes mandatory for Super Admins. The owner asked to turn that off. It is now the `security.requireTwoFactor` setting (default off; Settings › Security will show it). Anyone who has already set up an authenticator is still asked for a code. Trade-off, stated plainly: with it off, a Super Admin password alone opens everything, including refunds and user management, so it should be turned on again before real money flows.

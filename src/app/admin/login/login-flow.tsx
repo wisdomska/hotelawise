@@ -65,8 +65,8 @@ export function LoginFlow({ initial, idle, idleMinutes, resetByEmail }: Props) {
   };
 
   const head: Record<Step, { label: string; title: string }> = {
-    password: { label: 'STEP 1 OF 2', title: 'Staff sign in' },
-    totp: { label: 'STEP 2 OF 2', title: 'Enter your code' },
+    password: { label: 'A-WISE ADMIN', title: 'Staff sign in' },
+    totp: { label: 'TWO-STEP SIGN-IN', title: 'Enter your code' },
     forgot: { label: 'RESET PASSWORD · STEP 1 OF 2', title: 'Forgot your password?' },
     reset: { label: 'RESET PASSWORD · STEP 2 OF 2', title: 'Choose a new password' },
     'change-password': { label: 'FIRST SIGN-IN', title: 'Choose your password' },
@@ -253,7 +253,7 @@ function TotpStep({ busy, run, onDone, onBack }: { busy: boolean; run: Run; onDo
       <p style={{ margin: 0, fontSize: 14, lineHeight: 1.5, color: 'var(--mute)' }}>
         {backup
           ? 'Enter one of the backup codes you saved when you set up two-step sign-in. Each code works once.'
-          : 'Super Admin accounts need a second step. Enter the 6-digit code from your authenticator app.'}
+          : 'Your account uses two-step sign-in. Enter the 6-digit code from your authenticator app.'}
       </p>
       {backup ? (
         <Field

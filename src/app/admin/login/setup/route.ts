@@ -32,6 +32,6 @@ export async function POST(request: Request) {
   const database = await db();
   await database.update(schema.user).set({ mustChangePassword: false }).where(eq(schema.user.id, actor.id));
   await audit(database, { actor, action: 'Changed own password', entity: 'user', entityId: actor.id, target: actor.email });
-  const next = actor.role === 'super_admin' && !actor.twoFactorEnabled ? 'enrol-2fa' : 'done';
+  const next = actor.role === 'super_admin' && actor.twoFactorRequired && !actor.twoFactorEnabled ? 'enrol-2fa' : 'done';
   return Response.json({ next });
 }

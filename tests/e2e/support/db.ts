@@ -35,3 +35,17 @@ export async function plantGuestCode(ref: string, code: string) {
     await close();
   }
 }
+
+/** Writes one setting, as Settings in the admin would. */
+export async function setSetting(key: string, value: unknown) {
+  const schema = await import('../../../src/server/db/schema');
+  const { db, close } = createNodeDb(process.env.E2E_DATABASE_URL ?? process.env.DATABASE_URL!);
+  try {
+    await db
+      .insert(schema.settings)
+      .values({ key, value: value as never })
+      .onConflictDoUpdate({ target: schema.settings.key, set: { value: value as never } });
+  } finally {
+    await close();
+  }
+}

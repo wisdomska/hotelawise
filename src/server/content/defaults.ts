@@ -40,6 +40,8 @@ export const SEED_SETTINGS = {
   'tax.tourismPercent': 1,
   // Admin
   'admin.sessionTimeoutMinutes': 30,
+  // Off at the owner's request (DECISIONS D-42); Settings › Security can turn it back on.
+  'security.requireTwoFactor': false,
   // Notifications
   'notify.smsTemplate':
     "Hi {first_name}, you're booked at Hotel A-Wise: {room}, {check_in} to {check_out}. Ref {ref}. We'll leave the light on. {phone}",

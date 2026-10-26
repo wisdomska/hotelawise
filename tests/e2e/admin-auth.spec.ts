@@ -1,8 +1,13 @@
 import { expect, test } from '@playwright/test';
-import { makeUser } from './support/db';
+import { makeUser, setSetting } from './support/db';
 import { totp } from './support/totp';
 
 test.describe.configure({ mode: 'serial' });
+
+// Two-step sign-in for Super Admins is a setting (D-42, off by default); these
+// tests switch it on to cover the set-up flow, then put it back.
+test.beforeAll(() => setSetting('security.requireTwoFactor', true));
+test.afterAll(() => setSetting('security.requireTwoFactor', false));
 
 const email = `esi+${Date.now()}@hotelawise.com`;
 let secret = '';
@@ -73,4 +78,19 @@ test('staff see only their screens, and are refused a Super Admin URL', async ({
   const res = await page.goto('/admin/audit');
   expect(res?.status()).toBe(403);
   await expect(page.getByRole('heading', { name: /isn't part of your role/ })).toBeVisible();
+});
+
+test('with two-step not required, a new Super Admin goes straight in after choosing a password', async ({ page }) => {
+  await setSetting('security.requireTwoFactor', false);
+  const e = `ama+${Date.now()}@hotelawise.com`;
+  await makeUser({ email: e, role: 'super_admin', password: 'temporary1' });
+  await page.goto('/admin/login');
+  await page.getByLabel('Work email').fill(e);
+  await page.getByLabel('Password', { exact: true }).fill('temporary1');
+  await page.getByRole('button', { name: 'Sign in' }).click();
+  await page.getByLabel('Temporary password', { exact: true }).fill('temporary1');
+  await page.getByLabel('New password', { exact: true }).fill('akwaaba2026');
+  await page.getByLabel('Confirm new password', { exact: true }).fill('akwaaba2026');
+  await page.getByRole('button', { name: 'Save password' }).click();
+  await expect(page.getByRole('heading', { name: /Good to see you/ })).toBeVisible();
 });

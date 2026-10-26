@@ -1,9 +1,10 @@
 // Turns a signed-in user into an Actor and enforces the account rules that sit
 // on top of the permission matrix:
-// - Super Admins must have TOTP enrolled before they can use anything else.
+// - Super Admins must enrol TOTP first when Settings › Security requires it (D-42).
 // - Anyone flagged mustChangePassword (first sign-in, admin reset) changes it first.
 // - Money actions re-check the user's password (step-up).
 import { and, eq } from 'drizzle-orm';
+import { SEED_SETTINGS } from '@/server/content/defaults';
 import * as schema from '@/server/db/schema';
 import type { AnyDb } from '@/server/services/holds';
 import { assertCan, ForbiddenError, type Actor, type Capability, type Grant } from './permissions';
@@ -14,6 +15,8 @@ export type ActorRecord = Actor & {
   email: string;
   jobTitle: string;
   twoFactorEnabled: boolean;
+  /** Settings › Security: whether Super Admins must set up two-step sign-in (DECISIONS D-42). */
+  twoFactorRequired: boolean;
   mustChangePassword: boolean;
 };
 
@@ -22,10 +25,13 @@ export type SetupStep = 'change-password' | 'enrol-2fa' | null;
 export async function loadActor(db: AnyDb, userId: string): Promise<ActorRecord | null> {
   const [u] = await db.select().from(schema.user).where(eq(schema.user.id, userId));
   if (!u) return null;
-  const grants = await db
-    .select({ key: schema.userPermissions.key })
-    .from(schema.userPermissions)
-    .where(and(eq(schema.userPermissions.userId, userId), eq(schema.userPermissions.enabled, true)));
+  const [grants, [req]] = await Promise.all([
+    db
+      .select({ key: schema.userPermissions.key })
+      .from(schema.userPermissions)
+      .where(and(eq(schema.userPermissions.userId, userId), eq(schema.userPermissions.enabled, true))),
+    db.select({ value: schema.settings.value }).from(schema.settings).where(eq(schema.settings.key, 'security.requireTwoFactor')),
+  ]);
   return {
     id: u.id,
     name: u.name,
@@ -35,6 +41,7 @@ export async function loadActor(db: AnyDb, userId: string): Promise<ActorRecord 
     grants: grants.map((g) => g.key as Grant),
     active: !u.banned,
     twoFactorEnabled: u.twoFactorEnabled,
+    twoFactorRequired: (req?.value ?? SEED_SETTINGS['security.requireTwoFactor']) === true,
     mustChangePassword: u.mustChangePassword,
   };
 }
@@ -42,7 +49,7 @@ export async function loadActor(db: AnyDb, userId: string): Promise<ActorRecord 
 /** What the user must do before the admin opens up. */
 export function pendingSetup(actor: ActorRecord): SetupStep {
   if (actor.mustChangePassword) return 'change-password';
-  if (actor.role === 'super_admin' && !actor.twoFactorEnabled) return 'enrol-2fa';
+  if (actor.role === 'super_admin' && actor.twoFactorRequired && !actor.twoFactorEnabled) return 'enrol-2fa';
   return null;
 }
 
