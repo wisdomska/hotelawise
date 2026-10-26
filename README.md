@@ -53,11 +53,11 @@ When you first sign in to the admin, you must set a new password. Super Admins m
 
 ## Branches and releases
 
-| Branch                       | Purpose                           | Deploys to                    |
-| ---------------------------- | --------------------------------- | ----------------------------- |
-| `main`                       | Production                        | `hotelawise.com`              |
-| `preview`                    | Staging, behind Cloudflare Access | `preview.hotelawise.com`      |
-| `feat/*`, `fix/*`, `chore/*` | Feature work                      | A pull request into `preview` |
+| Branch                       | Purpose                    | Deploys to                    |
+| ---------------------------- | -------------------------- | ----------------------------- |
+| `main`                       | Production                 | `hotelawise.com`              |
+| `preview`                    | Staging, behind a password | `preview.hotelawise.com`      |
+| `feat/*`, `fix/*`, `chore/*` | Feature work               | A pull request into `preview` |
 
 - A release is a pull request from `preview` into `main`.
 - Commits follow Conventional Commits. The `commit-msg` hook rejects tool attribution lines.
