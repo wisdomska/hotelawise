@@ -402,3 +402,14 @@ html[data-banner-off] .aw-banner {
 .aw-keycard:active {
   transform: scale(0.985);
 }
+.aw-lift {
+  transition: transform 220ms var(--ease-enter);
+}
+.aw-lift:active {
+  transform: scale(0.97);
+}
+@media (hover: hover) and (pointer: fine) {
+  .aw-lift:hover {
+    transform: translateY(-4px);
+  }
+}

@@ -38,7 +38,8 @@ const failures = [];
 async function shot(file, hash, name, tweaks = {}) {
   overrides = tweaks;
   for (const [vk, vp] of Object.entries(viewports)) {
-    const ctx = await browser.newContext({ viewport: vp, deviceScaleFactor: 1, isMobile: vk === 'm', hasTouch: vk === 'm' });
+    // Reduced motion: the prototype's scroll reveal would otherwise hide off-screen content.
+    const ctx = await browser.newContext({ viewport: vp, deviceScaleFactor: 1, isMobile: vk === 'm', hasTouch: vk === 'm', reducedMotion: 'reduce' });
     const page = await ctx.newPage();
     try {
       await page.goto(`${base}${file}${hash ? '#' + hash : ''}`, { waitUntil: 'networkidle' });
