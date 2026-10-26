@@ -32,7 +32,7 @@ type Props = {
 
 const sum = (x: number[]) => x.reduce((p, q) => p + q, 0);
 const pct = (a: number, b: number) => (b ? Math.round(((a - b) / b) * 100) : 0);
-const ghsK = (n: number) => (n >= 1_000_000 ? `GHS ${(n / 100_000).toFixed(1)}k` : formatGhs(n));
+const ghsK = (n: number) => (n >= 1_000_000 ? `GHS ${(n / 100_000).toFixed(1)}k` : formatGhs(Math.round(n)));
 const day = (d: IsoDate, o: Intl.DateTimeFormatOptions) =>
   new Date(`${d}T00:00:00Z`).toLocaleDateString('en-GB', { timeZone: 'UTC', ...o });
 

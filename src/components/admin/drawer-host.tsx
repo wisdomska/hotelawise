@@ -5,12 +5,14 @@ import type { ComponentType } from 'react';
 import { BookingDrawer, RoomDrawer } from './bookings/drawers';
 import { EnquiryDrawer, OrderDrawer } from './rentals/ui';
 import { useAdmin, type DrawerSpec } from './context';
+import { CustomerDrawer } from './customers/drawer';
 
 const DRAWERS: Partial<{ [K in DrawerSpec['kind']]: ComponentType<{ spec: Extract<DrawerSpec, { kind: K }> }> }> = {
   booking: BookingDrawer,
   room: RoomDrawer,
   rental: OrderDrawer,
   enquiry: EnquiryDrawer,
+  customer: CustomerDrawer,
 };
 
 export function DrawerHost() {

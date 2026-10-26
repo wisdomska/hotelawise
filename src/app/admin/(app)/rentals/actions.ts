@@ -23,6 +23,7 @@ import {
   setRepair,
   enquiries,
 } from '@/server/admin/rentals';
+import { isUploadedId } from '@/server/admin/cloudinary';
 import { issueRefund } from '@/server/admin/refunds';
 import * as s from '@/server/db/schema';
 
@@ -203,6 +204,8 @@ export async function saveItemAction(raw: {
 }
 
 export async function setItemImageAction(itemId: string, imageId: string) {
+  // Only photos from our own signed inventory uploads.
+  if (!isUploadedId(imageId, 'inventory')) return { ok: false as const, error: 'That photo didn’t come from an upload here.' };
   return act(
     'inventory.edit',
     async (tx, who) => {

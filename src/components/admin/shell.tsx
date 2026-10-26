@@ -13,6 +13,7 @@ import { authClient } from '@/lib/auth/client';
 import type { Capability } from '@/server/auth/permissions';
 import { QuickBooking } from './bookings/modals';
 import { AdminProvider, useAdmin, type Me } from './context';
+import { ItemModal } from './rentals/inventory-view';
 import { BlackoutModal } from './rooms/modals';
 import { DrawerHost } from './drawer-host';
 import { ModalHost } from './modal';
@@ -146,7 +147,7 @@ function Frame(p: Props) {
     if (k === 'newBooking') newBooking();
     else if (k === 'newRental') window.open('/rent', '_blank', 'noopener');
     else if (k === 'blockDates') openModal(<BlackoutModal />);
-    else router.push('/admin/inventory?action=add');
+    else openModal(<ItemModal item={null} />);
   };
 
   return (

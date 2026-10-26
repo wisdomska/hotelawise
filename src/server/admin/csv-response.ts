@@ -34,7 +34,7 @@ export async function csvDownload(
       target: what,
       after: { rows: rows.length - 1 },
     });
-    return new Response('﻿' + toCsv(rows), {
+    return new Response('\uFEFF' + toCsv(rows), {
       headers: {
         'content-type': 'text/csv; charset=utf-8',
         'content-disposition': `attachment; filename="${filename}"`,
