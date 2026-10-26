@@ -49,3 +49,15 @@ export async function setSetting(key: string, value: unknown) {
     await close();
   }
 }
+
+/** Every test signs in from the same address; start each admin file with a clean sign-in budget. */
+export async function clearSignInLimits() {
+  const schema = await import('../../../src/server/db/schema');
+  const { db, close } = createNodeDb(process.env.E2E_DATABASE_URL ?? process.env.DATABASE_URL!);
+  try {
+    await db.delete(schema.rateLimits);
+    await db.delete(schema.authRateLimit);
+  } finally {
+    await close();
+  }
+}

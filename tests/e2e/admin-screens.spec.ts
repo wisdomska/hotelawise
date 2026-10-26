@@ -1,5 +1,5 @@
-import { expect, test, type Page } from '@playwright/test';
-import { makeUser } from './support/db';
+import { expect, test, type Locator, type Page } from '@playwright/test';
+import { clearSignInLimits, makeUser, setSetting } from './support/db';
 
 // Every admin screen renders for a Super Admin, and the desk's main jobs work
 // end to end against the real database.
@@ -23,7 +23,15 @@ async function signIn(page: Page, first: boolean) {
   await expect(page.getByRole('heading', { level: 1, name: /Good (morning|afternoon|evening)/ })).toBeVisible();
 }
 
+/** The admin uses its own listbox select, not a native <select>. */
+async function pick(page: Page, scope: Locator, label: string, option: string) {
+  await scope.getByRole('button', { name: new RegExp(`^${label} `) }).click();
+  await page.getByRole('listbox', { name: label }).getByRole('option', { name: option }).click();
+}
+
 test.beforeAll(async () => {
+  await setSetting('security.requireTwoFactor', false);
+  await clearSignInLimits();
   await makeUser({ email, role: 'super_admin', password: 'temporary1' });
 });
 
@@ -65,7 +73,7 @@ test('desk booking: create a walk-in, check in, take payment', async ({ page }) 
   await dialog.getByRole('button', { name: 'Continue' }).click();
   await expect(dialog.getByLabel('Check-in')).toBeVisible();
   await dialog.getByRole('button', { name: 'Continue' }).click();
-  await dialog.getByLabel('Payment').selectOption('none');
+  await pick(page, dialog, 'Payment', 'Not paid yet');
   await dialog.getByRole('button', { name: /Create booking/ }).click();
   await expect(page.getByText(/AW-[A-Z0-9]+ created\./).first()).toBeVisible();
 
@@ -88,9 +96,9 @@ test('rooms & rates: promo code and blocked dates', async ({ page }) => {
   await page.getByRole('button', { name: 'New promo code' }).click();
   const d = page.getByRole('dialog');
   await d.getByLabel('Code').fill(code);
-  await d.getByLabel('Percentage').fill('10');
+  await d.getByLabel('Percentage', { exact: true }).fill('10');
   await d.getByRole('button', { name: 'Continue' }).click();
-  await d.getByLabel('Ends').selectOption('never');
+  await pick(page, d, 'Ends', 'No end date');
   await d.getByRole('button', { name: 'Save code' }).click();
   await expect(page.getByRole('cell', { name: code })).toBeVisible();
   const row = page.getByRole('row').filter({ hasText: code });
