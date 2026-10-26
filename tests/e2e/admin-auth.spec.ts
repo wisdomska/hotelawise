@@ -32,7 +32,7 @@ test('first sign-in: new password, then TOTP enrolment, then the dashboard', asy
   await page.getByLabel('6-digit code').fill(totp(secret));
   await page.getByRole('button', { name: 'Turn on two-step sign-in' }).click();
   await expect(page.getByRole('heading', { name: /Good to see you, Esi/ })).toBeVisible();
-  await expect(page.getByRole('navigation', { name: 'Admin' }).getByRole('link')).toHaveCount(14);
+  await expect(page.getByRole('navigation', { name: 'Screens' }).getByRole('link')).toHaveCount(14);
 });
 
 test('later sign-ins ask for the TOTP code', async ({ page }) => {
@@ -65,7 +65,7 @@ test('staff see only their screens, and are refused a Super Admin URL', async ({
   await page.getByLabel('New password').fill('adinkra2026');
   await page.getByRole('button', { name: 'Save password' }).click();
   await expect(page.getByRole('heading', { name: /Good to see you, Kojo/ })).toBeVisible();
-  const links = page.getByRole('navigation', { name: 'Admin' }).getByRole('link');
+  const links = page.getByRole('navigation', { name: 'Screens' }).getByRole('link');
   await expect(links).toHaveCount(8);
   await expect(links.filter({ hasText: 'Audit log' })).toHaveCount(0);
   const res = await page.goto('/admin/audit');

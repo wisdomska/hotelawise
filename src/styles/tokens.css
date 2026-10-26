@@ -278,3 +278,138 @@
     transform: translateY(0);
   }
 }
+
+/* Admin shell layout (Admin.dc.html rootVars): phone < 640, mobile < 1024, wide ≥ 1100. */
+.admin {
+  --toast-bg: #00003a;
+  --dflex: none;
+  --mflex: flex;
+  --c-charts: minmax(0, 1fr);
+  --sp2: auto;
+  --c-inbox: 1fr;
+  --c-login: 1fr;
+}
+.admin[data-theme='dark'] {
+  --toast-bg: #26262a;
+}
+@media (min-width: 640px) {
+  .admin {
+    --c-charts: repeat(2, minmax(0, 1fr));
+    --c-inbox: 320px minmax(0, 1fr);
+    --c-login: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .admin {
+    --dflex: flex;
+    --mflex: none;
+  }
+}
+@media (min-width: 1100px) {
+  .admin {
+    --c-charts: repeat(4, minmax(0, 1fr));
+    --sp2: span 2;
+  }
+}
+.aw-shell {
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: 100vh;
+}
+.aw-side {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 272px;
+  z-index: 56;
+  background: var(--side);
+  color: #f5f2ea;
+  border-right: 1px solid var(--side-line);
+  padding: 16px 10px;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-105%);
+  transition: transform 320ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.aw-side[data-open='true'] {
+  transform: translateX(0);
+}
+@media (min-width: 1024px) {
+  .aw-shell {
+    grid-template-columns: 240px minmax(0, 1fr);
+  }
+  .aw-shell[data-collapsed='true'] {
+    grid-template-columns: 76px minmax(0, 1fr);
+  }
+  .aw-side {
+    position: sticky;
+    width: auto;
+    height: 100vh;
+    z-index: 40;
+    transform: none;
+    transition: none;
+    min-width: 0;
+  }
+  .aw-shell[data-collapsed='true'] .aw-side {
+    padding: 16px 12px;
+  }
+}
+.aw-nav-btn:hover {
+  background: rgba(245, 242, 234, 0.08) !important;
+}
+.aw-hov:hover {
+  background: var(--hover) !important;
+}
+.aw-row:hover {
+  background: var(--hover);
+}
+.admin button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+.admin input::placeholder,
+.admin textarea::placeholder {
+  color: var(--mute);
+  opacity: 0.8;
+}
+@keyframes aw-slide {
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+@keyframes aw-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@media (min-width: 1024px) {
+  .aw-um {
+    left: var(--um-left) !important;
+    right: auto !important;
+    bottom: 0 !important;
+    width: 312px;
+  }
+}
+/* KPI columns: 2 on phones, 3 or 4 below 1180px, up to 6 above (Admin.dc.html kpiCols). */
+.aw-kpis {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (min-width: 640px) {
+  .aw-kpis {
+    grid-template-columns: repeat(var(--kpi-m), minmax(0, 1fr));
+  }
+}
+@media (min-width: 1180px) {
+  .aw-kpis {
+    grid-template-columns: repeat(var(--kpi-n), minmax(0, 1fr));
+  }
+}

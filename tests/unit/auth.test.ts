@@ -8,6 +8,7 @@ const base: ActorRecord = {
   id: 'u',
   name: 'Esi',
   email: 'esi@hotelawise.com',
+  jobTitle: '',
   role: 'super_admin',
   grants: [],
   active: true,

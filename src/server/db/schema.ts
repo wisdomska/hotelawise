@@ -42,6 +42,7 @@ export const user = pgTable('user', {
   emailVerified: boolean('email_verified').notNull().default(false),
   image: text('image'),
   role: roleEnum('role').notNull().default('staff'),
+  jobTitle: text('job_title').notNull().default(''), // e.g. Front desk, Events, Night desk
   banned: boolean('banned').notNull().default(false),
   banReason: text('ban_reason'),
   banExpires: timestamp('ban_expires', { withTimezone: true }),

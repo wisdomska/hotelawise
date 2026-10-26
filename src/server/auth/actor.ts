@@ -12,6 +12,7 @@ import { createPasswordHasher } from './password';
 export type ActorRecord = Actor & {
   name: string;
   email: string;
+  jobTitle: string;
   twoFactorEnabled: boolean;
   mustChangePassword: boolean;
 };
@@ -29,6 +30,7 @@ export async function loadActor(db: AnyDb, userId: string): Promise<ActorRecord 
     id: u.id,
     name: u.name,
     email: u.email,
+    jobTitle: u.jobTitle,
     role: u.role,
     grants: grants.map((g) => g.key as Grant),
     active: !u.banned,
