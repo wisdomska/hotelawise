@@ -4,7 +4,8 @@ import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  typedRoutes: true,
+  // typedRoutes is switched on once every linked route exists (milestone 5).
+  typedRoutes: false,
   images: {
     loader: 'custom',
     loaderFile: './src/lib/cloudinary-loader.ts',
@@ -12,7 +13,8 @@ const nextConfig: NextConfig = {
     imageSizes: [64, 128, 256, 384],
   },
   experimental: {
-    optimizePackageImports: ['date-fns', 'lucide-react'],
+    optimizePackageImports: ['date-fns'],
+    authInterrupts: true, // forbidden() → 403 page for screens a role can't use
   },
   async headers() {
     // CSP with nonces is set in src/proxy.ts; these are static and safe for every response.

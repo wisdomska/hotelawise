@@ -63,7 +63,21 @@ export function createAuth(deps: AuthDeps) {
       defaultCookieAttributes: { httpOnly: true, sameSite: 'lax', path: '/' },
       ipAddress: { ipAddressHeaders: ['cf-connecting-ip'] },
     },
-    rateLimit: { enabled: true, window: 60, max: 30 },
+    // Handoff: sign-in locks for 30 s after 5 tries. Per client IP (cf-connecting-ip).
+    // Persistent storage across isolates is added with Upstash in milestone 5.
+    rateLimit: {
+      enabled: true,
+      window: 60,
+      max: 30,
+      customRules: {
+        '/sign-in/email': { window: 30, max: 5 },
+        '/two-factor/verify-totp': { window: 30, max: 5 },
+        '/two-factor/verify-backup-code': { window: 30, max: 5 },
+        '/email-otp/send-verification-otp': { window: 60, max: 3 },
+        '/forget-password/email-otp': { window: 60, max: 3 },
+        '/email-otp/reset-password': { window: 60, max: 5 },
+      },
+    },
     trustedOrigins: [deps.baseURL],
     plugins: [
       twoFactor({ issuer: 'Hotel A-Wise', backupCodeOptions: { amount: 10 } }),
