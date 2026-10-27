@@ -2,8 +2,10 @@
 // Last-resort error page, in the site's own look rather than Next.js's default.
 // The common cause is a tab that was open during a deploy: its next click asks for script
 // files the new version no longer has. That case reloads itself once, straight away.
+// Fonts are named directly, not imported from ./fonts: a client file calling the same
+// next/font setup as the root layout gave the fonts a second set of class names, the site's
+// CSS stopped matching the layout's, and every serif heading fell back to sans.
 import { useEffect } from 'react';
-import { cormorant, geist } from './fonts';
 import './globals.css';
 
 const STALE = /ChunkLoadError|Loading chunk|Loading CSS chunk|dynamically imported module|Importing a module script failed/i;
@@ -24,8 +26,8 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
   }, [stale]);
 
   return (
-    <html lang="en-GB" className={`${cormorant.variable} ${geist.variable}`}>
-      <body style={{ margin: 0, background: '#F5F2EA', color: '#00003A', fontFamily: 'var(--font-sans)' }}>
+    <html lang="en-GB">
+      <body style={{ margin: 0, background: '#F5F2EA', color: '#00003A', fontFamily: '"Geist", system-ui, sans-serif' }}>
         <main
           style={{
             minHeight: '100svh',
@@ -38,8 +40,16 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
             margin: '0 auto',
           }}
         >
-          <span style={{ fontFamily: 'var(--font-serif)', fontSize: 22 }}>Hotel A-Wise</span>
-          <h1 style={{ margin: 0, fontFamily: 'var(--font-serif)', fontWeight: 400, fontSize: 'clamp(36px, 6vw, 64px)', lineHeight: 1 }}>
+          <span style={{ fontFamily: '"Cormorant Garamond", Georgia, serif', fontSize: 22 }}>Hotel A-Wise</span>
+          <h1
+            style={{
+              margin: 0,
+              fontFamily: '"Cormorant Garamond", Georgia, serif',
+              fontWeight: 400,
+              fontSize: 'clamp(36px, 6vw, 64px)',
+              lineHeight: 1,
+            }}
+          >
             {stale ? 'Loading the latest version…' : 'This page didn’t load.'}
           </h1>
           <p style={{ margin: 0, fontSize: 16, lineHeight: 1.55, color: 'rgba(0,0,58,0.72)' }}>

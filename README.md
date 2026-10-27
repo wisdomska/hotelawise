@@ -2,10 +2,10 @@
 
 Website, booking engine and admin for **Hotel A-Wise**, No. 1 Wisepak Lane, New Asofan, Accra.
 
-- **Guests** book a room and pay by Mobile Money or card, manage the booking with a texted code, reserve event rentals to collect, and send venue enquiries.
+- **Guests** book a room and pay by Mobile Money or card, manage the booking with a texted code, reserve event rentals to collect, and enquire about hiring the event compound or conference room.
 - **Staff** run the hotel from `/admin`: bookings, rooms, rentals, inventory, venues, payments, customers, content, reports and users, in a light or a night-navy dark theme. Every change is written to an audit log.
 
-**Live:** https://hotelawise.wisdomska.workers.dev (moves to `hotelawise.com` once the domain is connected). **Preview:** https://hotelawise-preview.wisdomska.workers.dev (not indexed). **Latest release:** [v1.0.0](https://github.com/wisdomska/hotelawise/releases/tag/v1.0.0), notes in [CHANGELOG.md](CHANGELOG.md).
+**Live:** https://hotelawise.wisdomska.workers.dev (moves to `hotelawise.com` once the domain is connected). **Preview:** https://hotelawise-preview.wisdomska.workers.dev (not indexed). **Latest release:** [v1.0.0](https://github.com/wisdomska/hotelawise/releases/tag/v1.0.0), notes in [CHANGELOG.md](CHANGELOG.md); changes merged since then are listed under Unreleased.
 
 ## Status
 
@@ -21,14 +21,28 @@ Website, booking engine and admin for **Hotel A-Wise**, No. 1 Wisepak Lane, New 
 
 ### In production today
 
-| Works now                                                            | Waiting on                                                         |
-| -------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| Public site, room bookings and rental reservations paid at the hotel | Paystack live keys: online MoMo and card payments                  |
-| Venue enquiries and contact messages, with an invisible bot check    | Resend (email) and Arkesel (SMS) keys: confirmations and reminders |
-| The admin, the audit log and the scheduled jobs                      | The above, for manage-my-booking codes sent by text or email       |
-|                                                                      | The `hotelawise.com` domain                                        |
+| Works now                                                                               | Waiting on                                                         |
+| --------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Public site, room bookings and rental reservations paid at the hotel                    | Paystack live keys: online MoMo and card payments                  |
+| Venue enquiries (on the rentals page) and contact messages, with an invisible bot check | Resend (email) and Arkesel (SMS) keys: confirmations and reminders |
+| The admin, the audit log and the scheduled jobs                                         | The above, for manage-my-booking codes sent by text or email       |
+|                                                                                         | The `hotelawise.com` domain                                        |
 
 The plan is in [docs/PLAN.md](docs/PLAN.md). The release QA is in [docs/QA-REPORT.md](docs/QA-REPORT.md) and the security review in [docs/SECURITY.md](docs/SECURITY.md). Hotel facts that still need the owner's confirmation are in [docs/HOTEL-FACTS.md](docs/HOTEL-FACTS.md).
+
+### Public pages
+
+| Path       | What's there                                                                                   |
+| ---------- | ---------------------------------------------------------------------------------------------- |
+| `/`        | Hero with the booking bar, rooms, facilities, rentals, events, a guest review and getting here |
+| `/rooms`   | Rooms with filters and a side-by-side comparison; `/rooms/[code]` for each room                |
+| `/book`    | Three-step room booking: dates and room, your details, pay                                     |
+| `/manage`  | Look up a booking by reference and phone, then change dates or cancel                          |
+| `/rent`    | Rentals & venues: reserve items to collect, and enquire about the venues at `/rent#venues`     |
+| `/gallery` | Photos, filtered by category                                                                   |
+| `/contact` | Reception, WhatsApp, email, address and hours, a message form and the FAQ                      |
+
+`/venues` redirects to `/rent#venues` (see D-53 in [docs/DECISIONS.md](docs/DECISIONS.md)). Phone numbers print as one unbroken run, such as `+233555557090` (D-54).
 
 ## Stack
 
