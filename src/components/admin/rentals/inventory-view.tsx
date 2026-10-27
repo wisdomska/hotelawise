@@ -114,7 +114,11 @@ function Items({ items, canEdit }: { items: ItemRow[]; canEdit: boolean }) {
                 t: '',
                 img: {
                   src: it.imageId ? thumb(it.imageId, 160) : null,
-                  alt: canEdit ? `Change the photo of ${it.name}` : it.name,
+                  alt: canEdit
+                    ? `${it.imageId ? 'Change the photo' : 'Add a photo'} of ${it.name}`
+                    : it.imageId
+                      ? it.name
+                      : `${it.name}, no photo`,
                   onClick: canEdit ? () => upload(it) : undefined,
                 },
               },

@@ -57,7 +57,14 @@ export function Tabs({ list, cur, set, label }: { list: readonly TabDef[]; cur: 
     <div
       role="tablist"
       aria-label={label}
-      style={{ display: 'flex', gap: 2, borderBottom: '1px solid var(--line)', overflowX: 'auto', scrollbarWidth: 'none' }}
+      style={{
+        display: 'flex',
+        gap: 2,
+        borderBottom: '1px solid var(--line)',
+        position: 'relative',
+        overflowX: 'auto',
+        scrollbarWidth: 'none',
+      }}
     >
       {list.map((t) => {
         const [name, count] = Array.isArray(t) ? t : [t, ''];

@@ -134,7 +134,7 @@ function Search({ q }: { q: string }) {
           height: 34,
           padding: '0 10px 0 30px',
           borderRadius: 8,
-          border: '1px solid var(--line2)',
+          border: '1px solid var(--field)',
           background: 'var(--bg)',
           color: 'var(--ink)',
           fontSize: 13,

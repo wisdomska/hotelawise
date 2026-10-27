@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Icon } from '@/components/ui/icon';
 import { searchAdmin, type Hit } from '@/app/admin/(app)/search';
 import { useAdmin } from './context';
+import { useFocusTrap } from './focus-trap';
 import type { NavGroup } from './shell';
 import { EASE, mono } from './ui';
 
@@ -27,10 +28,8 @@ export function Palette(p: Props) {
   const [idx, setIdx] = useState(0);
   const [hits, setHits] = useState<Hit[]>([]);
 
-  useEffect(() => {
-    const t = setTimeout(() => input.current?.focus(), 20);
-    return () => clearTimeout(t);
-  }, []);
+  const box = useRef<HTMLDivElement>(null);
+  useFocusTrap(box);
   useEffect(() => {
     const term = q.trim();
     if (term.length < 2) return;
@@ -93,6 +92,7 @@ export function Palette(p: Props) {
       }}
     >
       <div
+        ref={box}
         role="dialog"
         aria-modal="true"
         aria-label="Search"

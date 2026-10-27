@@ -18,6 +18,8 @@ All notable changes to this project are recorded here. The format follows [Keep 
 - Desk work: walk-in and phone bookings, check-in and check-out, payments at the desk, refunds and approvals, return checklists with deposit deductions.
 - Scheduled jobs: day-before reminders (check-in, pickup, return), release of unpaid pay-at-pickup orders at 10:00, nightly housekeeping.
 - Guest messages for desk bookings and every rental step; PDF receipts and invoices for guests and staff; Excel and CSV exports.
+- Admin dark theme in night navy (a darker take on the brand blue) instead of neutral grey.
+- Accessibility: skip links, focus kept inside dialogs, drawers and search and returned on close; axe, keyboard, reflow and text-spacing tests across the site and every admin screen in both themes.
 
 ### Security
 
@@ -32,3 +34,6 @@ All notable changes to this project are recorded here. The format follows [Keep 
 - On the deployed site, pages inside route groups didn't load their scripts in some browsers (redirect loop on bracketed paths).
 - Tooltips stay inside the window everywhere; collapsed-sidebar tooltips open to the right.
 - Cron jobs now run inside the app, so they can reach the database and settings.
+- Text-field outlines meet 3:1 contrast (WCAG 1.4.11) on the site and the admin.
+- Screen-reader names now start with the visible label (sidebar, room board, calendar bars, photo cells; WCAG 2.5.3).
+- Overlapping calendar bars stay readable; hidden table headers no longer widen the page on phones.

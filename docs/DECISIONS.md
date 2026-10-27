@@ -349,3 +349,7 @@ Customers are matched by phone number. Public booking, rental and venue forms us
 ## D-47 Idle sign-out enforced on the server, at most 30 minutes
 
 Settings › Security › "Sign out after" was only applied in the browser. The server now ends a session idle for longer than the setting. Better Auth's own session lasts 30 minutes from the last activity, so the setting now runs from 5 to 30 minutes.
+
+## D-48 Admin dark theme in night navy, checked for contrast
+
+The dark theme was a neutral grey. It is now a navy darker than the brand's own (`#000020` page, `#08082F` panels, against `#000063` and `#00003A`), so it reads as Hotel A-Wise. Every text colour on it is at least 4.5:1, text fields have their own outline colour (`--field`) at 3:1 in both themes (WCAG 1.4.11), and white text on the green bars was swapped for navy where white fell short. `tests/e2e/admin-a11y.spec.ts` runs axe on every screen in both themes so a new colour can't slip below AA.

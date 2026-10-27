@@ -1,11 +1,12 @@
 'use client';
 // The right-hand detail drawer from Admin.dc.html: kicker, serif title, status
 // chip, a definition list, receipt-style sections, staff notes and actions.
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
+import { useId, useRef, useState, type ReactNode } from 'react';
 import { Icon } from '@/components/ui/icon';
 import type { ActionResult } from '@/lib/admin/result';
 import { ActionButton } from './table';
 import { useAdmin } from './context';
+import { useFocusTrap } from './focus-trap';
 import type { Line } from './modal';
 import { chip, EASE, mono, serif, statusTone, type Action } from './ui';
 
@@ -27,11 +28,7 @@ type Props = {
 export function DrawerShell({ label, children }: { label: string; children: ReactNode }) {
   const { closeDrawer } = useAdmin();
   const ref = useRef<HTMLElement>(null);
-  useEffect(() => {
-    const prev = document.activeElement as HTMLElement | null;
-    ref.current?.focus();
-    return () => prev?.focus?.();
-  }, []);
+  useFocusTrap(ref, 'container');
   return (
     <>
       <div
@@ -43,6 +40,7 @@ export function DrawerShell({ label, children }: { label: string; children: Reac
         ref={ref}
         tabIndex={-1}
         role="dialog"
+        aria-modal="true"
         aria-label={label}
         style={{
           position: 'fixed',
@@ -204,7 +202,7 @@ function StaffNote({ value, save }: { value: string; save: (v: string) => Promis
         style={{
           padding: 10,
           borderRadius: 8,
-          border: '1px solid var(--line2)',
+          border: '1px solid var(--field)',
           background: 'var(--bg)',
           color: 'var(--ink)',
           fontSize: 13.5,

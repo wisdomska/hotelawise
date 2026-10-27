@@ -165,6 +165,8 @@
   --mute: rgb(0 0 58 / 0.62);
   --line: rgb(0 0 99 / 0.09);
   --line2: rgb(0 0 99 / 0.18);
+  /* Text-field outlines: 3:1 against the field, as WCAG 1.4.11 asks. */
+  --field: rgb(0 0 58 / 0.5);
   --hover: rgb(0 0 99 / 0.03);
   --lane: #f2f1ee;
   --chip-bg: #e3e4f5;
@@ -176,6 +178,7 @@
   --amber-ink: #7a4e00;
   --green: #1f7a4d;
   --green-bg: rgb(31 122 77 / 0.12);
+  --on-green: #ffffff;
   --red: #b42318;
   --red-bg: rgb(180 35 24 / 0.1);
   --tip-bg: #00003a;
@@ -186,29 +189,33 @@
   --admin-pad: 16px;
 }
 .admin[data-theme='dark'] {
-  --bg: #111113;
-  --panel: #1a1a1d;
-  --ink: #ededef;
-  --mute: rgb(237 237 239 / 0.6);
-  --line: rgb(255 255 255 / 0.08);
-  --line2: rgb(255 255 255 / 0.16);
-  --hover: rgb(255 255 255 / 0.04);
-  --lane: #151517;
-  --chip-bg: rgb(255 255 255 / 0.09);
-  --chip-fg: #e4e4e8;
-  --pri-bg: #e8e8ec;
-  --pri-fg: #111113;
-  --chart: #9a9ce0;
-  --chart-fill: rgb(154 156 224 / 0.14);
+  /* Night navy: the brand blue (#000063, #00003a), taken darker. */
+  color-scheme: dark;
+  --bg: #000020;
+  --panel: #08082f;
+  --ink: #f5f2ea;
+  --mute: rgb(245 242 234 / 0.7);
+  --line: rgb(227 228 245 / 0.1);
+  --line2: rgb(227 228 245 / 0.2);
+  --field: rgb(227 228 245 / 0.45);
+  --hover: rgb(227 228 245 / 0.05);
+  --lane: #040428;
+  --chip-bg: rgb(154 156 224 / 0.18);
+  --chip-fg: #e3e4f5;
+  --pri-bg: #f5f2ea;
+  --pri-fg: #000063;
+  --chart: #a8aaf0;
+  --chart-fill: rgb(168 170 240 / 0.16);
   --amber-ink: #f2b544;
   --green: #5bc08a;
-  --green-bg: rgb(91 192 138 / 0.14);
-  --red: #f2857a;
-  --red-bg: rgb(242 133 122 / 0.14);
-  --tip-bg: #ededef;
-  --tip-fg: #111113;
-  --side: #18181b;
-  --side-line: rgb(255 255 255 / 0.06);
+  --green-bg: rgb(91 192 138 / 0.16);
+  --on-green: #00003a;
+  --red: #f4897e;
+  --red-bg: rgb(244 137 126 / 0.16);
+  --tip-bg: #f5f2ea;
+  --tip-fg: #00003a;
+  --side: #00001a;
+  --side-line: rgb(245 242 234 / 0.08);
 }
 @media (min-width: 640px) {
   .admin {
@@ -290,7 +297,7 @@
   --c-login: 1fr;
 }
 .admin[data-theme='dark'] {
-  --toast-bg: #26262a;
+  --toast-bg: #16164f;
 }
 @media (min-width: 640px) {
   .admin {

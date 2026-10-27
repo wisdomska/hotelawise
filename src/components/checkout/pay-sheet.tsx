@@ -134,7 +134,7 @@ export function PaySheet({
                   height: 48,
                   padding: '0 14px',
                   borderRadius: 10,
-                  border: `1.5px solid ${err ? '#B42318' : 'rgba(0,0,99,0.2)'}`,
+                  border: `1.5px solid ${err ? '#B42318' : 'rgba(0,0,58,0.5)'}`,
                   fontSize: 18,
                   fontFamily: 'var(--font-mono)',
                   letterSpacing: '0.2em',

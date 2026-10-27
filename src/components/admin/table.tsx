@@ -94,7 +94,7 @@ export function DataTable(p: Props) {
         )}
       </div>
       {rows.length > 0 ? (
-        <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
+        <div style={{ position: 'relative', overflowX: 'auto', overflowY: 'hidden' }}>
           <table style={{ width: '100%', minWidth: p.minW ?? 720, fontSize: 13, borderCollapse: 'collapse' }}>
             <thead>
               <tr>
@@ -240,42 +240,51 @@ function CellTd({ cl, onOpen, first }: { cl: Cell; onOpen?: () => void; first: b
   };
   if (cl.img) {
     const img = cl.img;
+    const frame: CSSProperties = {
+      position: 'relative',
+      width: 64,
+      height: 48,
+      padding: 0,
+      borderRadius: 8,
+      border: '1px solid var(--line2)',
+      background: 'var(--lane)',
+      overflow: 'hidden',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: 'var(--mute)',
+      cursor: img.onClick ? 'pointer' : 'default',
+    };
+    const inner = img.src ? (
+      // eslint-disable-next-line @next/next/no-img-element -- a 64px thumbnail from Cloudinary
+      <img src={img.src} alt="" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+    ) : (
+      <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, fontSize: 10.5 }}>
+        <Icon name="image" size={16} />
+        {img.onClick ? 'Add' : 'None'}
+      </span>
+    );
     return (
       <td style={td}>
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            img.onClick?.();
-          }}
-          aria-label={img.alt}
-          data-tip={img.onClick ? (img.src ? 'Change photo' : 'Add a photo') : undefined}
-          style={{
-            position: 'relative',
-            width: 64,
-            height: 48,
-            padding: 0,
-            borderRadius: 8,
-            border: '1px solid var(--line2)',
-            background: 'var(--lane)',
-            overflow: 'hidden',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--mute)',
-            cursor: img.onClick ? 'pointer' : 'default',
-          }}
-        >
-          {img.src ? (
-            // eslint-disable-next-line @next/next/no-img-element -- a 64px thumbnail from Cloudinary
-            <img src={img.src} alt="" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-          ) : (
-            <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, fontSize: 10.5 }}>
-              <Icon name="image" size={16} />
-              {img.onClick ? 'Add' : 'None'}
-            </span>
-          )}
-        </button>
+        {img.onClick ? (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              img.onClick?.();
+            }}
+            aria-label={img.alt}
+            data-tip={img.src ? 'Change photo' : 'Add a photo'}
+            style={frame}
+          >
+            {inner}
+          </button>
+        ) : (
+          // Nothing to do with it: a picture, not a button.
+          <span role="img" aria-label={img.alt} style={frame}>
+            {inner}
+          </span>
+        )}
       </td>
     );
   }

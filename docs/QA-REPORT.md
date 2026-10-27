@@ -11,7 +11,7 @@ Date: 26 October 2026. Build: commit `e4e92ad` and later on `senya/nice-darwin-o
 | ESLint (`next/core-web-vitals`, strict TS)    | local                               | 0 errors, 0 warnings                                                    |
 | Prettier                                      | local                               | all files formatted                                                     |
 | TypeScript (`tsc --noEmit`)                   | local                               | 0 errors                                                                |
-| Unit + integration tests (Vitest, Postgres)   | local and CI                        | 598 passed, 45 files                                                    |
+| Unit + integration tests (Vitest, Postgres)   | local and CI                        | 599 passed, 45 files                                                    |
 | Coverage gate (90%) on `src/lib`, services    | local and CI                        | lines 99.2%, branches 90.8%, functions 98.2%                            |
 | End-to-end (Playwright), desktop Chromium     | local production build              | all pass: site, booking, rentals, venues, admin screens, auth, security |
 | End-to-end, Pixel 7 (mobile Chromium)         | local production build              | all pass except 4 screenshot comparisons, see below                     |
@@ -22,6 +22,27 @@ Date: 26 October 2026. Build: commit `e4e92ad` and later on `senya/nice-darwin-o
 | Worker size                                   | Cloudflare deploy                   | 2,534 KiB gzip of the 3,072 KiB free-plan limit                         |
 
 The four Pixel screenshot differences (rooms, executive room, gallery, contact) appear only on this machine: the local database carries test bookings that change "rooms left tonight" counts, and fonts render slightly differently here. CI, with a fresh database, compares the same screens.
+
+## Accessibility (WCAG 2.2 AA), 27 October 2026
+
+Run after the admin dark theme moved to night navy. Tests: `tests/e2e/a11y.spec.ts` (public site) and `tests/e2e/admin-a11y.spec.ts` (admin), desktop Chromium on a local production build.
+
+| Check                                                                                          | Result                     |
+| ---------------------------------------------------------------------------------------------- | -------------------------- |
+| axe, every public page, the lightbox and contact errors                                        | 0 violations               |
+| axe, sign-in page and all 23 admin screens and tabs, light theme                               | 0 violations               |
+| axe, the same in the dark theme                                                                | 0 violations               |
+| axe with the New booking dialog, a room drawer and ⌘K search open, both themes                 | 0 violations               |
+| Contrast of every dark-theme colour pair (computed)                                            | text ≥ 4.5:1, fields ≥ 3:1 |
+| Skip link is the first Tab stop and jumps to the content (site and admin)                      | pass                       |
+| Dialogs: focus moves in, Tab and Shift+Tab stay inside, Escape closes, focus returns to opener | pass                       |
+| Visible focus ring on controls                                                                 | pass                       |
+| Reflow at 320 px, every public page and every admin screen (1.4.10)                            | no sideways scrolling      |
+| Text spacing override on every public page (1.4.12)                                            | no sideways scrolling      |
+
+Found and fixed: text-field outlines below 3:1 (site and admin); screen-reader names that didn't start with the visible label (sidebar badges, account menu, room board, calendar bars, photo cells); white text on the dark-theme green bar; calendar bars that overlapped (an early check-out, then the room resold) blending into unreadable colours; hidden table header text widening the page on phones; dialogs, drawers and search not keeping keyboard focus inside.
+
+Still for a person: a pass with a real screen reader (NVDA or VoiceOver) and Windows High Contrast. Automated tools catch roughly a third to a half of accessibility problems.
 
 ## Admin (local production build, real database)
 

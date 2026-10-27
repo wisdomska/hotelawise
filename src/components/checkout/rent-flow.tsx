@@ -52,7 +52,7 @@ const field = (bad?: boolean): React.CSSProperties => ({
   height: 48,
   padding: '0 14px',
   borderRadius: 10,
-  border: `1.5px solid ${bad ? '#B42318' : 'rgba(0,0,99,0.2)'}`,
+  border: `1.5px solid ${bad ? '#B42318' : 'rgba(0,0,58,0.5)'}`,
   background: '#F5F2EA',
   fontSize: 16,
   color: '#00003A',
@@ -631,7 +631,7 @@ export function RentFlow(p: RentFlowProps) {
                                 style={{
                                   display: 'flex',
                                   alignItems: 'center',
-                                  border: `1.5px solid ${qtyErr[it.slug] ? '#B42318' : 'rgba(0,0,99,0.2)'}`,
+                                  border: `1.5px solid ${qtyErr[it.slug] ? '#B42318' : 'rgba(0,0,58,0.5)'}`,
                                   borderRadius: 10,
                                   overflow: 'hidden',
                                   background: '#FFFFFF',

@@ -346,7 +346,7 @@ function PermissionMatrix({ rows }: { rows: PermRow[] }) {
         </span>
       </div>
       {rows.length ? (
-        <div style={{ overflowX: 'auto' }}>
+        <div style={{ position: 'relative', overflowX: 'auto' }}>
           <table style={{ width: '100%', minWidth: 720, fontSize: 13, borderCollapse: 'collapse' }}>
             <thead>
               <tr>

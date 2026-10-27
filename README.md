@@ -3,7 +3,9 @@
 Website, booking engine and admin for **Hotel A-Wise**, No. 1 Wisepak Lane, New Asofan, Accra.
 
 - **Guests** book a room and pay by Mobile Money or card, manage the booking with a texted code, reserve event rentals to collect, and send venue enquiries.
-- **Staff** run the hotel from `/admin`: bookings, rooms, rentals, inventory, venues, payments, customers, content, reports and users. Every change is written to an audit log.
+- **Staff** run the hotel from `/admin`: bookings, rooms, rentals, inventory, venues, payments, customers, content, reports and users, in a light or a night-navy dark theme. Every change is written to an audit log.
+
+**Preview:** https://hotel-a-wise-preview.wisdomska.workers.dev (not indexed; production goes live at `hotelawise.com`).
 
 ## Status
 
@@ -32,6 +34,17 @@ The plan is in [docs/PLAN.md](docs/PLAN.md). The release QA is in [docs/QA-REPOR
 | Images     | Cloudinary                                                             |
 | Bot checks | Cloudflare Turnstile                                                   |
 | Tests      | Vitest (unit and integration), Playwright with axe (e2e, a11y, visual) |
+
+## Accessibility
+
+The site and the admin aim for **WCAG 2.2 AA**, and the tests hold them to it:
+
+- axe (WCAG 2.0–2.2 A and AA rules) on every public page, every admin screen and tab in both themes, and the open dialogs, drawers, lightbox and search.
+- Keyboard: a skip link on every page; dialogs move focus in, keep Tab inside and hand focus back when they close; every control shows a focus ring.
+- Reflow at 320 px wide and the user's own text spacing (WCAG 1.4.10, 1.4.12) without sideways scrolling.
+- Contrast: text at 4.5:1 or more and field outlines at 3:1 in both admin themes. Motion respects "reduce motion".
+
+The tests are `tests/e2e/a11y.spec.ts` and `tests/e2e/admin-a11y.spec.ts`; results are in the [QA report](docs/QA-REPORT.md).
 
 How the parts fit together: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Why things are the way they are: [docs/DECISIONS.md](docs/DECISIONS.md).
 

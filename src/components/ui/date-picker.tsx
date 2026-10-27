@@ -257,8 +257,8 @@ export function DatePicker(p: DatePickerProps) {
         ? 'var(--ink, #000063)'
         : '#000063'
       : p.compact
-        ? 'var(--line2, rgba(0,0,99,0.2))'
-        : 'rgba(0,0,99,0.2)';
+        ? 'var(--field, rgba(0,0,58,0.5))'
+        : 'rgba(0,0,58,0.5)';
 
   const panelStyle: React.CSSProperties = sheet
     ? {

@@ -1,52 +1,15 @@
 import { expect, test, type Locator, type Page } from '@playwright/test';
-import { clearSignInLimits, makeUser, releaseTestStays } from './support/db';
-import { ownAddress } from './support/ip';
-import { totp } from './support/totp';
+import { superAdmin } from './support/admin';
+import { clearSignInLimits, releaseTestStays } from './support/db';
 
 // Every admin screen renders for a Super Admin, and the desk's main jobs work
 // end to end against the real database.
 test.describe.configure({ mode: 'serial' });
 test.skip(({ browserName, isMobile }) => browserName !== 'chromium' || isMobile, 'desktop Chromium only');
 
-const email = `daniel+${Date.now()}@hotelawise.com`;
-const PASSWORD = 'akwaaba2026';
-
-let secret = '';
-
-// Another test file switches "require two-step sign-in" on and off while this
-// one runs, so whichever step the login asks for next is handled.
-let changed = false;
-
-async function signIn(page: Page) {
-  const first = !changed;
-  await ownAddress(page);
-  await page.goto('/admin/login');
-  await page.getByLabel('Work email').fill(email);
-  await page.getByLabel('Password', { exact: true }).fill(first ? 'temporary1' : PASSWORD);
-  await page.getByRole('button', { name: 'Sign in' }).click();
-  if (first) {
-    await page.getByLabel('Temporary password', { exact: true }).fill('temporary1');
-    await page.getByLabel('New password', { exact: true }).fill(PASSWORD);
-    await page.getByLabel('Confirm new password', { exact: true }).fill(PASSWORD);
-    await page.getByRole('button', { name: 'Save password' }).click();
-    changed = true;
-  }
-  const home = page.getByRole('heading', { level: 1, name: /Good (morning|afternoon|evening)/ });
-  const enrol = page.getByRole('heading', { name: 'Set up two-step sign-in' });
-  const code = page.getByRole('heading', { name: 'Enter your code' });
-  await expect(home.or(enrol).or(code)).toBeVisible();
-  if (await enrol.isVisible()) {
-    await page.getByLabel('Password', { exact: true }).fill(PASSWORD);
-    await page.getByRole('button', { name: 'Continue' }).click();
-    secret = (await page.locator('code').innerText()).replace(/\s/g, '');
-    await page.getByLabel('I’ve saved my backup codes somewhere safe.').check();
-    await page.getByLabel('6-digit code').fill(totp(secret));
-    await page.getByRole('button', { name: 'Turn on two-step sign-in' }).click();
-  } else if (await code.isVisible()) {
-    await page.getByLabel('6-digit code').fill(totp(secret));
-  }
-  await expect(home).toBeVisible();
-}
+const admin = superAdmin('daniel');
+const PASSWORD = admin.password;
+const signIn = (page: Page) => admin.signIn(page);
 
 /** The admin uses its own listbox select, not a native <select>. */
 async function pick(page: Page, scope: Locator, label: string, option: string) {
@@ -57,7 +20,7 @@ async function pick(page: Page, scope: Locator, label: string, option: string) {
 test.beforeAll(async () => {
   await clearSignInLimits();
   await releaseTestStays('+233244123456');
-  await makeUser({ email, role: 'super_admin', password: 'temporary1' });
+  await admin.create();
 });
 
 test('every screen opens', async ({ page }) => {
@@ -152,7 +115,7 @@ test('rooms: add a room, then remove it', async ({ page }) => {
   await d.getByLabel('Room number').fill(number);
   await d.getByRole('button', { name: 'Add room' }).click();
   await expect(page.getByText(`Room ${number} added.`).first()).toBeVisible();
-  await page.getByRole('button', { name: new RegExp(`^Room ${number}, Available`) }).click();
+  await page.getByRole('button', { name: new RegExp(`^Room ${number} .*Available`) }).click();
   const drawer = page.getByRole('dialog', { name: /room/i });
   await drawer.getByRole('button', { name: 'Remove room' }).click();
   await page
@@ -161,7 +124,7 @@ test('rooms: add a room, then remove it', async ({ page }) => {
     .getByRole('button', { name: 'Remove room' })
     .click();
   await expect(page.getByText(`Room ${number} removed.`).first()).toBeVisible();
-  await expect(page.getByRole('button', { name: new RegExp(`^Room ${number},`) })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: new RegExp(`^Room ${number} `) })).toHaveCount(0);
 });
 
 test('every tooltip stays inside the window, sidebar open or collapsed', async ({ page }) => {

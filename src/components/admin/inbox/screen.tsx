@@ -303,7 +303,7 @@ export function InboxScreen({ messages, people }: Props) {
                   style={{
                     padding: 12,
                     borderRadius: 8,
-                    border: `1px solid ${errors.reply ? 'var(--red)' : 'var(--line2)'}`,
+                    border: `1px solid ${errors.reply ? 'var(--red)' : 'var(--field)'}`,
                     background: 'var(--bg)',
                     color: 'var(--ink)',
                     fontSize: 14,

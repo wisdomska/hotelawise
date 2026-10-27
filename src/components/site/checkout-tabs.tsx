@@ -20,6 +20,7 @@ export function CheckoutTabs() {
         display: 'flex',
         gap: 4,
         marginBottom: 32,
+        position: 'relative',
         overflowX: 'auto',
         overflowY: 'hidden',
         scrollbarWidth: 'none',

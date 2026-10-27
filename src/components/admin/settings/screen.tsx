@@ -113,7 +113,7 @@ function PaystackKeys({ keys, canReveal }: { keys: Keys; canReveal: boolean }) {
           height: 40,
           padding: '0 10px',
           borderRadius: 8,
-          border: '1px solid var(--line2)',
+          border: '1px solid var(--field)',
           background: 'var(--lane)',
           color: 'var(--ink)',
           fontFamily: mono,

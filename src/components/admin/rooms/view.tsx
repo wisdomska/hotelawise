@@ -134,7 +134,6 @@ export function RoomsView(p: Props) {
                   type="button"
                   className="aw-tile"
                   onClick={() => openDrawer({ kind: 'room', number: r.number })}
-                  aria-label={`Room ${r.number}, ${label}. Open details`}
                   style={{
                     padding: 12,
                     borderRadius: 12,
@@ -147,7 +146,10 @@ export function RoomsView(p: Props) {
                   }}
                 >
                   <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', width: '100%' }}>
-                    <span style={{ fontFamily: mono, fontSize: 18, fontWeight: 500 }}>{r.number}</span>
+                    <span style={{ fontFamily: mono, fontSize: 18, fontWeight: 500 }}>
+                      <span className="sr-only">Room </span>
+                      {r.number}
+                    </span>
                     <span style={{ fontFamily: mono, fontSize: 11, color: 'var(--mute)' }}>{r.code}</span>
                   </span>
                   <span style={chip(statusTone(label))}>{label}</span>
@@ -163,6 +165,7 @@ export function RoomsView(p: Props) {
                   >
                     {line}
                   </span>
+                  <span className="sr-only">Open details</span>
                 </button>
               );
             })}

@@ -57,6 +57,7 @@ beforeAll(async () => {
       subtotalPesewas: 45_000,
       totalPesewas: 45_000,
       paidPesewas: 45_000,
+      createdAt: new Date('2026-10-19T10:00:00Z'),
     })
     .returning();
   await h.db.insert(s.payments).values({

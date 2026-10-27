@@ -2,13 +2,14 @@
 // The admin modal from Admin.dc.html and the pieces modals are built from:
 // step bar, field grid (text, area, select, date), stepper rows, receipt lines
 // and the info note. One modal at a time, hosted by the shell.
-import { useId, type ReactNode } from 'react';
+import { useId, useRef, type ReactNode } from 'react';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Icon } from '@/components/ui/icon';
 import { Select, type SelectOption } from '@/components/ui/select';
 import type { IsoDate } from '@/lib/dates';
 import type { ActionResult } from '@/lib/admin/result';
 import { useAdmin } from './context';
+import { useFocusTrap } from './focus-trap';
 import { useAction } from './use-action';
 import { EASE, mono, serif } from './ui';
 
@@ -34,8 +35,11 @@ export function ModalFrame(p: FrameProps) {
   const { closeModal } = useAdmin();
   const titleId = useId();
   const sec = p.secondary ?? { label: 'Cancel', on: closeModal };
+  const box = useRef<HTMLDivElement>(null);
+  useFocusTrap(box);
   return (
     <div
+      ref={box}
       role="dialog"
       aria-modal="true"
       aria-labelledby={titleId}
@@ -220,7 +224,7 @@ const inputStyle = (err?: string): React.CSSProperties => ({
   height: 40,
   padding: '0 10px',
   borderRadius: 8,
-  border: `1px solid ${err ? 'var(--red)' : 'var(--line2)'}`,
+  border: `1px solid ${err ? 'var(--red)' : 'var(--field)'}`,
   background: 'var(--bg)',
   color: 'var(--ink)',
   fontSize: 13.5,
@@ -282,7 +286,7 @@ export function AreaField(p: Base & { value: string; onChange: (v: string) => vo
         style={{
           padding: 10,
           borderRadius: 8,
-          border: `1px solid ${p.err ? 'var(--red)' : 'var(--line2)'}`,
+          border: `1px solid ${p.err ? 'var(--red)' : 'var(--field)'}`,
           background: 'var(--bg)',
           color: 'var(--ink)',
           fontSize: 13.5,
@@ -363,7 +367,7 @@ export type StepperRow = {
 
 export function StepperRows({ cols, rows }: { cols: string[]; rows: StepperRow[] }) {
   return (
-    <div style={{ overflowX: 'auto' }}>
+    <div style={{ position: 'relative', overflowX: 'auto' }}>
       <table style={{ width: '100%', minWidth: 480, fontSize: 13, borderCollapse: 'collapse' }}>
         <thead>
           <tr>

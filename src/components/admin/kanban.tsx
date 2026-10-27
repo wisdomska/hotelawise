@@ -14,6 +14,7 @@ export function Kanban({ lanes, minCol = 230 }: { lanes: Lane[]; minCol?: number
         display: 'grid',
         gridTemplateColumns: `repeat(${lanes.length}, minmax(${minCol}px,1fr))`,
         gap: 10,
+        position: 'relative',
         overflowX: 'auto',
         paddingBottom: 4,
       }}

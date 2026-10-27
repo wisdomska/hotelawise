@@ -153,7 +153,7 @@ function Field({
   };
   const inputBase: React.CSSProperties = {
     borderRadius: 8,
-    border: `1px solid ${err ? 'var(--red)' : 'var(--line2)'}`,
+    border: `1px solid ${err ? 'var(--red)' : 'var(--field)'}`,
     background: ro ? 'var(--lane)' : 'var(--bg)',
     color: 'var(--ink)',
     fontSize: 13.5,

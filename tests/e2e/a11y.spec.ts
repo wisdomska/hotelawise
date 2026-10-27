@@ -58,3 +58,35 @@ test('no axe violations with contact form errors showing', async ({ page }) => {
   await expect(page.locator('form [role=alert]').first()).toBeVisible();
   await audit(page);
 });
+
+// WCAG 1.4.10 (reflow) and 1.4.12 (text spacing): at 320px wide, and with the
+// user's own wider letter, word and line spacing, the page never scrolls sideways.
+test.describe('reflow and text spacing', () => {
+  test.skip(({ isMobile }) => isMobile, 'desktop browsers resize to 320px');
+  for (const path of PAGES) {
+    test(`320px wide: ${path}`, async ({ page }) => {
+      await page.setViewportSize({ width: 320, height: 640 });
+      await page.goto(path);
+      await expect(page.locator('.aw-boot')).toBeHidden();
+      const over = () => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      expect(await over(), 'reflow').toBeLessThanOrEqual(0);
+      await page.addStyleTag({
+        content:
+          '* { line-height: 1.5 !important; letter-spacing: 0.12em !important; word-spacing: 0.16em !important; } p { margin-bottom: 2em !important; }',
+      });
+      expect(await over(), 'text spacing').toBeLessThanOrEqual(0);
+    });
+  }
+});
+
+test('keyboard: the first Tab reaches a visible skip link that jumps to the content', async ({ page }) => {
+  await page.goto('/rooms');
+  await expect(page.locator('.aw-boot')).toBeHidden();
+  await page.keyboard.press('Tab');
+  const skip = page.getByRole('link', { name: 'Skip to content' });
+  await expect(skip).toBeFocused();
+  await expect(skip).toBeInViewport();
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(/#main$/);
+  expect(await page.evaluate(() => document.getElementById('main') !== null)).toBe(true);
+});

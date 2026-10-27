@@ -65,7 +65,12 @@ export default async function RoomsPage() {
               Scroll sideways on small screens →
             </span>
           </div>
-          <div style={{ overflowX: 'auto', borderTop: '1.5px solid #000063' }} tabIndex={0} role="region" aria-label="Room comparison">
+          <div
+            style={{ position: 'relative', overflowX: 'auto', borderTop: '1.5px solid #000063' }}
+            tabIndex={0}
+            role="region"
+            aria-label="Room comparison"
+          >
             <table style={{ width: '100%', minWidth: 720, borderCollapse: 'collapse', fontSize: 14 }}>
               <thead>
                 <tr>

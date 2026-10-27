@@ -38,7 +38,7 @@ const TONE: Record<string, [string, string]> = {
   amber: ['rgba(242,181,68,0.85)', '#00003A'],
   grey: ['var(--line2)', 'var(--ink)'],
   red: ['var(--red-bg)', 'var(--red)'],
-  green: ['var(--green)', '#FFFFFF'],
+  green: ['var(--green)', 'var(--on-green)'],
 };
 
 const DAYS = 14;
@@ -128,7 +128,7 @@ export function Timeline(p: Props) {
           </div>
         </div>
       </div>
-      <div style={{ overflowX: 'auto' }}>
+      <div style={{ position: 'relative', overflowX: 'auto' }}>
         <div style={{ minWidth: 960 }}>
           <div style={{ display: 'grid', gridTemplateColumns: cols, borderBottom: '1px solid var(--line)' }}>
             <span style={{ padding: '8px 12px', fontFamily: mono, fontSize: 11, color: 'var(--mute)' }}>{p.rowHead}</span>
@@ -208,7 +208,8 @@ export function Timeline(p: Props) {
                     key={b.key}
                     role="button"
                     tabIndex={0}
-                    aria-label={b.title}
+                    // The visible label comes first, so voice users can say what they see (WCAG 2.5.3).
+                    aria-label={b.title.startsWith(b.label) ? b.title : `${b.label}, ${b.title}`}
                     title={b.title}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
@@ -229,7 +230,9 @@ export function Timeline(p: Props) {
                       gridRow: 1,
                       margin: '6px 3px',
                       borderRadius: 7,
-                      background: bg,
+                      // Tints are laid over the panel colour so each bar is opaque: two stays that
+                      // share a night (an early check-out, then the room resold) stay readable.
+                      background: `linear-gradient(${bg}, ${bg}), var(--panel)`,
                       color: fg,
                       fontSize: 11.5,
                       padding: '0 8px',

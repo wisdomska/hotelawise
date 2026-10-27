@@ -238,6 +238,7 @@ export default async function HomePage() {
             display: 'grid',
             gridTemplateColumns: 'var(--c4)',
             gap: 'clamp(16px,2vw,28px)',
+            position: 'relative',
             overflowX: 'auto',
             scrollSnapType: 'x mandatory',
             padding: '4px 2px 8px',

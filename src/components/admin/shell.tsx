@@ -72,7 +72,10 @@ function Frame(p: Props) {
     setDark((d) => {
       const next = !d;
       setCookie('aw_theme', next ? 'dark' : 'light');
-      document.querySelector('.admin')?.setAttribute('data-theme', next ? 'dark' : 'light');
+      const root = document.querySelector<HTMLElement>('.admin');
+      root?.setAttribute('data-theme', next ? 'dark' : 'light');
+      // Native controls (scrollbars, date fields) follow the theme too.
+      if (root) root.style.colorScheme = next ? 'dark' : 'light';
       return next;
     });
   }, []);
@@ -152,6 +155,9 @@ function Frame(p: Props) {
 
   return (
     <div className="aw-shell" data-collapsed={mini ? 'true' : 'false'}>
+      <a href="#main" className="aw-skip">
+        Skip to content
+      </a>
       {side && (
         <div
           aria-hidden="true"
@@ -262,7 +268,6 @@ function Frame(p: Props) {
                     key={it.key}
                     href={it.href}
                     aria-current={current ? 'page' : undefined}
-                    aria-label={it.label + (it.badge ? `, ${it.badge} to do` : '')}
                     data-tip={mini ? it.label + (it.badge ? ` · ${it.badge}` : '') : undefined}
                     data-tip-side="right"
                     className="aw-nav-btn"
@@ -286,7 +291,11 @@ function Frame(p: Props) {
                   >
                     <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                       <Icon name={it.icon} size={18} />
-                      {!mini && <span>{it.label}</span>}
+                      {mini ? (
+                        <span className="sr-only">{it.label + (it.badge ? `, ${it.badge} to do` : '')}</span>
+                      ) : (
+                        <span>{it.label}</span>
+                      )}
                     </span>
                     {!mini && it.badge > 0 && (
                       <span
@@ -300,6 +309,7 @@ function Frame(p: Props) {
                         }}
                       >
                         {it.badge}
+                        <span className="sr-only"> to do</span>
                       </span>
                     )}
                     {mini && it.badge > 0 && (
@@ -440,6 +450,7 @@ function Frame(p: Props) {
         </header>
         <main
           id="main"
+          tabIndex={-1}
           style={{
             padding: '24px var(--admin-pad) 80px',
             display: 'flex',
@@ -615,7 +626,6 @@ function UserMenu(p: { me: Me; mini: boolean; stats: UmStat[]; quick: QuickKey[]
         }}
         aria-haspopup="menu"
         aria-expanded={!!open}
-        aria-label={`Account menu for ${p.me.name}`}
         data-tip={p.mini && !open ? p.me.name : undefined}
         data-tip-side="right"
         style={{
@@ -634,6 +644,7 @@ function UserMenu(p: { me: Me; mini: boolean; stats: UmStat[]; quick: QuickKey[]
         }}
       >
         <span
+          aria-hidden="true"
           style={{
             width: 32,
             height: 32,
@@ -659,6 +670,7 @@ function UserMenu(p: { me: Me; mini: boolean; stats: UmStat[]; quick: QuickKey[]
             <Icon name="chevupdown" size={15} style={{ opacity: 0.7 }} />
           </>
         )}
+        <span className="sr-only">{p.mini ? `${p.me.name}, account menu` : ', account menu'}</span>
       </button>
       {open && (
         <div
