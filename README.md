@@ -5,7 +5,7 @@ Website, booking engine and admin for **Hotel A-Wise**, No. 1 Wisepak Lane, New 
 - **Guests** book a room and pay by Mobile Money or card, manage the booking with a texted code, reserve event rentals to collect, and send venue enquiries.
 - **Staff** run the hotel from `/admin`: bookings, rooms, rentals, inventory, venues, payments, customers, content, reports and users, in a light or a night-navy dark theme. Every change is written to an audit log.
 
-**Live:** https://hotelawise.wisdomska.workers.dev (moves to `hotelawise.com` once the domain is connected). **Preview:** https://hotelawise-preview.wisdomska.workers.dev (not indexed).
+**Live:** https://hotelawise.wisdomska.workers.dev (moves to `hotelawise.com` once the domain is connected). **Preview:** https://hotelawise-preview.wisdomska.workers.dev (not indexed). **Latest release:** [v1.0.0](https://github.com/wisdomska/hotelawise/releases/tag/v1.0.0), notes in [CHANGELOG.md](CHANGELOG.md).
 
 ## Status
 
@@ -18,6 +18,15 @@ Website, booking engine and admin for **Hotel A-Wise**, No. 1 Wisepak Lane, New 
 | M5 Admin: 14 screens, roles and permissions, audit     | Done                            |
 | M6 Notifications, scheduled jobs, reports, exports     | Done                            |
 | M7 Release: QA report, security pass, runbook, v1.0.0  | Done: v1.0.0 live in production |
+
+### In production today
+
+| Works now                                                            | Waiting on                                                         |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Public site, room bookings and rental reservations paid at the hotel | Paystack live keys: online MoMo and card payments                  |
+| Venue enquiries and contact messages, with an invisible bot check    | Resend (email) and Arkesel (SMS) keys: confirmations and reminders |
+| The admin, the audit log and the scheduled jobs                      | The above, for manage-my-booking codes sent by text or email       |
+|                                                                      | The `hotelawise.com` domain                                        |
 
 The plan is in [docs/PLAN.md](docs/PLAN.md). The release QA is in [docs/QA-REPORT.md](docs/QA-REPORT.md) and the security review in [docs/SECURITY.md](docs/SECURITY.md). Hotel facts that still need the owner's confirmation are in [docs/HOTEL-FACTS.md](docs/HOTEL-FACTS.md).
 
@@ -32,7 +41,7 @@ The plan is in [docs/PLAN.md](docs/PLAN.md). The release QA is in [docs/QA-REPOR
 | Payments   | Paystack: MoMo (MTN, Telecel, AirtelTigo) and card, in GHS             |
 | Messages   | Resend (email), Arkesel (SMS, optional)                                |
 | Images     | Cloudinary                                                             |
-| Bot checks | Cloudflare Turnstile                                                   |
+| Bot checks | Cloudflare Turnstile (invisible: no checkbox on any page)              |
 | Tests      | Vitest (unit and integration), Playwright with axe (e2e, a11y, visual) |
 
 ## Accessibility
@@ -96,6 +105,7 @@ Deployed Workers get public values from `wrangler.jsonc` and secrets from `wrang
 | `pnpm admin:create`                  | Create the first Super Admin                                                                       |
 | `pnpm cf:build` · `cf:preview`       | Build the Cloudflare Worker · build and run it locally                                             |
 | `pnpm cf:deploy:preview`             | Deploy the preview Worker by hand (sets `.env.local` aside so it isn't bundled)                    |
+| `pnpm cf:deploy:production`          | Deploy the production Worker by hand (normally the Deploy workflow does it)                        |
 | `pnpm images:import`                 | Upload the hotel photos to Cloudinary                                                              |
 | `pnpm design:capture`                | Re-capture the prototype reference screenshots                                                     |
 
@@ -130,6 +140,12 @@ docs/             plan, architecture, decisions, setup checklist, runbook, hotel
 A push to `preview` or `main` migrates that environment's database and then deploys its Worker (`.github/workflows/deploy.yml`). Every pull request into `preview` also uploads a preview version and links it in the PR. Deploys, rollbacks and incident steps are in [docs/RUNBOOK.md](docs/RUNBOOK.md).
 
 The Worker has to stay under the free plan's 3 MiB (gzip). CI measures it on every pull request.
+
+Each Worker has one Cron Trigger, every 15 minutes (the free plan allows 5 per account): it releases expired holds and unpaid pay-at-pickup orders, and also sends the 07:00 reminders and runs the 02:00 housekeeping.
+
+### Releases
+
+Raise `version` in `package.json` and add its section to [CHANGELOG.md](CHANGELOG.md) in the same pull request. When it reaches `main`, the Release workflow (`.github/workflows/release.yml`) tags the commit and publishes a GitHub release with that section as its notes. It can also be run by hand from the Actions tab.
 
 ## Contributing
 
