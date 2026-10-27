@@ -6,10 +6,14 @@ import { EASE, mono, type Action } from './ui';
 export type KanbanCard = { key: string; ref: string; when: string; title: string; sub: string; onOpen: () => void; actions: Action[] };
 export type Lane = { title: string; cards: KanbanCard[] };
 
-export function Kanban({ lanes, minCol = 230 }: { lanes: Lane[]; minCol?: number }) {
+export function Kanban({ lanes, minCol = 230, label = 'Board' }: { lanes: Lane[]; minCol?: number; label?: string }) {
   return (
+    // Focusable so keyboard users can scroll the lanes even when they hold no cards.
     <div
       data-stagger=""
+      role="region"
+      aria-label={label}
+      tabIndex={0}
       style={{
         display: 'grid',
         gridTemplateColumns: `repeat(${lanes.length}, minmax(${minCol}px,1fr))`,
