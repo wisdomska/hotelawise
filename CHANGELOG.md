@@ -9,6 +9,10 @@ All notable changes to this project are recorded here. The format follows [Keep 
 - Home: the booking bar sits across the bottom edge of the hero, half over the photo, so more of the photo shows.
 - Turnstile runs invisibly; no "Verify you are human" box appears anywhere.
 - Admin: the top search reads "Search" on small screens; New booking no longer asks for a password.
+- The home title sits on two balanced lines in title case, with real spaces between words for screen readers.
+- Page intros and captions always sit beneath their headings (rooms, gallery, rentals, venues, booking).
+- A branded error page replaces Next.js's default; a tab left open across a deploy reloads itself.
+- Releases are tagged and published by a workflow when the version changes on main.
 
 ## [1.0.0] - 2026-10-27
 

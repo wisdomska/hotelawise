@@ -1,0 +1,50 @@
+name: Release
+
+# When the version in package.json changes on main, tag that commit (vX.Y.Z) and publish a
+# GitHub release whose notes are that version's section of CHANGELOG.md. Re-running is safe:
+# a version that already has a tag is skipped.
+on:
+  push:
+    branches: [main]
+    paths: [package.json]
+  workflow_dispatch:
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Tag and publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(node -p "require('./package.json').version")
+          tag="v$version"
+          if git rev-parse -q --verify "refs/tags/$tag" >/dev/null; then
+            echo "$tag already exists; nothing to do."
+            exit 0
+          fi
+          # Notes: everything under "## [X.Y.Z]" up to the next "## [" heading.
+          awk -v v="$version" '
+            index($0, "## [" v "]") == 1 { on = 1; next }
+            on && /^## \[/ { exit }
+            on { print }
+          ' CHANGELOG.md > notes.md
+          if [ ! -s notes.md ]; then
+            echo "::error::CHANGELOG.md has no section for $version"
+            exit 1
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$tag" -m "Hotel A-Wise $tag"
+          git push origin "$tag"
+          gh release create "$tag" --title "Hotel A-Wise $tag" --notes-file notes.md --verify-tag

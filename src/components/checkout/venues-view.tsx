@@ -68,7 +68,7 @@ export function VenuesView({ venues, intro, turnstileSiteKey }: { venues: VenueC
 
   return (
     <section data-screen-label="Venues & enquiry" style={{ display: 'flex', flexDirection: 'column', gap: 48 }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'var(--c2)', gap: 32, alignItems: 'end' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'flex-start' }}>
         <h1
           style={{
             margin: 0,
@@ -99,7 +99,7 @@ export function VenuesView({ venues, intro, turnstileSiteKey }: { venues: VenueC
                   />
                 )}
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                 <h2 style={{ margin: 0, fontFamily: 'var(--font-serif)', fontWeight: 400, fontSize: 30 }}>{x.name}</h2>
                 <span style={{ fontFamily: mono, fontSize: 13 }}>{x.label}</span>
               </div>

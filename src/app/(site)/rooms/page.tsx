@@ -32,7 +32,7 @@ export default async function RoomsPage() {
   return (
     <main id="main" style={{ paddingTop: 84 }}>
       <section data-screen-label="Rooms" style={{ padding: 'calc(var(--sy) * 0.6) var(--pad) var(--sy)' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'var(--c2)', gap: 32, alignItems: 'end', marginBottom: 40 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'flex-start', marginBottom: 40 }}>
           <h1
             style={{
               margin: 0,
