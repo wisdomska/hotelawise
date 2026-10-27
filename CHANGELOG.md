@@ -4,6 +4,10 @@ All notable changes to this project are recorded here. The format follows [Keep 
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-10-27
+
+First production release, live at https://hotelawise.wisdomska.workers.dev.
+
 ### Added
 
 - Public site: home, rooms and room pages, gallery, contact, 404, sitemap and structured data.
@@ -37,3 +41,10 @@ All notable changes to this project are recorded here. The format follows [Keep 
 - Text-field outlines meet 3:1 contrast (WCAG 1.4.11) on the site and the admin.
 - Screen-reader names now start with the visible label (sidebar, room board, calendar bars, photo cells; WCAG 2.5.3).
 - Overlapping calendar bars stay readable; hidden table headers no longer widen the page on phones.
+- Workers renamed `hotelawise` and `hotelawise-preview`; one Cron Trigger per Worker to fit the free plan.
+- Public site: the home hero fills the screen with its content on the bottom edge; the rooms strip is a
+  carousel on phones; room filters fold behind a Filters button on phones; the comparison table shows
+  it scrolls without a scrollbar; headings run the full width; the floating "Book a room" is phone-only.
+- Admin: text fields and dropdowns share one 40px height; table rows centre their content; FAQ,
+  testimonial and gallery reordering shows at once; gallery Live/Hidden tags read on any photo; the
+  calendars jump to any month and year.

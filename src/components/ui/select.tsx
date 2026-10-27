@@ -129,13 +129,14 @@ export function Select(p: SelectProps) {
       fontSize: 16,
     },
     compact: {
-      height: 34,
+      // Same height and type size as the admin's text fields, so rows of fields line up.
+      height: 40,
       padding: '0 10px',
       borderRadius: 8,
       border: `1px solid ${open ? 'var(--ink, #000063)' : 'var(--field, rgba(0,0,58,0.5))'}`,
       background: 'var(--bg, #F5F2EA)',
       color: 'var(--ink, #00003A)',
-      fontSize: 12.5,
+      fontSize: 13.5,
     },
     chip: { height: 32, padding: '0 10px', borderRadius: 8, border: 'none', background: '#F6E2B3', color: '#00003A', fontSize: 12 },
     bare: { minHeight: 28, padding: 0, border: 'none', background: 'transparent', color: 'inherit', fontSize: 18 },
