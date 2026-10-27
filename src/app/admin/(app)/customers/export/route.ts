@@ -8,7 +8,7 @@ export async function GET(req: Request) {
     req,
     ['customers.view', 'exports.download'],
     'Newsletter subscribers',
-    `hotel-a-wise-newsletter-${todayInAccra()}`,
+    `hotelawise-newsletter-${todayInAccra()}`,
     async (d) => [
       ['email', 'signed_up', 'source'],
       ...(await allSubscribers(d)).map((x) => [x.email, x.at.toISOString().slice(0, 10), x.source]),

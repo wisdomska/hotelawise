@@ -286,7 +286,7 @@ The prototype shows a full-screen Nyansapo loader ("Turning the key…") on firs
 
 **Conflict:** The brief asks for a new repo, `hotel-a-wise`.
 
-**Ruling:** The owner chose the existing private repo `wisdomska/hotelawise`. Package name: `hotel-a-wise`.
+**Ruling:** The owner chose the existing private repo `wisdomska/hotelawise`. Package and Worker names: `hotelawise` (D-49).
 
 ## D-35 Receipts go by SMS and email, not WhatsApp
 
@@ -353,3 +353,7 @@ Settings › Security › "Sign out after" was only applied in the browser. The 
 ## D-48 Admin dark theme in night navy, checked for contrast
 
 The dark theme was a neutral grey. It is now a navy darker than the brand's own (`#000020` page, `#08082F` panels, against `#000063` and `#00003A`), so it reads as Hotel A-Wise. Every text colour on it is at least 4.5:1, text fields have their own outline colour (`--field`) at 3:1 in both themes (WCAG 1.4.11), and white text on the green bars was swapped for navy where white fell short. `tests/e2e/admin-a11y.spec.ts` runs axe on every screen in both themes so a new colour can't slip below AA.
+
+## D-49 Everything public is named `hotelawise`
+
+The owner wants the name written as one word. The Workers are `hotelawise` (production, `hotelawise.wisdomska.workers.dev`) and `hotelawise-preview` (`hotelawise-preview.wisdomska.workers.dev`); the preview Worker was renamed in place, so its secrets carried over. The Turnstile widgets, the package name and every downloaded file name (invoices, calendar files, exports, backup codes) follow. Three internal names stay as they were, because renaming them would mean moving data: the Cloudinary photo folder `hotel-a-wise/`, the D1 tag-cache databases `hotel-a-wise-tags*`, and the cron key's salt string. None of them is visible to guests.

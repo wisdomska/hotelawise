@@ -2,7 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   // Top level = local development. Deployed environments are below; every
   // deploy names one explicitly (wrangler deploy --env production|preview).
-  "name": "hotel-a-wise-dev",
+  "name": "hotelawise-dev",
   "main": "src/worker/index.ts",
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
@@ -15,12 +15,12 @@
   ],
   "durable_objects": { "bindings": [{ "name": "NEXT_CACHE_DO_QUEUE", "class_name": "DOQueueHandler" }] },
   "migrations": [{ "tag": "v1", "new_sqlite_classes": ["DOQueueHandler"] }],
-  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "hotel-a-wise-dev" }],
+  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "hotelawise-dev" }],
   "vars": { "APP_ENV": "development", "APP_URL": "http://localhost:3000", "TURNSTILE_SITE_KEY": "1x00000000000000000000AA" },
 
   "env": {
     "preview": {
-      "name": "hotel-a-wise-preview",
+      "name": "hotelawise-preview",
       // Until a domain is registered (docs/SETUP-CHECKLIST.md §1), the Worker is served on workers.dev.
       "workers_dev": true,
       "triggers": { "crons": ["*/15 * * * *", "0 7 * * *", "0 2 * * *"] },
@@ -34,13 +34,13 @@
         },
       ],
       "durable_objects": { "bindings": [{ "name": "NEXT_CACHE_DO_QUEUE", "class_name": "DOQueueHandler" }] },
-      "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "hotel-a-wise-preview" }],
+      "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "hotelawise-preview" }],
       "vars": {
         "APP_ENV": "preview",
         // Open to anyone with the link, at the owner's request (DECISIONS D-41). Still noindex.
         // Set to "on" to ask for PREVIEW_PASSWORD again.
         "PREVIEW_GATE": "off",
-        "APP_URL": "https://hotel-a-wise-preview.wisdomska.workers.dev",
+        "APP_URL": "https://hotelawise-preview.wisdomska.workers.dev",
         "TURNSTILE_SITE_KEY": "0x4AAAAAAFmY-i1HGdxRTFd8",
         // Paystack test mode: publishable key only; the secret is a Worker secret.
         "NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY": "pk_test_7b1e3e1d5bdb671a60774af35d7e688e73941da7",
@@ -50,7 +50,7 @@
       },
     },
     "production": {
-      "name": "hotel-a-wise",
+      "name": "hotelawise",
       // Add custom-domain routes here once the domain exists (hotelawise.com, www.hotelawise.com).
       "workers_dev": true,
       "triggers": { "crons": ["*/15 * * * *", "0 7 * * *", "0 2 * * *"] },
@@ -59,10 +59,10 @@
         { "binding": "NEXT_TAG_CACHE_D1", "database_name": "hotel-a-wise-tags", "database_id": "22ccc851-4227-4ff4-bbec-1b65596b2da1" },
       ],
       "durable_objects": { "bindings": [{ "name": "NEXT_CACHE_DO_QUEUE", "class_name": "DOQueueHandler" }] },
-      "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "hotel-a-wise" }],
+      "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "hotelawise" }],
       "vars": {
         "APP_ENV": "production",
-        "APP_URL": "https://hotel-a-wise.wisdomska.workers.dev",
+        "APP_URL": "https://hotelawise.wisdomska.workers.dev",
         "TURNSTILE_SITE_KEY": "0x4AAAAAAFmY-fP0FjmxxEYb",
         "NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME": "mxjpgelb",
         "CLOUDINARY_CLOUD_NAME": "mxjpgelb",

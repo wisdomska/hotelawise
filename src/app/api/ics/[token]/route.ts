@@ -27,7 +27,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ token: 
   const b = await bookingBy(d, { token });
   if (b?.ref && ['confirmed', 'pending_payment', 'checked_in'].includes(b.status)) {
     return respond(
-      `hotel-a-wise-${b.ref}`,
+      `hotelawise-${b.ref}`,
       icsFile({
         uid: `${b.ref}@hotelawise.com`,
         summary: `Hotel A-Wise · ${b.variantName} (${b.ref})`,
@@ -42,7 +42,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ token: 
   if (o && ['reserved', 'ready_for_pickup', 'pending_payment'].includes(o.status)) {
     const from = setting<number>(await getSiteData(), 'rentals.pickupFromHour');
     return respond(
-      `hotel-a-wise-pickup-${o.ref}`,
+      `hotelawise-pickup-${o.ref}`,
       icsFile({
         uid: `${o.ref}@hotelawise.com`,
         summary: `Collect rentals · Hotel A-Wise (${o.ref})`,

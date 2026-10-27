@@ -1,6 +1,6 @@
 # QA report: v1.0.0 release candidate
 
-Date: 26 October 2026. Build: commit `e4e92ad` and later on `senya/nice-darwin-ocn7jo`. Tested: the code, a local production build (Node, Postgres 16) and the deployed preview Worker at https://hotel-a-wise-preview.wisdomska.workers.dev (Cloudflare Workers Free, Neon `preview` branch).
+Date: 26 October 2026. Build: commit `e4e92ad` and later on `senya/nice-darwin-ocn7jo`. Tested: the code, a local production build (Node, Postgres 16) and the deployed preview Worker at https://hotelawise-preview.wisdomska.workers.dev (Cloudflare Workers Free, Neon `preview` branch).
 
 **Verdict: ready for production, with the items under "Not verified" and "Before real money" still open.** Every automated check passes. The release review found and fixed five security problems and two problems that only showed on the deployed Worker (scripts not loading in route groups, the security policy blocking Turnstile).
 

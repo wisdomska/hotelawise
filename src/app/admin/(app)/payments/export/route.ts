@@ -10,7 +10,7 @@ export async function GET(req: Request) {
     req,
     ['payments.view', 'exports.download'],
     `Payments (${filter})`,
-    `hotel-a-wise-payments-${todayInAccra()}`,
+    `hotelawise-payments-${todayInAccra()}`,
     async (d) => [
       ['date', 'for', 'customer', 'method', 'channel', 'amount_ghs'],
       ...(await allTransactions(d, filter)).map((t) => [t.day, t.ref, t.who, t.method, t.channel, (t.amount / 100).toFixed(2)]),

@@ -12,7 +12,7 @@ The preview can also be deployed by hand with `pnpm cf:deploy:preview`, and prod
 
 ## First production launch
 
-Production is `https://hotel-a-wise.wisdomska.workers.dev` until the hotel's domain is ready. The Worker doesn't exist until the first deploy; its KV namespace and D1 tag database already do (ids in `wrangler.jsonc`).
+Production is `https://hotelawise.wisdomska.workers.dev` until the hotel's domain is ready. The Worker doesn't exist until the first deploy; its KV namespace and D1 tag database already do (ids in `wrangler.jsonc`).
 
 1. Migrate the production database (Neon `production` branch, direct connection):
    ```bash
@@ -27,7 +27,7 @@ Production is `https://hotel-a-wise.wisdomska.workers.dev` until the hotel's dom
    ```
    - `DATABASE_URL`: the production **pooled** URL.
    - `BETTER_AUTH_SECRET` and `REF_SECRET`: new random values, never the preview ones (`openssl rand -base64 48`).
-   - `TURNSTILE_SECRET_KEY`: the secret of the `hotel-a-wise` widget (Cloudflare → Turnstile).
+   - `TURNSTILE_SECRET_KEY`: the secret of the `hotelawise` widget (Cloudflare → Turnstile).
    - Leave `PAYSTACK_SECRET_KEY` unset until the live keys arrive: the site then offers only "Pay at the hotel" and "Pay when you collect". Then set it with the **live** secret key, add `NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY` (live public key) to the production `vars`, set the live webhook URL in Paystack, and deploy.
    - `RESEND_API_KEY` and `SMS_API_KEY` (+ `SMS_PROVIDER=arkesel`, `SMS_SENDER_ID`) when those accounts exist; until then no email or SMS goes out.
 4. Check: `/api/health` answers 200, the home page and `/admin/login` load, sign in as the first Super Admin (`scripts/create-super-admin.ts` if none exists yet).

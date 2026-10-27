@@ -5,7 +5,7 @@ Website, booking engine and admin for **Hotel A-Wise**, No. 1 Wisepak Lane, New 
 - **Guests** book a room and pay by Mobile Money or card, manage the booking with a texted code, reserve event rentals to collect, and send venue enquiries.
 - **Staff** run the hotel from `/admin`: bookings, rooms, rentals, inventory, venues, payments, customers, content, reports and users, in a light or a night-navy dark theme. Every change is written to an audit log.
 
-**Preview:** https://hotel-a-wise-preview.wisdomska.workers.dev (not indexed; production goes live at `hotelawise.com`).
+**Preview:** https://hotelawise-preview.wisdomska.workers.dev (not indexed; production goes live at `hotelawise.com`).
 
 ## Status
 
@@ -122,10 +122,10 @@ docs/             plan, architecture, decisions, setup checklist, runbook, hotel
 
 ## Environments and deploys
 
-| Branch    | Environment | Address                                                            |
-| --------- | ----------- | ------------------------------------------------------------------ |
-| `main`    | production  | `hotel-a-wise.wisdomska.workers.dev`, then `hotelawise.com`        |
-| `preview` | preview     | `hotel-a-wise-preview.wisdomska.workers.dev`, open but not indexed |
+| Branch    | Environment | Address                                                          |
+| --------- | ----------- | ---------------------------------------------------------------- |
+| `main`    | production  | `hotelawise.wisdomska.workers.dev`, then `hotelawise.com`        |
+| `preview` | preview     | `hotelawise-preview.wisdomska.workers.dev`, open but not indexed |
 
 A push to `preview` or `main` migrates that environment's database and then deploys its Worker (`.github/workflows/deploy.yml`). Every pull request into `preview` also uploads a preview version and links it in the PR. Deploys, rollbacks and incident steps are in [docs/RUNBOOK.md](docs/RUNBOOK.md).
 

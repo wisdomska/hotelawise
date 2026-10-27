@@ -20,5 +20,5 @@ export async function staffInvoice(kind: 'booking' | 'rental', ref: string): Pro
   const d = await db();
   const inv = kind === 'booking' ? await bookingInvoice(d, { ref }) : await orderInvoice(d, { ref });
   if (!inv) return new Response('Not found', { status: 404 });
-  return pdfResponse(renderInvoice(inv, await getSiteData()), `hotel-a-wise-${invoiceTitle(inv).toLowerCase()}-${inv.ref}.pdf`);
+  return pdfResponse(renderInvoice(inv, await getSiteData()), `hotelawise-${invoiceTitle(inv).toLowerCase()}-${inv.ref}.pdf`);
 }

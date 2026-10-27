@@ -624,7 +624,7 @@ function EnrolStep({ busy, run, onDone }: { busy: boolean; run: Run; onDone: () 
               a.href =
                 'data:text/plain;charset=utf-8,' +
                 encodeURIComponent(`Hotel A-Wise admin backup codes\nEach works once.\n\n${backup.join('\n')}\n`);
-              a.download = 'hotel-a-wise-backup-codes.txt';
+              a.download = 'hotelawise-backup-codes.txt';
               a.click();
             }}
           >

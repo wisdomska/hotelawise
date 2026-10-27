@@ -10,5 +10,5 @@ export async function GET(_req: Request, { params }: { params: Promise<{ token: 
   const d = await db();
   const inv = (await bookingInvoice(d, { token })) ?? (await orderInvoice(d, { token }));
   if (!inv) return new Response('Not found', { status: 404 });
-  return pdfResponse(renderInvoice(inv, await getSiteData()), `hotel-a-wise-${invoiceTitle(inv).toLowerCase()}-${inv.ref}.pdf`);
+  return pdfResponse(renderInvoice(inv, await getSiteData()), `hotelawise-${invoiceTitle(inv).toLowerCase()}-${inv.ref}.pdf`);
 }

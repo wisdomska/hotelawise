@@ -12,7 +12,7 @@ export async function runScheduled(cron: string, at: Date, env: CloudflareEnv, c
   const vars = env as unknown as Record<string, string | undefined>;
   const secret = vars.BETTER_AUTH_SECRET;
   if (!secret) return console.error('cron: BETTER_AUTH_SECRET is not set');
-  const base = vars.APP_URL ?? 'https://hotel-a-wise.internal';
+  const base = vars.APP_URL ?? 'https://hotelawise.internal';
   const res = await fetchApp(
     new Request(`${base}/api/cron/${name}`, {
       method: 'POST',
