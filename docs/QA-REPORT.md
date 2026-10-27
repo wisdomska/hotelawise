@@ -1,8 +1,8 @@
-# QA report: v1.0.0 release candidate
+# QA report: v1.0.0
 
-Date: 26 October 2026. Build: commit `e4e92ad` and later on `senya/nice-darwin-ocn7jo`. Tested: the code, a local production build (Node, Postgres 16) and the deployed preview Worker at https://hotelawise-preview.wisdomska.workers.dev (Cloudflare Workers Free, Neon `preview` branch).
+Date: 26–27 October 2026. Released as v1.0.0 on 27 October 2026, live at https://hotelawise.wisdomska.workers.dev. Tested: the code, a local production build (Node, Postgres 16) and the deployed preview Worker at https://hotelawise-preview.wisdomska.workers.dev (Cloudflare Workers Free, Neon `preview` branch).
 
-**Verdict: ready for production, with the items under "Not verified" and "Before real money" still open.** Every automated check passes. The release review found and fixed five security problems and two problems that only showed on the deployed Worker (scripts not loading in route groups, the security policy blocking Turnstile).
+**Verdict: live in production, with the items under "Not verified" and "Before real money" still open.** Every automated check passes. The release review found and fixed five security problems and two problems that only showed on the deployed Worker (scripts not loading in route groups, the security policy blocking Turnstile).
 
 ## Automated checks
 
@@ -96,6 +96,20 @@ Performance work in this release: cached pages are served before Next.js starts 
 4. **Tooltips** could spill off-screen (the collapsed sidebar); now measured and kept inside the window.
 5. **Online payment without Paystack keys**: checkout now offers only "Pay at the hotel" / "Pay when you collect" until the keys are set, instead of failing at the last step.
 
+## Production launch, 27 October 2026
+
+| Check                                                                    | Result                                                     |
+| ------------------------------------------------------------------------ | ---------------------------------------------------------- |
+| Deploy workflow from `main` (migrate, build, deploy)                     | success                                                    |
+| Database migrations on the Neon `production` branch                      | 8 of 8 applied                                             |
+| Worker secrets (database, auth, references, Turnstile, Cloudinary)       | set; new auth and reference secrets, not the preview's     |
+| Scheduled jobs                                                           | one 15-minute Cron Trigger per Worker (free plan allows 5) |
+| Every public route, health, sign-in reaching the database                | 200; wrong password answered from the database             |
+| Site, security and accessibility e2e against production (desktop, Pixel) | 66 passed                                                  |
+| Indexing                                                                 | production indexable; preview `noindex`                    |
+
+Found and fixed during the launch: the free plan's limit of 5 Cron Triggers per account (preview and production asked for 3 each), and the production Worker starting without its secrets.
+
 ## Not verified (needs a person, or access I don't have)
 
 - **A real guest booking and rental on the deployed site.** Real Turnstile rightly stops a scripted browser, so this needs one human run on the preview: book a room with "Pay at the hotel", reserve a rental, send a contact message, then find all three in the admin.
@@ -104,7 +118,6 @@ Performance work in this release: cached pages are served before Next.js starts 
 - **Email and SMS delivery.** No Resend or Arkesel keys yet, so nothing is sent; the code paths are unit-tested.
 - **Photo uploads to Cloudinary from the admin.** Signing is tested; an actual upload needs a signed-in browser.
 - **WebKit / Safari locally.** Not installed on this machine; CI runs WebKit desktop and iPhone 14.
-- **Production deploy.** Blocked by this session's permissions; the steps are in the [RUNBOOK](RUNBOOK.md#first-production-launch).
 
 ## Before real money
 

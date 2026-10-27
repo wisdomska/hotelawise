@@ -480,7 +480,7 @@ export function AuditScreen(p: {
             type="button"
             onClick={() => go({ who: '', what: '', from: '', to: '' })}
             style={{
-              height: 36,
+              height: 40,
               padding: '0 12px',
               borderRadius: 8,
               border: '1px solid var(--line2)',

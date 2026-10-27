@@ -60,8 +60,11 @@
   --h2s: 30px;
   --h3: 26px;
   --quote: 24px;
-  /* The hero fills the screen; its content sits on the bottom edge at every width. */
-  --hero-h: 100svh;
+  /* Booking bar height: a first guess per width, measured exactly once the page runs. */
+  --bar-h: 262px;
+  /* The hero fills the screen down to the middle of the booking bar, which overlaps the
+     next section by half its height, so the whole bar still shows on first load. */
+  --hero-h: calc(100svh - var(--bar-h) / 2 - 16px);
   --foot-h: 260px;
   --foot-type-checkout: 40px;
   --navgap: 10px;
@@ -72,7 +75,7 @@
   --hmb: 28px;
   --bar-mt: 28px;
   --hero-pt: 120px;
-  --hero-pb: 20px;
+  --hero-pb: 0px;
   --hero-jc: flex-end;
   --c4: repeat(4, 80%);
   --c3: 1fr;
@@ -131,7 +134,8 @@
     --hmb: 48px;
     --bar-mt: 36px;
     --hero-pt: 128px;
-    --hero-pb: 32px;
+    --hero-pb: 0px;
+    --bar-h: 132px;
     --hero-jc: flex-end;
     --c4: repeat(4, minmax(0, 1fr));
     --c3: repeat(3, minmax(0, 1fr));

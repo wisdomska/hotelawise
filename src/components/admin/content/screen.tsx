@@ -1,7 +1,7 @@
 'use client';
 // Content from Admin.dc.html: photo slots, the gallery manager, page copy
 // forms, venues, FAQ, testimonials, the banner and the list of pages.
-import { useState, type CSSProperties } from 'react';
+import { useRef, useState, type CSSProperties } from 'react';
 import {
   addGalleryAction,
   deleteFaqAction,
@@ -483,8 +483,9 @@ function useGalleryUpload() {
   return { busy, go: () => void go() };
 }
 
-function Gallery({ rows }: { rows: GalleryRow[] }) {
+function Gallery({ rows: saved }: { rows: GalleryRow[] }) {
   const [page, setPage] = useState(0);
+  const [rows, move] = useOrdered(saved, 'gallery');
   const pages = Math.max(1, Math.ceil(rows.length / GAL_PAGE));
   const cur = Math.min(page, pages - 1);
   const live = rows.filter((g) => g.published).length;
@@ -523,6 +524,7 @@ function Gallery({ rows }: { rows: GalleryRow[] }) {
               pos={cur * GAL_PAGE + j + 1}
               first={cur * GAL_PAGE + j === 0}
               last={cur * GAL_PAGE + j === rows.length - 1}
+              onMove={(dir) => move(g.id, dir)}
             />
           ))}
         </div>
@@ -556,7 +558,19 @@ function Gallery({ rows }: { rows: GalleryRow[] }) {
   );
 }
 
-function GalleryCard({ g, pos, first, last }: { g: GalleryRow; pos: number; first: boolean; last: boolean }) {
+function GalleryCard({
+  g,
+  pos,
+  first,
+  last,
+  onMove,
+}: {
+  g: GalleryRow;
+  pos: number;
+  first: boolean;
+  last: boolean;
+  onMove: (dir: -1 | 1) => void;
+}) {
   const { can, toast, refresh, openModal } = useAdmin();
   const [alt, setAlt] = useState(g.alt);
   const ok = !!g.alt.trim();
@@ -566,11 +580,6 @@ function GalleryCard({ g, pos, first, last }: { g: GalleryRow; pos: number; firs
     toast(r.ok ? r.title : r.error, r.ok ? r.body : undefined);
     if (r.ok) refresh();
     else setAlt(g.alt);
-  };
-  const move = async (dir: -1 | 1) => {
-    const r = await moveAction('gallery', g.id, dir);
-    if (!r.ok) toast(r.error);
-    refresh();
   };
   const bd = ok ? 'var(--line)' : 'var(--red)';
   return (
@@ -597,15 +606,23 @@ function GalleryCard({ g, pos, first, last }: { g: GalleryRow; pos: number; firs
         >
           #{pos}
         </span>
+        {/* A dark frosted pill reads on any photo: white text on near-navy is well above 4.5:1. */}
         <span
           style={{
             ...badge,
             left: 'auto',
             right: 8,
-            background: ok ? 'var(--green-bg)' : 'var(--red-bg)',
-            color: ok ? 'var(--green)' : 'var(--red)',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+            background: 'rgba(0,0,32,0.72)',
+            WebkitBackdropFilter: 'blur(8px) saturate(1.4)',
+            backdropFilter: 'blur(8px) saturate(1.4)',
+            border: '1px solid rgba(255,255,255,0.18)',
+            color: '#FFFFFF',
           }}
         >
+          <span aria-hidden="true" style={{ width: 7, height: 7, borderRadius: '50%', background: ok ? '#5BC08A' : '#F4897E' }} />
           {ok ? 'Live' : 'Hidden'}
         </span>
       </div>
@@ -627,19 +644,19 @@ function GalleryCard({ g, pos, first, last }: { g: GalleryRow; pos: number; firs
           aria-label="Alt text"
           maxLength={200}
           style={{
-            height: 34,
+            height: 40,
             borderRadius: 8,
-            border: `1px solid ${bd}`,
+            border: `1px solid ${ok ? 'var(--field)' : 'var(--red)'}`,
             background: 'var(--bg)',
             color: 'var(--ink)',
-            fontSize: 12.5,
+            fontSize: 13.5,
             padding: '0 10px',
           }}
         />
         <div style={{ display: 'flex', gap: 4 }}>
           <button
             type="button"
-            onClick={() => void move(-1)}
+            onClick={() => onMove(-1)}
             disabled={first}
             aria-label="Move earlier"
             data-tip="Move earlier"
@@ -649,7 +666,7 @@ function GalleryCard({ g, pos, first, last }: { g: GalleryRow; pos: number; firs
           </button>
           <button
             type="button"
-            onClick={() => void move(1)}
+            onClick={() => onMove(1)}
             disabled={last}
             aria-label="Move later"
             data-tip="Move later"
@@ -685,18 +702,44 @@ function GalleryCard({ g, pos, first, last }: { g: GalleryRow; pos: number; firs
 
 /* ── FAQ and testimonials ── */
 
-function useMove(kind: 'faq' | 'testimonial') {
+/**
+ * Up/down reordering that shows the new order at once. Saves run one after another in
+ * click order; the list reloads from the server only when the last one is done, and
+ * goes back to the saved order if one fails.
+ */
+function useOrdered<T extends { id: string }>(rows: T[], kind: 'faq' | 'testimonial' | 'gallery') {
   const { toast, refresh } = useAdmin();
-  return async (id: string, dir: -1 | 1) => {
-    const r = await moveAction(kind, id, dir);
-    if (!r.ok) toast(r.error);
-    refresh();
+  const [local, setLocal] = useState<{ src: T[]; ids: string[] } | null>(null);
+  const queue = useRef(Promise.resolve());
+  const inflight = useRef(0);
+  // A fresh list from the server replaces the local order.
+  const ids = local && local.src === rows ? local.ids : rows.map((r) => r.id);
+  const byId = new Map(rows.map((r) => [r.id, r]));
+  const ordered = ids.map((id) => byId.get(id)).filter((r): r is T => !!r);
+  const move = (id: string, dir: -1 | 1) => {
+    const i = ids.indexOf(id);
+    const j = i + dir;
+    if (i < 0 || j < 0 || j >= ids.length) return;
+    const next = [...ids];
+    [next[i], next[j]] = [next[j]!, next[i]!];
+    setLocal({ src: rows, ids: next });
+    inflight.current += 1;
+    queue.current = queue.current.then(async () => {
+      const r = await moveAction(kind, id, dir);
+      if (!r.ok) {
+        toast(r.error);
+        setLocal(null);
+      }
+      inflight.current -= 1;
+      if (inflight.current === 0) refresh();
+    });
   };
+  return [ordered, move] as const;
 }
 
-function FaqTable({ rows }: { rows: FaqRow[] }) {
+function FaqTable({ rows: saved }: { rows: FaqRow[] }) {
   const { can, openModal } = useAdmin();
-  const move = useMove('faq');
+  const [rows, move] = useOrdered(saved, 'faq');
   return (
     <DataTable
       title="Questions"
@@ -714,8 +757,8 @@ function FaqTable({ rows }: { rows: FaqRow[] }) {
           c(f.published ? 'Live' : 'Hidden', 'chip', undefined, f.published ? 'green' : 'grey'),
         ],
         actions: [
-          { label: 'Move up', icon: 'arrowup', iconOnly: true, disabled: i === 0, on: () => void move(f.id, -1) },
-          { label: 'Move down', icon: 'arrowdown', iconOnly: true, disabled: i === rows.length - 1, on: () => void move(f.id, 1) },
+          { label: 'Move up', icon: 'arrowup', iconOnly: true, disabled: i === 0, on: () => move(f.id, -1) },
+          { label: 'Move down', icon: 'arrowdown', iconOnly: true, disabled: i === rows.length - 1, on: () => move(f.id, 1) },
           { label: 'Edit question', icon: 'edit', iconOnly: true, on: () => openModal(<FaqModal f={f} />) },
           ...(can('content.delete')
             ? [
@@ -766,9 +809,9 @@ function LiveToggle({ live, set, label }: { live: boolean; set: (v: boolean) => 
   );
 }
 
-function TestimonialTable({ rows }: { rows: TestimonialRow[] }) {
+function TestimonialTable({ rows: saved }: { rows: TestimonialRow[] }) {
   const { can, openModal, toast, refresh } = useAdmin();
-  const move = useMove('testimonial');
+  const [rows, move] = useOrdered(saved, 'testimonial');
   const live = async (x: TestimonialRow, v: boolean) => {
     const r = await testimonialLiveAction(x.id, v);
     toast(r.ok ? r.title : r.error, r.ok ? r.body : undefined);
@@ -789,7 +832,8 @@ function TestimonialTable({ rows }: { rows: TestimonialRow[] }) {
           x.live
             ? { label: 'Unpublish', icon: 'eye', iconOnly: true, hint: 'Hide from the website', on: () => void live(x, false) }
             : { label: 'Publish', icon: 'check', kind: 'primary', on: () => void live(x, true) },
-          { label: 'Move up', icon: 'arrowup', iconOnly: true, disabled: i === 0, on: () => void move(x.id, -1) },
+          { label: 'Move up', icon: 'arrowup', iconOnly: true, disabled: i === 0, on: () => move(x.id, -1) },
+          { label: 'Move down', icon: 'arrowdown', iconOnly: true, disabled: i === rows.length - 1, on: () => move(x.id, 1) },
           { label: 'Edit testimonial', icon: 'edit', iconOnly: true, on: () => openModal(<TestimonialModal x={x} />) },
           ...(can('content.delete')
             ? [

@@ -5,19 +5,19 @@ Website, booking engine and admin for **Hotel A-Wise**, No. 1 Wisepak Lane, New 
 - **Guests** book a room and pay by Mobile Money or card, manage the booking with a texted code, reserve event rentals to collect, and send venue enquiries.
 - **Staff** run the hotel from `/admin`: bookings, rooms, rentals, inventory, venues, payments, customers, content, reports and users, in a light or a night-navy dark theme. Every change is written to an audit log.
 
-**Preview:** https://hotelawise-preview.wisdomska.workers.dev (not indexed; production goes live at `hotelawise.com`).
+**Live:** https://hotelawise.wisdomska.workers.dev (moves to `hotelawise.com` once the domain is connected). **Preview:** https://hotelawise-preview.wisdomska.workers.dev (not indexed).
 
 ## Status
 
-| Milestone                                              | State                                                                  |
-| ------------------------------------------------------ | ---------------------------------------------------------------------- |
-| M1 Foundations: schema, auth, CI/CD, Worker build      | Done                                                                   |
-| M2 Public site: home, rooms, gallery, contact          | Done                                                                   |
-| M3 Room booking: holds, Paystack, confirmation, manage | Done                                                                   |
-| M4 Rentals (reserve and collect) and venue enquiries   | Done                                                                   |
-| M5 Admin: 14 screens, roles and permissions, audit     | Done                                                                   |
-| M6 Notifications, scheduled jobs, reports, exports     | Done                                                                   |
-| M7 Release: QA report, security pass, runbook, v1.0.0  | Done on preview; production launch waiting on the steps in the runbook |
+| Milestone                                              | State                           |
+| ------------------------------------------------------ | ------------------------------- |
+| M1 Foundations: schema, auth, CI/CD, Worker build      | Done                            |
+| M2 Public site: home, rooms, gallery, contact          | Done                            |
+| M3 Room booking: holds, Paystack, confirmation, manage | Done                            |
+| M4 Rentals (reserve and collect) and venue enquiries   | Done                            |
+| M5 Admin: 14 screens, roles and permissions, audit     | Done                            |
+| M6 Notifications, scheduled jobs, reports, exports     | Done                            |
+| M7 Release: QA report, security pass, runbook, v1.0.0  | Done: v1.0.0 live in production |
 
 The plan is in [docs/PLAN.md](docs/PLAN.md). The release QA is in [docs/QA-REPORT.md](docs/QA-REPORT.md) and the security review in [docs/SECURITY.md](docs/SECURITY.md). Hotel facts that still need the owner's confirmation are in [docs/HOTEL-FACTS.md](docs/HOTEL-FACTS.md).
 

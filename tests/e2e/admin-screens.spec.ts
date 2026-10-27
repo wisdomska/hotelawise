@@ -173,3 +173,32 @@ test('every tooltip stays inside the window, sidebar open or collapsed', async (
     await page.keyboard.press('Control+b');
   }
 });
+
+test('content: moving a question shows straight away and is saved', async ({ page }) => {
+  await signIn(page);
+  await page.goto('/admin/content?tab=FAQ');
+  const questions = () => page.locator('table tbody tr td:nth-child(2)').allInnerTexts();
+  const [first, second] = await questions();
+  await page.locator('table tbody tr').first().getByRole('button', { name: 'Move down' }).click();
+  // The list reorders at once, before the save comes back.
+  await expect(page.locator('table tbody tr td:nth-child(2)').first()).toHaveText(second!, { timeout: 500 });
+  await expect(page.getByText('Order saved.')).toHaveCount(0);
+  await page.waitForLoadState('networkidle');
+  await page.reload();
+  await expect(page.locator('table tbody tr td:nth-child(2)').nth(1)).toHaveText(first!);
+  // Put it back.
+  await page.locator('table tbody tr').nth(1).getByRole('button', { name: 'Move up' }).click();
+  await expect(page.locator('table tbody tr td:nth-child(2)').first()).toHaveText(first!);
+  await page.waitForLoadState('networkidle');
+});
+
+test('bookings calendar: jump to any month and year', async ({ page }) => {
+  await signIn(page);
+  await page.goto('/admin/bookings?tab=Calendar');
+  const year = new Date().getUTCFullYear() + 1;
+  await pick(page, page.locator('main'), 'Year', String(year));
+  await pick(page, page.locator('main'), 'Month', 'March');
+  await expect(page.getByText(new RegExp(`^1 Mar – 14 Mar ${year}$`))).toBeVisible();
+  await page.getByRole('button', { name: 'Today' }).click();
+  await expect(page.getByRole('button', { name: /^Year / })).toContainText(String(new Date().getUTCFullYear()));
+});

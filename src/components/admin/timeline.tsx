@@ -4,7 +4,12 @@
 // right edge, when the screen passes onDrop.
 import { useRef, useState } from 'react';
 import { addDays, nightsBetween, type IsoDate } from '@/lib/dates';
+import { Select } from '@/components/ui/select';
 import { mono, panel, type Tone } from './ui';
+
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const label = (d: IsoDate, opts: Intl.DateTimeFormatOptions) =>
+  new Date(d + 'T00:00:00Z').toLocaleDateString('en-GB', { ...opts, timeZone: 'UTC' });
 
 export type TlBar = {
   key: string;
@@ -76,12 +81,27 @@ export function Timeline(p: Props) {
   };
 
   const shiftBtn: React.CSSProperties = {
-    width: 32,
-    height: 32,
+    width: 40,
+    height: 40,
     borderRadius: 8,
     border: '1px solid var(--line2)',
     background: 'transparent',
   };
+  // Jumping to a month or a year: the view starts on that month's 1st.
+  const [y, m] = p.start.split('-').map(Number) as [number, number];
+  const thisYear = Number(p.today.slice(0, 4));
+  const years = Array.from({ length: 6 }, (_, i) => thisYear - 2 + i);
+  if (!years.includes(y)) years.push(y);
+  years.sort((a, b) => a - b);
+  const jump = (year: number, month: number) => {
+    const first = `${year}-${String(month).padStart(2, '0')}-01` as IsoDate;
+    p.onShift(nightsBetween(p.start, first));
+  };
+  const end = addDays(p.start, DAYS - 1);
+  const range =
+    p.start.slice(0, 4) === end.slice(0, 4)
+      ? `${label(p.start, { day: 'numeric', month: 'short' })} – ${label(end, { day: 'numeric', month: 'short', year: 'numeric' })}`
+      : `${label(p.start, { day: 'numeric', month: 'short', year: 'numeric' })} – ${label(end, { day: 'numeric', month: 'short', year: 'numeric' })}`;
   return (
     <section style={{ ...panel, overflow: 'hidden' }}>
       <div
@@ -95,9 +115,32 @@ export function Timeline(p: Props) {
           flexWrap: 'wrap',
         }}
       >
-        <h2 style={{ margin: 0, fontSize: 14, fontWeight: 500 }}>{p.title}</h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <h2 style={{ margin: 0, fontSize: 14, fontWeight: 500 }}>{p.title}</h2>
+          <span aria-live="polite" style={{ fontFamily: mono, fontSize: 11.5, color: 'var(--mute)' }}>
+            {range}
+          </span>
+        </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
           <span style={{ fontSize: 12, color: 'var(--mute)' }}>{p.hint}</span>
+          <div style={{ display: 'flex', gap: 4 }}>
+            <Select
+              variant="compact"
+              ariaLabel="Month"
+              value={String(m)}
+              options={MONTHS.map((name, i) => ({ value: String(i + 1), label: name }))}
+              onChange={(v) => jump(y, Number(v))}
+              width={130}
+            />
+            <Select
+              variant="compact"
+              ariaLabel="Year"
+              value={String(y)}
+              options={years.map((yr) => ({ value: String(yr), label: String(yr) }))}
+              onChange={(v) => jump(Number(v), m)}
+              width={92}
+            />
+          </div>
           <div style={{ display: 'flex', gap: 4 }}>
             <button
               type="button"
@@ -112,12 +155,12 @@ export function Timeline(p: Props) {
               type="button"
               onClick={() => p.onShift('today')}
               style={{
-                height: 32,
-                padding: '0 10px',
+                height: 40,
+                padding: '0 12px',
                 borderRadius: 8,
                 border: '1px solid var(--line2)',
                 background: 'transparent',
-                fontSize: 12,
+                fontSize: 13,
               }}
             >
               Today
@@ -132,7 +175,7 @@ export function Timeline(p: Props) {
         <div style={{ minWidth: 960 }}>
           <div style={{ display: 'grid', gridTemplateColumns: cols, borderBottom: '1px solid var(--line)' }}>
             <span style={{ padding: '8px 12px', fontFamily: mono, fontSize: 11, color: 'var(--mute)' }}>{p.rowHead}</span>
-            {days.map((d) => {
+            {days.map((d, i) => {
               const dt = new Date(d + 'T00:00:00Z');
               const isToday = d === p.today;
               return (
@@ -148,6 +191,15 @@ export function Timeline(p: Props) {
                     lineHeight: 1.3,
                   }}
                 >
+                  {i === 0 || dt.getUTCDate() === 1 ? (
+                    <span style={{ display: 'block', color: 'var(--ink)', fontWeight: 600 }}>
+                      {dt.toLocaleDateString('en-GB', { month: 'short', timeZone: 'UTC' }).toUpperCase()}
+                    </span>
+                  ) : (
+                    <span aria-hidden="true" style={{ display: 'block' }}>
+                      &nbsp;
+                    </span>
+                  )}
                   {dt.toLocaleDateString('en-GB', { weekday: 'short', timeZone: 'UTC' }).slice(0, 2).toUpperCase()}
                   <br />
                   {dt.getUTCDate()}

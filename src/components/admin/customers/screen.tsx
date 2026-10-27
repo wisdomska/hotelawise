@@ -131,13 +131,13 @@ function Search({ q }: { q: string }) {
         placeholder="Name, phone or email"
         style={{
           width: '100%',
-          height: 34,
+          height: 40,
           padding: '0 10px 0 30px',
           borderRadius: 8,
           border: '1px solid var(--field)',
           background: 'var(--bg)',
           color: 'var(--ink)',
-          fontSize: 13,
+          fontSize: 13.5,
         }}
       />
     </label>

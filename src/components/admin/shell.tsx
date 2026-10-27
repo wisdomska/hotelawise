@@ -386,9 +386,11 @@ function Frame(p: Props) {
               fontSize: 13,
             }}
           >
-            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden' }}>
               <Icon name="search" size={16} />
-              Search bookings, guests, screens…
+              {/* The full hint only where it fits on one line. */}
+              <span className="hidden tab:inline">Search bookings, guests, screens…</span>
+              <span className="tab:hidden">Search</span>
             </span>
             <span
               style={{

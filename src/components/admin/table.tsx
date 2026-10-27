@@ -135,7 +135,10 @@ export function DataTable(p: Props) {
                     <CellTd key={i} cl={cl} first={i === 0} onOpen={r.on} />
                   ))}
                   {hasActions && (
-                    <td style={{ padding: '7px 12px', textAlign: 'right', whiteSpace: 'nowrap' }} onClick={(e) => e.stopPropagation()}>
+                    <td
+                      style={{ padding: '7px 12px', textAlign: 'right', whiteSpace: 'nowrap', verticalAlign: 'middle' }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <div style={{ display: 'inline-flex', gap: 4 }}>
                         {(r.actions ?? []).map((a) => (
                           <ActionButton key={a.label} a={a} />
@@ -227,7 +230,8 @@ function CellTd({ cl, onOpen, first }: { cl: Cell; onOpen?: () => void; first: b
   const isMono = k === 'mono' || k === 'num' || k === 'money';
   const td: CSSProperties = {
     padding: cl.img ? '8px 12px' : '11px 12px',
-    verticalAlign: cl.img ? 'middle' : 'top',
+    // Centred, so short cells sit level with taller ones (a two-line name, a thumbnail).
+    verticalAlign: 'middle',
     width: cl.img ? 88 : undefined,
     textAlign: k === 'num' || k === 'money' ? 'right' : 'left',
     fontFamily: isMono ? mono : 'inherit',

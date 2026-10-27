@@ -211,7 +211,11 @@ export default async function HomePage() {
         <BookingBar />
       </section>
 
-      <section data-screen-label="Home · Rooms strip" style={{ padding: 'var(--sy) var(--pad)' }}>
+      <section
+        data-screen-label="Home · Rooms strip"
+        // Extra room on top for the lower half of the booking bar.
+        style={{ padding: 'calc(var(--sy) + var(--bar-h) / 2) var(--pad) var(--sy)' }}
+      >
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 'var(--hgap)', marginBottom: 'var(--hmb)' }}>
           <h2 style={h2}>{c['home.roomsHeading']}</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14, width: '100%' }}>

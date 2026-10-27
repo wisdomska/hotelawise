@@ -361,3 +361,11 @@ The owner wants the name written as one word. The Workers are `hotelawise` (prod
 ## D-50 One Cron Trigger per Worker
 
 The Workers free plan allows 5 Cron Triggers per account, and preview and production asked for 3 each, so the first production deploy was refused. Each Worker now has a single 15-minute trigger; `cronJobs()` in `src/lib/cron.ts` adds the 07:00 reminders and the 02:00 housekeeping to the run that starts in that quarter hour. Accra is on UTC all year, so the times need no conversion. Two of the five slots are used, leaving room for a third environment.
+
+## D-51 Turnstile runs invisibly
+
+The owner doesn't want a "Verify you are human" box anywhere. Both Turnstile widgets (production and preview) are set to Cloudflare's invisible mode and the site renders them with `size: 'invisible'`: the check runs in the background on every form, and the server still verifies each token before a hold, order, enquiry or message is accepted. The trade-off is that a visitor Cloudflare can't clear silently gets the form's error message instead of a checkbox to tick; they can call reception.
+
+## D-52 No password on New booking
+
+At the owner's request, creating a desk booking no longer asks for the staff member's password, even when the guest pays at the desk straight away. The permission check stays (taking money still needs "Take payments at the desk"), the payment is in the audit log under the staff member's name, and the amount is the booking's own price. Recording a later payment, refunds and every other money or account action still ask for the password.
