@@ -169,7 +169,15 @@ export function ManageBooking({ view, initialRef }: { view: ManageView | null; i
   return (
     <section
       data-screen-label="Manage my booking"
-      style={{ display: 'grid', gridTemplateColumns: 'var(--c-main)', gap: 40, alignItems: 'start' }}
+      // Before a booking is open the page is one short form: centre it rather than leave it
+      // hugging the left with the rest of the row empty.
+      style={{
+        display: 'grid',
+        gridTemplateColumns: view ? 'var(--c-main)' : 'minmax(0, 520px)',
+        justifyContent: 'center',
+        gap: 40,
+        alignItems: 'start',
+      }}
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         <h1
@@ -213,12 +221,7 @@ export function ManageBooking({ view, initialRef }: { view: ManageView | null; i
           </p>
         )}
         {!view && !codeFor && (
-          <form
-            onSubmit={lookup}
-            noValidate
-            aria-label="Find my booking"
-            style={{ display: 'flex', flexDirection: 'column', gap: 14, maxWidth: 440 }}
-          >
+          <form onSubmit={lookup} noValidate aria-label="Find my booking" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <label style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: 13 }}>
               <Label icon="hash">Booking reference</Label>
               <input
@@ -247,7 +250,7 @@ export function ManageBooking({ view, initialRef }: { view: ManageView | null; i
                   setPhone(e.target.value);
                   setErr(null);
                 }}
-                placeholder="055 555 7090"
+                placeholder="0555557090"
                 aria-invalid={!!err}
                 style={input(!!err)}
               />
@@ -271,7 +274,7 @@ export function ManageBooking({ view, initialRef }: { view: ManageView | null; i
             onSubmit={verify}
             noValidate
             aria-label="Enter your code"
-            style={{ display: 'flex', flexDirection: 'column', gap: 14, maxWidth: 440, animation: 'aw-up 300ms var(--ease-enter)' }}
+            style={{ display: 'flex', flexDirection: 'column', gap: 14, animation: 'aw-up 300ms var(--ease-enter)' }}
           >
             <p style={{ margin: 0, fontSize: 14, lineHeight: 1.55 }}>
               We&apos;ve sent a 6-digit code to {codeFor.sentTo.join(' and ')}. It works for 10 minutes.

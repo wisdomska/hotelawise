@@ -12,7 +12,7 @@ export function checkCollector(c: CollectorInput) {
   if (name.length < 2) errors.name = 'Who will collect? We check the name at the desk.';
   else if (name.length > 120) errors.name = 'That name is a little long. Use 120 characters or fewer.';
   const phone = parseGhanaPhone(c.phone);
-  if (!phone.ok) errors.phone = "That doesn't look like a Ghana mobile number. Try 055 555 7090.";
+  if (!phone.ok) errors.phone = "That doesn't look like a Ghana mobile number. Try 0555557090.";
   const email = c.email.trim().toLowerCase();
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = 'Check the email address.';
   if (Object.keys(errors).length || !phone.ok) return { ok: false as const, errors };

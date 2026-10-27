@@ -898,8 +898,7 @@ const PAGES: [string, string][] = [
   ['Gallery', '/gallery'],
   ['Contact & FAQ', '/contact'],
   ['Book a room', '/book'],
-  ['Rentals', '/rent'],
-  ['Venues', '/venues'],
+  ['Rentals & venues', '/rent'],
   ['Manage booking', '/manage'],
 ];
 

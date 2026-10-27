@@ -51,7 +51,11 @@ export default async function RoomsPage() {
         <div style={{ marginTop: 'var(--sy)' }}>
           <ScrollTable
             label="Room comparison"
-            heading={<h2 style={{ margin: 0, fontFamily: 'var(--font-serif)', fontWeight: 400, fontSize: 'var(--h3)' }}>Side by side</h2>}
+            heading={
+              <h2 style={{ margin: 0, fontFamily: 'var(--font-serif)', fontWeight: 400, fontSize: 'var(--h3)' }}>
+                Side by side comparison
+              </h2>
+            }
           >
             <table style={{ width: '100%', minWidth: 720, borderCollapse: 'collapse', fontSize: 14 }}>
               <thead>

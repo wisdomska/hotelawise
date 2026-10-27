@@ -53,7 +53,7 @@ test.describe('contact', () => {
     await page.getByRole('button', { name: 'Send to reception' }).click();
     await expect(page.locator('form [role=alert]')).toHaveText([
       'We’d like to know who we’re talking to.',
-      'Enter a Ghana mobile number, like 055 555 7090.',
+      'Enter a Ghana mobile number, like 0555557090.',
       'A few more words, please.',
     ]);
   });

@@ -26,7 +26,7 @@ test('reserve rentals to collect and pay at pickup', async ({ page, isMobile }, 
   await next.click();
   await expect(page.locator('#rf-name-err')).toHaveText('Who will collect? We check the name at the desk.');
   await page.getByPlaceholder('e.g. Abena Owusu').fill('Abena Owusu');
-  await page.getByPlaceholder('055 555 7090').fill('0244123456');
+  await page.getByPlaceholder('0555557090').fill('0244123456');
   await next.click();
   await page.getByRole('radio', { name: /Pay when you collect/ }).click();
   await next.click();
@@ -36,8 +36,14 @@ test('reserve rentals to collect and pay at pickup', async ({ page, isMobile }, 
   await expect(page.getByText('● RESERVED · PAY AT PICKUP')).toBeVisible();
 });
 
-test('the venue enquiry asks for what it needs', async ({ page }) => {
+test('/venues lands on the venues section of the rentals page', async ({ page }) => {
   await page.goto('/venues');
+  await expect(page).toHaveURL(/\/rent#venues$/);
+  await expect(page.getByRole('heading', { level: 2, name: /Host it/ })).toBeVisible();
+});
+
+test('the venue enquiry asks for what it needs', async ({ page }) => {
+  await page.goto('/rent#venues');
   await page.getByRole('button', { name: 'Send enquiry' }).click();
   await expect(page.locator('form [role=alert]')).toHaveText([
     'Which day?',

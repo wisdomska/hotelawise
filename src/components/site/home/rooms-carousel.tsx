@@ -1,11 +1,35 @@
 'use client';
-// The home rooms strip. Below 1024px it is a swipeable carousel: cards run to the
-// screen edge with the next one peeking, and a dot for each room plus previous and
-// next buttons show where you are. From 1024px it is a plain four-column grid.
+// The home page's card strips (rooms, rentals). Below 1024px each is a swipeable carousel:
+// cards run to the screen edge with the next one peeking, and a dot for each card plus
+// previous and next buttons show where you are. From 1024px it is a plain grid.
 import { Children, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Icon } from '@/components/ui/icon';
 
 export function RoomsCarousel({ names, children }: { names: string[]; children: ReactNode }) {
+  return (
+    <Carousel label="Rooms" noun="room" names={names} columns="var(--c4)">
+      {children}
+    </Carousel>
+  );
+}
+
+export function Carousel({
+  label,
+  noun,
+  names,
+  columns,
+  dark = false,
+  gap = 'clamp(16px,2vw,28px)',
+  children,
+}: {
+  label: string;
+  noun: string;
+  names: string[];
+  columns: string;
+  dark?: boolean;
+  gap?: string;
+  children: ReactNode;
+}) {
   const track = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const count = Children.count(children);
@@ -49,24 +73,24 @@ export function RoomsCarousel({ names, children }: { names: string[]; children: 
     width: 44,
     height: 44,
     borderRadius: '50%',
-    border: '1px solid rgba(0,0,99,0.3)',
+    border: `1px solid ${dark ? 'rgba(245,242,234,0.4)' : 'rgba(0,0,99,0.3)'}`,
     background: 'transparent',
-    color: '#000063',
+    color: dark ? '#F5F2EA' : '#000063',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   };
 
   return (
-    <div role="region" aria-roledescription="carousel" aria-label="Rooms">
+    <div role="region" aria-roledescription="carousel" aria-label={label}>
       <div
         ref={track}
         data-stagger=""
-        className="aw-carousel"
+        className="aw-carousel aw-snap"
         style={{
           display: 'grid',
-          gridTemplateColumns: 'var(--c4)',
-          gap: 'clamp(16px,2vw,28px)',
+          gridTemplateColumns: columns,
+          gap,
           position: 'relative',
           overflowX: 'auto',
           scrollSnapType: 'x mandatory',
@@ -82,7 +106,7 @@ export function RoomsCarousel({ names, children }: { names: string[]; children: 
               key={name}
               type="button"
               onClick={() => go(i)}
-              aria-label={`Show ${name}, room ${i + 1} of ${count}`}
+              aria-label={`Show ${name}, ${noun} ${i + 1} of ${count}`}
               aria-current={i === active ? 'true' : undefined}
               className="aw-press"
               style={{
@@ -103,7 +127,7 @@ export function RoomsCarousel({ names, children }: { names: string[]; children: 
                   height: 6,
                   width: i === active ? 20 : 6,
                   borderRadius: 999,
-                  background: i === active ? '#000063' : 'rgba(0,0,99,0.28)',
+                  background: i === active ? (dark ? '#F5F2EA' : '#000063') : dark ? 'rgba(245,242,234,0.35)' : 'rgba(0,0,99,0.28)',
                   transition: 'width 300ms cubic-bezier(0.23,1,0.32,1), background 300ms',
                 }}
               />
@@ -114,7 +138,7 @@ export function RoomsCarousel({ names, children }: { names: string[]; children: 
           <button
             type="button"
             className="aw-press"
-            aria-label="Previous room"
+            aria-label={`Previous ${noun}`}
             disabled={active === 0}
             onClick={() => go(active - 1)}
             style={{ ...arrow, opacity: active === 0 ? 0.35 : 1 }}
@@ -124,7 +148,7 @@ export function RoomsCarousel({ names, children }: { names: string[]; children: 
           <button
             type="button"
             className="aw-press"
-            aria-label="Next room"
+            aria-label={`Next ${noun}`}
             disabled={active === count - 1}
             onClick={() => go(active + 1)}
             style={{ ...arrow, opacity: active === count - 1 ? 0.35 : 1 }}

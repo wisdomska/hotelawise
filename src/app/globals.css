@@ -578,6 +578,9 @@ html[data-banner-off] .aw-banner {
   scroll-padding-inline: var(--pad);
   scrollbar-width: none;
 }
+.aw-snap > * {
+  scroll-snap-align: start;
+}
 .aw-carousel::-webkit-scrollbar {
   display: none;
 }

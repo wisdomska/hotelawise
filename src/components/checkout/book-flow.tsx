@@ -13,6 +13,7 @@ import {
   submitBooking,
 } from '@/app/(site)/(checkout)/book/actions';
 import { paymentState, sendMomoCode } from '@/app/(site)/(checkout)/pay-actions';
+import { Stepper } from './stepper';
 import { Icon, type AnyIconName } from '@/components/ui/icon';
 import { Select } from '@/components/ui/select';
 import { notify } from '@/components/ui/toaster';
@@ -77,46 +78,7 @@ const dayAria = (key: IsoDate) =>
   new Date(`${key}T00:00:00Z`).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' });
 
 function Steps({ step }: { step: number }) {
-  const items: [string, AnyIconName][] = [
-    ['Dates & room', 'calendar'],
-    ['Your details', 'user'],
-    ['Pay', 'card'],
-  ];
-  return (
-    <ol
-      aria-label="Booking steps"
-      style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', gap: 6, flexWrap: 'wrap', flexShrink: 0, maxWidth: '100%' }}
-    >
-      {items.map(([label, icon], i) => {
-        const n = i + 1;
-        const now = n === step;
-        const done = n < step;
-        return (
-          <li
-            key={label}
-            aria-current={now ? 'step' : undefined}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              height: 34,
-              padding: '0 12px',
-              whiteSpace: 'nowrap',
-              flexShrink: 0,
-              borderRadius: 999,
-              border: `1px solid ${now ? '#000063' : 'rgba(0,0,99,0.2)'}`,
-              background: now ? '#000063' : done ? '#F6E2B3' : 'transparent',
-              color: now ? '#F5F2EA' : '#00003A',
-              fontSize: 13,
-            }}
-          >
-            <Icon name={icon} size={15} />
-            {label}
-          </li>
-        );
-      })}
-    </ol>
-  );
+  return <Stepper steps={['Dates & room', 'Your details', 'Pay']} current={step} label="Booking steps" />;
 }
 
 function FieldLabel({ icon, children }: { icon: AnyIconName; children: React.ReactNode }) {
@@ -989,7 +951,7 @@ export function BookFlow(p: BookFlowProps) {
                         setGf({ ...gf, phone: e.target.value });
                         setGe({ ...ge, phone: undefined });
                       }}
-                      placeholder="055 555 7090"
+                      placeholder="0555557090"
                       aria-invalid={!!ge.phone}
                       aria-describedby={ge.phone ? 'bk-phone-err' : undefined}
                       style={{ ...field(!!ge.phone), flex: 1, minWidth: 0, fontFamily: mono }}
@@ -1345,7 +1307,7 @@ export function BookFlow(p: BookFlowProps) {
                           setMomo(e.target.value);
                           setMomoErr(null);
                         }}
-                        placeholder="024 412 3456"
+                        placeholder="0244123456"
                         aria-invalid={!!momoErr}
                         style={{ ...field(!!momoErr), background: '#FFFFFF', fontFamily: mono }}
                       />

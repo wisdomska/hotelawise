@@ -28,7 +28,7 @@ export function checkContact(i: ContactInput): { ok: true; value: ContactClean }
   const ghana = i.dialCode === '+233';
   const knownCode = DIAL_CODES.some((d) => d.value === i.dialCode);
   const phone = knownCode ? parseInternationalPhone(i.phone, i.dialCode) : null;
-  if (!phone?.ok) errors.phone = ghana ? 'Enter a Ghana mobile number, like 055 555 7090.' : 'Enter a valid phone number.';
+  if (!phone?.ok) errors.phone = ghana ? 'Enter a Ghana mobile number, like 0555557090.' : 'Enter a valid phone number.';
   const email = i.email.trim().toLowerCase();
   if (email && (!EMAIL.test(email) || email.length > 254)) errors.email = 'Check the email address.';
   const message = i.message.trim();

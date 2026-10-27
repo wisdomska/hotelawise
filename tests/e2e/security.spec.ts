@@ -3,19 +3,7 @@ import { expect, test } from '@playwright/test';
 // The Content-Security-Policy must not block anything the site itself uses.
 test.skip(({ browserName, isMobile }) => browserName !== 'chromium' || isMobile, 'desktop Chromium only');
 
-const PAGES = [
-  '/',
-  '/rooms',
-  '/rooms/std',
-  '/gallery',
-  '/contact',
-  '/rent',
-  '/rent/checkout',
-  '/venues',
-  '/book',
-  '/manage',
-  '/admin/login',
-];
+const PAGES = ['/', '/rooms', '/rooms/std', '/gallery', '/contact', '/rent', '/rent/checkout', '/book', '/manage', '/admin/login'];
 
 for (const path of PAGES)
   test(`no policy violations on ${path}`, async ({ page }) => {

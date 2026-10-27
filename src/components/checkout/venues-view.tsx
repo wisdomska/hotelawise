@@ -67,20 +67,24 @@ export function VenuesView({ venues, intro, turnstileSiteKey }: { venues: VenueC
   };
 
   return (
-    <section data-screen-label="Venues & enquiry" style={{ display: 'flex', flexDirection: 'column', gap: 48 }}>
+    <section
+      id="venues"
+      data-screen-label="Venues & enquiry"
+      style={{ display: 'flex', flexDirection: 'column', gap: 48, scrollMarginTop: 96 }}
+    >
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'flex-start' }}>
-        <h1
+        <h2
           style={{
             margin: 0,
             fontFamily: 'var(--font-serif)',
             fontWeight: 400,
-            fontSize: 'var(--h1)',
+            fontSize: 'var(--h2)',
             lineHeight: 0.95,
             letterSpacing: '-0.05em',
           }}
         >
           Host it <em style={{ fontWeight: 300 }}>at ours.</em>
-        </h1>
+        </h2>
         <p style={{ margin: 0, fontSize: 16, lineHeight: 1.55, color: 'rgba(0,0,58,0.72)' }}>{intro}</p>
       </div>
       <div data-stagger="" style={{ display: 'grid', gridTemplateColumns: 'var(--c2)', gap: 20 }}>
@@ -100,7 +104,7 @@ export function VenuesView({ venues, intro, turnstileSiteKey }: { venues: VenueC
                 )}
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <h2 style={{ margin: 0, fontFamily: 'var(--font-serif)', fontWeight: 400, fontSize: 30 }}>{x.name}</h2>
+                <h3 style={{ margin: 0, fontFamily: 'var(--font-serif)', fontWeight: 400, fontSize: 30 }}>{x.name}</h3>
                 <span style={{ fontFamily: mono, fontSize: 13 }}>{x.label}</span>
               </div>
               <p style={{ margin: 0, fontSize: 15, lineHeight: 1.55, color: 'rgba(0,0,58,0.72)' }}>{x.description}</p>
@@ -350,7 +354,7 @@ export function VenuesView({ venues, intro, turnstileSiteKey }: { venues: VenueC
               setVf({ ...vf, phone: e.target.value });
               setVe({ ...ve, phone: undefined });
             }}
-            placeholder="055 555 7090"
+            placeholder="0555557090"
             aria-invalid={!!ve.phone}
             style={{ ...field(!!ve.phone), fontFamily: mono }}
           />

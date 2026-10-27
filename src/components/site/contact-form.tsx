@@ -161,7 +161,7 @@ export function ContactForm({ siteKey }: { siteKey: string | null }) {
             inputMode="tel"
             autoComplete="tel-national"
             enterKeyHint="next"
-            placeholder="55 555 7090"
+            placeholder="555557090"
             aria-invalid={!!errors.phone}
             aria-describedby={errors.phone ? 'cf-phone-err' : undefined}
             onChange={() => clear('phone')}

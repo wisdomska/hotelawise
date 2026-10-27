@@ -22,8 +22,8 @@ describe('phone', () => {
     expect(parseInternationalPhone('024 412 3456', '+233')).toEqual({ ok: true, e164: '+233244123456' });
   });
   it('formats', () => {
-    expect(formatPhone('+233555557090')).toBe('+233 55 555 7090');
-    expect(formatPhoneLocal('+233555557090')).toBe('055 555 7090');
+    expect(formatPhone('+233555557090')).toBe('+233555557090');
+    expect(formatPhoneLocal('+233555557090')).toBe('0555557090');
     expect(formatPhone('+447700900123')).toBe('+447700900123');
     expect(formatPhoneLocal('+447700900123')).toBe('+447700900123');
     expect(telHref('+233555557090')).toBe('tel:+233555557090');

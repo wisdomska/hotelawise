@@ -120,7 +120,7 @@ export function QuickBooking({ prefill }: { prefill?: { guest?: string; phone?: 
       {step === 0 && (
         <FieldGrid>
           <TextField label="Guest name" value={f.guest} onChange={set('guest')} placeholder="e.g. Yaw Darko" err={errors.guest} />
-          <TextField label="Phone" type="tel" value={f.phone} onChange={set('phone')} placeholder="e.g. 024 412 3456" err={errors.phone} />
+          <TextField label="Phone" type="tel" value={f.phone} onChange={set('phone')} placeholder="e.g. 0244123456" err={errors.phone} />
           <TextField
             label="Email (optional)"
             type="email"
