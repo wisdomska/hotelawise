@@ -78,7 +78,6 @@ const deskSchema = z.object({
   source: z.enum(['walk_in', 'phone', 'whatsapp']),
   pay: z.union([method, z.literal('none')]),
   txn: z.string().max(60),
-  password: z.string().max(200),
 });
 
 export async function createBookingAction(raw: z.input<typeof deskSchema>) {
@@ -107,7 +106,8 @@ export async function createBookingAction(raw: z.input<typeof deskSchema>) {
       });
       return done(`${r.ref} created.`, `Room ${i.room} · ${formatGhs(r.total)}. The guest gets a confirmation.`, { ref: r.ref });
     },
-    paying ? { password: i.password } : {},
+    // No password here (DECISIONS D-52): the money taken at check-in is the booking's own price.
+    {},
   );
   if (res.ok) {
     // Phone and WhatsApp guests need the reference; walk-ins get it for their records.

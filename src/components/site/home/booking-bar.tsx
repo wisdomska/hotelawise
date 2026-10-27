@@ -3,7 +3,7 @@
 // (event date → /rent), with the prototype's sliding tab indicator.
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Icon } from '@/components/ui/icon';
 import { addDays, nightsBetween, todayInAccra, type IsoDate } from '@/lib/dates';
@@ -20,6 +20,20 @@ export function BookingBar() {
   const [rentDate, setRentDate] = useState<IsoDate>(addDays(today, 7));
   const [error, setError] = useState<string | null>(null);
   const nights = nightsBetween(ci, co);
+  // The bar straddles the hero's bottom edge: half over the photo, half over the next
+  // section. Its height (which changes with the width and the tab) sets how far both move.
+  const bar = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    const el = bar.current;
+    if (!el) return;
+    const root = document.documentElement;
+    const ro = new ResizeObserver(() => root.style.setProperty('--bar-h', `${Math.round(el.offsetHeight)}px`));
+    ro.observe(el);
+    return () => {
+      ro.disconnect();
+      root.style.removeProperty('--bar-h');
+    };
+  }, []);
   const tapBtn: React.CSSProperties = {
     width: 'max(32px, var(--tap-min, 0px))',
     height: 'max(32px, var(--tap-min, 0px))',
@@ -38,12 +52,14 @@ export function BookingBar() {
         if (nights < 1) return setError('Pick a check-out date after your check-in.');
         router.push(`/book?ci=${ci}&co=${co}&g=${guests}`);
       }}
+      ref={bar}
       className="aw-bar"
       style={
         {
           position: 'relative',
-          zIndex: 1,
+          zIndex: 3,
           marginTop: 'var(--bar-mt)',
+          marginBottom: 'calc(var(--bar-h) / -2)',
           '--hcard': 'rgba(255,255,255,0.55)',
           '--hf': '#00003A',
           '--hs': 'rgba(0,0,58,0.66)',

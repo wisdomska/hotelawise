@@ -39,7 +39,6 @@ export function QuickBooking({ prefill }: { prefill?: { guest?: string; phone?: 
     source: 'walk_in' as 'walk_in' | 'phone' | 'whatsapp',
     pay: 'cash',
     txn: '',
-    pw: '',
   });
   const [quote, setQuote] = useState<{ free: string[]; total: number; checkOut: IsoDate } | null>(null);
   const set = (k: keyof typeof f) => (v: string) => {
@@ -85,7 +84,6 @@ export function QuickBooking({ prefill }: { prefill?: { guest?: string; phone?: 
     }
     if (step === 2 && !unpaid) {
       if (f.pay !== 'cash' && f.txn.trim().length < 4) err.txn = 'Enter the transaction ID.';
-      if (!f.pw) err.pw = 'Enter your password.';
     }
     if (Object.keys(err).length) return setErrors(err);
     if (step < 2) return setStep(step + 1);
@@ -102,7 +100,6 @@ export function QuickBooking({ prefill }: { prefill?: { guest?: string; phone?: 
         source: f.source,
         pay: unpaid ? 'none' : (f.pay as (typeof DESK_METHODS)[number]),
         txn: f.txn,
-        password: f.pw,
       }),
     );
     if (r.ok && r.data) openDrawer({ kind: 'booking', ref: (r.data as { ref: string }).ref });
@@ -196,7 +193,6 @@ export function QuickBooking({ prefill }: { prefill?: { guest?: string; phone?: 
                 err={errors.txn}
               />
             )}
-            {!unpaid && <PasswordField value={f.pw} onChange={set('pw')} err={errors.pw} />}
           </FieldGrid>
           <Lines
             lines={[

@@ -4,6 +4,12 @@ All notable changes to this project are recorded here. The format follows [Keep 
 
 ## [Unreleased]
 
+### Changed
+
+- Home: the booking bar sits across the bottom edge of the hero, half over the photo, so more of the photo shows.
+- Turnstile runs invisibly; no "Verify you are human" box appears anywhere.
+- Admin: the top search reads "Search" on small screens; New booking no longer asks for a password.
+
 ## [1.0.0] - 2026-10-27
 
 First production release, live at https://hotelawise.wisdomska.workers.dev.
