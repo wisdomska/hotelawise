@@ -2,6 +2,7 @@
 // What's here, rentals, events, testimonial and getting here.
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Fragment } from 'react';
 import { BookingBar } from '@/components/site/home/booking-bar';
 import { RoomsCarousel } from '@/components/site/home/rooms-carousel';
 import { WhatsHere } from '@/components/site/home/whats-here';
@@ -78,6 +79,18 @@ export default async function HomePage() {
   const contact = contactFrom(data);
   const c = data.content;
   const words = (c['home.heroTitle'] ?? '').trim().split(/\s+/);
+  // The title sits on two lines of about equal length: break after the word that makes
+  // the longer line as short as possible ("Your Gateway To / Unforgettable Memories").
+  const lineLen = (ws: string[]) => ws.join(' ').length;
+  const breakAt =
+    words.length < 2
+      ? -1
+      : words.slice(1).reduce((best, _, k) => {
+          const i = k + 1;
+          const worst = Math.max(lineLen(words.slice(0, i)), lineLen(words.slice(i)));
+          const bestWorst = Math.max(lineLen(words.slice(0, best)), lineLen(words.slice(best)));
+          return worst < bestWorst ? i : best;
+        }, 1);
   const price = (slug: string) => data.rentals.find((r) => r.slug === slug)?.price;
   const minPrice = (...slugs: string[]) => Math.min(...slugs.map(price).filter((p): p is number => p !== undefined));
   const rentals = [
@@ -130,6 +143,8 @@ export default async function HomePage() {
           <h1
             style={{
               margin: 0,
+              // Title case, whatever the CMS text: "Your Gateway To Unforgettable Memories".
+              textTransform: 'capitalize',
               fontFamily: 'var(--font-serif)',
               fontWeight: 300,
               fontSize: 'var(--h1)',
@@ -139,20 +154,24 @@ export default async function HomePage() {
             }}
           >
             {words.map((w, i) => (
-              <span
-                key={`${w}-${i}`}
-                style={{
-                  display: 'inline-block',
-                  overflow: 'hidden',
-                  verticalAlign: 'top',
-                  padding: '0 0.08em 0.1em 0.04em',
-                  margin: '0 0.1em 0 -0.04em',
-                }}
-              >
-                <span className="aw-rise" style={{ animationDelay: `${i * 45}ms`, fontWeight: 400 }}>
-                  {w}
+              <Fragment key={`${w}-${i}`}>
+                {i === breakAt && <br />}
+                <span
+                  style={{
+                    display: 'inline-block',
+                    overflow: 'hidden',
+                    verticalAlign: 'top',
+                    padding: '0 0.08em 0.1em 0.04em',
+                    margin: '0 0 0 -0.04em',
+                  }}
+                >
+                  <span className="aw-rise" style={{ animationDelay: `${i * 45}ms`, fontWeight: 400 }}>
+                    {w}
+                  </span>
                 </span>
-              </span>
+                {/* A real space, so the heading reads as words, not one run-together string. */}
+                {i < words.length - 1 && i + 1 !== breakAt && ' '}
+              </Fragment>
             ))}
           </h1>
           <div className="hidden tab:block" style={{ height: 1, background: 'rgba(245,242,234,0.4)' }} />

@@ -16,7 +16,7 @@ export default async function GalleryPage() {
   return (
     <main id="main" style={{ paddingTop: 84 }}>
       <section data-screen-label="Gallery" style={{ padding: 'calc(var(--sy) * 0.6) var(--pad) var(--sy)' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'var(--c2)', gap: 32, alignItems: 'end', marginBottom: 32 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'flex-start', marginBottom: 32 }}>
           <h1
             style={{
               margin: 0,

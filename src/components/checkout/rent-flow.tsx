@@ -346,7 +346,7 @@ export function RentFlow(p: RentFlowProps) {
     return (
       <section data-screen-label="Rentals · Catalogue" style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
         <Steps step={1} />
-        <div style={{ display: 'grid', gridTemplateColumns: 'var(--c2)', gap: 32, alignItems: 'end' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'flex-start' }}>
           <h1
             style={{
               margin: 0,
@@ -415,7 +415,7 @@ export function RentFlow(p: RentFlowProps) {
         <div style={{ display: 'grid', gridTemplateColumns: 'var(--c-main)', gap: 40, alignItems: 'start' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 32, minWidth: 0 }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 <h2 style={{ margin: 0, fontFamily: 'var(--font-serif)', fontWeight: 400, fontSize: 30 }}>
                   Packs <em style={{ fontWeight: 300 }}>(cheaper together)</em>
                 </h2>

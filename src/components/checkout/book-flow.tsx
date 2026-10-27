@@ -769,7 +769,7 @@ export function BookFlow(p: BookFlowProps) {
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                   <h2 style={{ margin: 0, fontFamily: 'var(--font-serif)', fontWeight: 400, fontSize: 28 }}>Rooms for {rangeShort}</h2>
                   {avail && <span style={{ fontFamily: mono, fontSize: 12, color: 'rgba(0,0,58,0.6)' }}>Live · updated {avail.at}</span>}
                 </div>
