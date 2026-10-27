@@ -1,0 +1,6 @@
+# Authorship guard: every commit is authored by WISDOMSKA(SENYA) alone.
+if grep -qiE 'co-authored-by|claude|anthropic|generated with' "$1"; then
+  echo "commit-msg: message contains a forbidden attribution (Co-Authored-By / Claude / Anthropic / Generated with)." >&2
+  exit 1
+fi
+pnpm exec commitlint --edit "$1"

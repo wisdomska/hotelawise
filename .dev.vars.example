@@ -1,0 +1,14 @@
+# Secrets for `wrangler dev` / `opennextjs-cloudflare preview`. Copy to .dev.vars.
+# Deployed environments use `wrangler secret put <NAME> --env preview|production`.
+DATABASE_URL=
+BETTER_AUTH_SECRET=
+REF_SECRET=
+RESEND_API_KEY=
+PAYSTACK_SECRET_KEY=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+TURNSTILE_SECRET_KEY=
+SENTRY_DSN=
+
+# Password for the preview site (any username). Only used when APP_ENV=preview.
+PREVIEW_PASSWORD=

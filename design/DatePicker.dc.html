@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:96px}
+button,a,label,input,select,textarea,[role=button],[role=option]{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+:focus:not(:focus-visible){outline:none}
+img{-webkit-user-drag:none}
+@media (max-width:760px){input,textarea{font-size:16px!important}}
+
+@keyframes awdp-pop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+@keyframes awdp-sheet{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes awdp-fade{from{opacity:0}to{opacity:1}}
+</style>
+</helmet>
+<div ref="{{ rootRef }}" style="position:relative;width:100%;min-width:0">
+  <sc-if value="{{ isBare }}" hint-placeholder-val="{{ false }}">
+    <button type="button" ref="{{ trigRef }}" onClick="{{ toggle }}" aria-haspopup="dialog" aria-expanded="{{ openStr }}" aria-label="{{ ariaLabel }}" style="width:100%;display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:0;border:none;background:transparent;text-align:left;color:inherit;cursor:pointer">
+      <span style="display:flex;align-items:center;gap:6px;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;opacity:0.65"><sc-if value="{{ icon }}" hint-placeholder-val="{{ false }}"><aw-icon name="{{ icon }}" size="14"></aw-icon></sc-if>{{ label }}</span>
+      <span style="display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:28px"><span style="font-size:18px;white-space:nowrap">{{ display }}</span><svg aria-hidden="true" data-mi-icon="down" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:0.6;transition:transform 200ms cubic-bezier(0.23,1,0.32,1);transform:rotate({{ chev }})"><path d="M4 6l4 4 4-4"></path></svg></span>
+    </button>
+  </sc-if>
+  <sc-if value="{{ isField }}" hint-placeholder-val="{{ true }}">
+    <button type="button" ref="{{ trigRef }}" onClick="{{ toggle }}" aria-haspopup="dialog" aria-expanded="{{ openStr }}" aria-label="{{ ariaLabel }}" style="width:100%;height:{{ fH }};display:flex;align-items:center;justify-content:space-between;gap:8px;padding:{{ fPad }};border-radius:{{ fR }};border:{{ fBw }} solid {{ fieldBd }};background:{{ fieldBg }};color:{{ fCol }};font-size:{{ fFs }};text-align:left;cursor:pointer;transition:border-color 150ms">
+      <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:{{ valOp }}">{{ display }}</span>
+      <svg aria-hidden="true" data-mi-icon="pop" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:0.6"><rect x="2.5" y="3.5" width="11" height="10" rx="2"></rect><path d="M2.5 6.5h11M5.5 2v3M10.5 2v3"></path></svg>
+    </button>
+  </sc-if>
+  <sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}">
+    <button type="button" ref="{{ trigRef }}" onClick="{{ toggle }}" aria-haspopup="dialog" aria-expanded="{{ openStr }}" aria-label="{{ ariaLabel }}" style="width:100%;height:46px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 12px;border-radius:10px;border:1px solid rgba(245,242,234,0.28);background:rgba(245,242,234,0.06);color:#F5F2EA;font-size:15px;text-align:left;cursor:pointer">
+      <span style="white-space:nowrap">{{ display }}</span><svg aria-hidden="true" data-mi-icon="down" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:0.6;transition:transform 200ms cubic-bezier(0.23,1,0.32,1);transform:rotate(0deg)"><path d="M4 6l4 4 4-4"></path></svg>
+    </button>
+  </sc-if>
+
+  <sc-if value="{{ open }}" hint-placeholder-val="{{ false }}">
+    <sc-if value="{{ sheet }}" hint-placeholder-val="{{ false }}"><div onClick="{{ close }}" style="position:fixed;inset:0;z-index:199;background:rgba(20,16,10,0.4);animation:awdp-fade 200ms cubic-bezier(0.23,1,0.32,1)"></div></sc-if>
+    <div ref="{{ panelRef }}" role="dialog" aria-label="Choose a date" tabindex="-1" onKeyDown="{{ onKey }}" style="{{ panelStyle }}">
+      <sc-if value="{{ sheet }}" hint-placeholder-val="{{ false }}"><div style="width:40px;height:4px;border-radius:2px;background:rgba(0,0,58,0.18);margin:-4px auto 10px"></div></sc-if>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-family:var(--serif,'Cormorant Garamond',Georgia,serif);font-size:22px;letter-spacing:-0.03em">{{ monthLabel }}</span>
+        <div style="display:flex;gap:4px">
+          <button type="button" onClick="{{ prev }}" disabled="{{ prevDis }}" aria-label="Previous month" style="display:flex;align-items:center;justify-content:center;padding:0;width:max(36px, var(--tap-min, 0px));height:max(36px, var(--tap-min, 0px));border-radius:999px;border:1px solid rgba(0,0,99,0.14);background:#FFFFFF;color:#00003A;font-size:15px;opacity:{{ prevOp }};transition:transform 120ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.92)"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4L6 8l4 4"></path></svg></button>
+          <button type="button" onClick="{{ next }}" aria-label="Next month" style="display:flex;align-items:center;justify-content:center;padding:0;width:max(36px, var(--tap-min, 0px));height:max(36px, var(--tap-min, 0px));border-radius:999px;border:1px solid rgba(0,0,99,0.14);background:#FFFFFF;color:#00003A;font-size:15px;transition:transform 120ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.92)"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></button>
+        </div>
+      </div>
+      <div role="grid" style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));row-gap:2px">
+        <sc-for list="{{ weekdays }}" as="w" hint-placeholder-count="7"><span style="text-align:center;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.04em;color:rgba(0,0,58,0.45);padding:4px 0 6px">{{ w }}</span></sc-for>
+        <sc-for list="{{ days }}" as="d" hint-placeholder-count="35"><button type="button" onClick="{{ d.on }}" disabled="{{ d.disabled }}" aria-label="{{ d.aria }}" aria-pressed="{{ d.pressed }}" style="{{ d.style }}" style-hover="{{ d.hover }}">{{ d.n }}</button></sc-for>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid rgba(0,0,99,0.08)">
+        <button type="button" onClick="{{ pickToday }}" disabled="{{ todayDis }}" style="height:max(32px, var(--tap-min, 0px));padding:0 12px;border-radius:999px;border:none;background:#F6E2B3;color:#00003A;font-size:12.5px;font-weight:500">Today</button>
+        <span style="font-family:'Geist Mono',monospace;font-size:11px;color:rgba(0,0,58,0.5)">{{ hint }}</span>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:360,&quot;height&quot;:460},&quot;value&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;onChange&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;(e:{target:{value:string}})=&gt;void&quot;},&quot;min&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;max&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;label&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Check-in&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;placeholder&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Pick a date&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;variant&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;field&quot;,&quot;bare&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;field&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;disabledDates&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;string[]&quot;},&quot;rangeStart&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;rangeEnd&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;error&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;bg&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#F5F2EA&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;withYear&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;hint&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+const ymd = d => d.toISOString().slice(0,10);
+const add = (s,n) => { const d = new Date(s+'T00:00:00Z'); d.setUTCDate(d.getUTCDate()+n); return ymd(d); };
+const EASE = 'cubic-bezier(0.23,1,0.32,1)';
+class Component extends DCLogic {
+  rootRef = React.createRef(); trigRef = React.createRef(); panelRef = React.createRef();
+  state = { open:false, view:null, focus:null, pos:null, sheet:false };
+  componentDidMount() {
+    this._down = e => { if (this.state.open && this.rootRef.current && !this.rootRef.current.contains(e.target)) this.close(); };
+    this._scroll = e => { if (!this.state.open || this.state.sheet) return; if (this.panelRef.current && e && e.target && this.panelRef.current.contains(e.target)) return; this.reflow(); };
+    document.addEventListener('pointerdown', this._down); window.addEventListener('scroll', this._scroll, true); window.addEventListener('resize', this._scroll);
+    if (window.visualViewport) window.visualViewport.addEventListener('resize', this._scroll);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this._raf); document.removeEventListener('pointerdown', this._down); window.removeEventListener('scroll', this._scroll, true); window.removeEventListener('resize', this._scroll); if (window.visualViewport) window.visualViewport.removeEventListener('resize', this._scroll); }
+  componentDidUpdate(pp, ps) { if (this.state.open && !this.state.sheet && (ps.view !== this.state.view || !ps.open)) this.reflow(); const lock = !!(this.state.open && this.state.sheet); if (lock !== !!this._awLocked) { this._awLocked = lock; window.__awLock = Math.max(0, (window.__awLock || 0) + (lock ? 1 : -1)); document.documentElement.style.overflow = window.__awLock > 0 ? 'hidden' : ''; } }
+  cbRect() {
+    const t = this.trigRef.current; let anc = t && t.parentElement;
+    while (anc && anc !== document.body && anc !== document.documentElement) { const cs = getComputedStyle(anc); if ((cs.transform && cs.transform !== 'none') || (cs.filter && cs.filter !== 'none') || (cs.backdropFilter && cs.backdropFilter !== 'none') || (cs.webkitBackdropFilter && cs.webkitBackdropFilter !== 'none') || (cs.contain && /paint|layout|strict|content/.test(cs.contain))) break; anc = anc.parentElement; }
+    return anc && anc !== document.body && anc !== document.documentElement ? anc.getBoundingClientRect() : { left:0, top:0, width:window.innerWidth, height:window.innerHeight };
+  }
+  place(estH, W) {
+    const t = this.trigRef.current; if (!t) return null;
+    const r = t.getBoundingClientRect(), vw = window.innerWidth, vh = window.innerHeight, M = 8, G = 8, base = this.cbRect();
+    const pnl = this.panelRef.current;
+    const natural = pnl ? Math.max(pnl.scrollHeight, pnl.offsetHeight) : estH;
+    const H = Math.min(natural || estH, vh - 2*M);
+    const below = vh - r.bottom - G - M, above = r.top - G - M;
+    let side, top;
+    if (H <= below) { side = 'below'; top = r.bottom + G; }
+    else if (H <= above) { side = 'above'; top = r.top - G - H; }
+    else { side = below >= above ? 'below' : 'above'; top = side === 'below' ? r.bottom + G : r.top - G - H; top = Math.max(M, Math.min(top, vh - M - H)); }
+    const left = Math.max(M, Math.min(r.left, vw - W - M));
+    const offscreen = r.bottom < 0 || r.top > vh;
+    return { top: top - base.top, left: left - base.left, maxH: vh - 2*M, side, w: W, offscreen };
+  }
+  reflow() {
+    if (!this.state.open || this.state.sheet) return;
+    cancelAnimationFrame(this._raf);
+    this._raf = requestAnimationFrame(() => { const p = this.place(this._estH || 380, this._W || 312); if (!p) return; if (p.offscreen) { this.setState({open:false}); return; }
+      const o = this.state.pos || {}; if (Math.abs((o.top||0) - p.top) > 0.5 || Math.abs((o.left||0) - p.left) > 0.5 || o.side !== p.side || o.maxH !== p.maxH) this.setState({pos:{...p, ready:true}}); else if (!o.ready) this.setState({pos:{...o, ready:true}}); });
+  }
+  today() { return ymd(new Date()); }
+  openIt() {
+    const t = this.trigRef.current; if (!t) return;
+    const sheet = this.cbRect().width < 640;
+    this._estH = 380; this._W = 312;
+    const p = this.place(380, 312);
+    const v = this.props.value || this.props.min || this.today();
+    this.setState({ open:true, sheet, pos:{...p, ready:false}, view:v.slice(0,7)+'-01', focus:v }, () => { this.reflow(); setTimeout(() => this.panelRef.current && this.panelRef.current.focus({preventScroll:true}), 10); });
+  }
+  close(refocus) { this.setState({open:false}); if (refocus && this.trigRef.current) this.trigRef.current.focus(); }
+  blocked(k) { const p = this.props; return (p.min && k < p.min) || (p.max && k > p.max) || (p.disabledDates || []).includes(k); }
+  pick(k) { if (this.blocked(k)) return; this.props.onChange && this.props.onChange({ target:{ value:k } }); this.close(true); }
+  renderVals() {
+    const p = this.props, s = this.state, T = this.today(), variant = p.variant || 'field';
+    const v = p.value || '';
+    const display = v ? new Date(v+'T00:00:00Z').toLocaleDateString('en-GB', { timeZone:'UTC', weekday:'short', day:'numeric', month:'short', ...(p.withYear ? {year:'numeric'} : {}) }) : (p.placeholder || 'Pick a date');
+    const view = s.view || (v || T).slice(0,7)+'-01';
+    const vd = new Date(view+'T00:00:00Z'), y = vd.getUTCFullYear(), mo = vd.getUTCMonth();
+    const lead = (vd.getUTCDay()+6)%7, dim = new Date(Date.UTC(y,mo+1,0)).getUTCDate();
+    const rs = p.rangeStart, re = p.rangeEnd;
+    const days = [];
+    for (let i=0;i<lead;i++) days.push({ n:'', disabled:true, aria:'', pressed:'false', style:{ visibility:'hidden', height:40 }, hover:{}, on:null });
+    for (let d=1; d<=dim; d++) {
+      const k = ymd(new Date(Date.UTC(y,mo,d))), sel = k===v, edge = k===rs || k===re, inR = rs && re && k > rs && k < re;
+      const dis = this.blocked(k), sold = (p.disabledDates||[]).includes(k), foc = k===s.focus;
+      days.push({ n:d, disabled:dis, pressed: sel ? 'true':'false', aria: new Date(k+'T00:00:00Z').toLocaleDateString('en-GB',{timeZone:'UTC',weekday:'long',day:'numeric',month:'long'}) + (sold ? ', fully booked' : ''),
+        style:{ height: s.sheet ? 46 : 40, border:'none', borderRadius: sel ? 999 : inR ? 0 : 999, fontFamily:"'Geist Mono',monospace", fontSize:13, cursor: dis ? 'not-allowed' : 'pointer',
+          background: sel ? '#000063' : edge ? 'rgba(0,0,99,0.12)' : inR ? '#F6E2B3' : 'transparent',
+          color: sel ? '#F5F2EA' : dis ? 'rgba(0,0,58,0.28)' : '#00003A', textDecoration: sold ? 'line-through' : 'none',
+          boxShadow: foc && !sel ? 'inset 0 0 0 1.5px #000063' : (k===T && !sel ? 'inset 0 0 0 1.5px #F2B544' : 'none'), transition:`background 150ms ${EASE}, transform 120ms ${EASE}` },
+        hover: dis || sel ? {} : { background:'rgba(242,181,68,0.35)' }, on:() => this.pick(k) });
+    }
+    const panelStyle = s.sheet
+      ? { position:'fixed', left:0, right:0, bottom:0, zIndex:200, background:'#F5F2EA', borderRadius:'18px 18px 0 0', padding:'16px 18px calc(24px + env(safe-area-inset-bottom))', overscrollBehavior:'contain', boxShadow:'0 -20px 40px -20px rgba(20,16,10,0.45)', animation:`awdp-sheet 360ms ${EASE}`, outline:'none', fontFamily:"'Geist',system-ui,sans-serif", color:'#00003A' }
+      : { position:'fixed', zIndex:200, width:312, left: s.pos ? s.pos.left : 0, top: s.pos ? s.pos.top : 0, maxHeight: s.pos ? s.pos.maxH : 'calc(100vh - 16px)', overflowY:'auto', overscrollBehavior:'contain', visibility: s.pos && s.pos.ready ? 'visible' : 'hidden',
+          background:'rgba(255,255,255,0.92)', WebkitBackdropFilter:'blur(18px) saturate(1.4)', backdropFilter:'blur(18px) saturate(1.4)', border:'1px solid rgba(0,0,99,0.1)', borderRadius:16, padding:14,
+          boxShadow:'0 24px 60px -24px rgba(20,16,10,0.45)', outline:'none', fontFamily:"'Geist',system-ui,sans-serif", color:'#00003A' };
+    const inner = s.sheet ? null : { animation: s.pos && s.pos.ready ? `awdp-pop 220ms ${EASE}` : 'none', transformOrigin: s.pos && s.pos.side === 'above' ? '0 100%' : '0 0' };
+    if (inner) Object.assign(panelStyle, { animation: inner.animation, transformOrigin: inner.transformOrigin });
+    const minView = p.min ? p.min.slice(0,7)+'-01' : null;
+    const moveFocus = n => { const f = add(s.focus || v || T, n); this.setState({ focus:f, view:f.slice(0,7)+'-01' }); };
+    return {
+      rootRef:this.rootRef, trigRef:this.trigRef, panelRef:this.panelRef,
+      isBare: variant==='bare', isField: variant==='field', isDark: variant==='dark',
+      label: p.label || '', icon: p.icon || '', ariaLabel: `${p.label || 'Date'}: ${display}`, display, valOp: v ? 1 : 0.5, calIcon:'CAL',
+      fieldBd: p.error ? (p.compact ? 'var(--red, #B42318)' : '#B42318') : s.open ? (p.compact ? 'var(--ink, #000063)' : '#000063') : (p.compact ? 'var(--line2, rgba(0,0,99,0.2))' : 'rgba(0,0,99,0.2)'), fieldBg: p.bg || (p.compact ? 'var(--bg, #F5F2EA)' : '#F5F2EA'),
+      fH: p.compact ? '40px' : '48px', fPad: p.compact ? '0 10px' : '0 14px', fR: p.compact ? '8px' : '10px', fBw: p.compact ? '1px' : '1.5px', fCol: p.compact ? 'var(--ink, #00003A)' : '#00003A', fFs: p.compact ? '13.5px' : '16px',
+      chev: s.open ? '180deg' : '0deg', open:s.open, openStr: s.open ? 'true':'false', sheet:s.sheet,
+      toggle:() => s.open ? this.close() : this.openIt(), close:() => this.close(true),
+      monthLabel: vd.toLocaleDateString('en-GB', { timeZone:'UTC', month:'long', year:'numeric' }),
+      prev:() => { const d = new Date(view+'T00:00:00Z'); d.setUTCMonth(d.getUTCMonth()-1); this.setState({view:ymd(d)}); }, prevDis: !!(minView && view <= minView), prevOp: minView && view <= minView ? 0.35 : 1,
+      next:() => { const d = new Date(view+'T00:00:00Z'); d.setUTCMonth(d.getUTCMonth()+1); this.setState({view:ymd(d)}); },
+      weekdays:['MO','TU','WE','TH','FR','SA','SU'], days, panelStyle,
+      pickToday:() => this.pick(T), todayDis: this.blocked(T), hint: p.hint || '← → ↑ ↓ · ENTER · ESC',
+      onKey: e => { const k = e.key;
+        if (k==='Escape') { e.preventDefault(); this.close(true); } else if (k==='ArrowLeft') { e.preventDefault(); moveFocus(-1); } else if (k==='ArrowRight') { e.preventDefault(); moveFocus(1); }
+        else if (k==='ArrowUp') { e.preventDefault(); moveFocus(-7); } else if (k==='ArrowDown') { e.preventDefault(); moveFocus(7); } else if (k==='Enter' && s.focus && e.target === this.panelRef.current) { e.preventDefault(); this.pick(s.focus); } },
+    };
+  }
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+name: Deploy
+
+# preview → preview.hotelawise.com, main → hotelawise.com. Each GitHub environment
+# holds its own secrets: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, DATABASE_URL_MIGRATE.
+on:
+  push:
+    branches: [preview, main]
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref_name == 'main' && 'production' || 'preview' }}
+    env:
+      TARGET: ${{ github.ref_name == 'main' && 'production' || 'preview' }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      DATABASE_URL_MIGRATE: ${{ secrets.DATABASE_URL_MIGRATE }}
+    steps:
+      - name: Check deploy secrets
+        run: |
+          for v in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID DATABASE_URL_MIGRATE; do
+            if [ -z "${!v}" ]; then echo "::error::$v is not set for the $TARGET environment"; exit 1; fi
+          done
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Migrations run here, before the new code goes live — never on page load.
+      - run: pnpm db:migrate
+      - run: node scripts/cf-clean-build.mjs --env "$TARGET"
+      # Uploads the Worker, populates the KV page cache and creates the D1 tag table.
+      - run: pnpm exec opennextjs-cloudflare deploy --env "$TARGET"

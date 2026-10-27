@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<script src="icons.js"></script>
+<script src="store.js"></script>
+<script src="motion.js" data-mode="stagger"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Book or rent · Hotel A-Wise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://api.fontshare.com/v2/css?f[]=gambetta@300,400,500,600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:96px}
+button,a,label,input,select,textarea,[role=button],[role=option]{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+:focus:not(:focus-visible){outline:none}
+@media (max-width:760px){input,textarea{font-size:16px!important}}
+
+html,body{overflow-x:clip;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+img,video,iframe{max-width:100%}
+html,body{margin:0;padding:0;background:#F5F2EA;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#000063;text-underline-offset:3px}
+a:hover{color:#00003A}
+::selection{background:#F2B544;color:#00003A}
+:focus-visible{outline:2px solid #F2B544;outline-offset:3px;border-radius:4px}
+button{font:inherit;color:inherit;cursor:pointer}
+button:disabled{cursor:not-allowed}
+input,select,textarea{font:inherit;color:inherit}
+img{display:block;max-width:100%}
+@keyframes aw-breathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.8)}}
+@keyframes aw-pop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+@keyframes aw-menu{from{opacity:0;transform:translateY(-6px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes aw-menu-item{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+@keyframes aw-fade{from{opacity:0}to{opacity:1}}
+@keyframes aw-up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes aw-spin{to{transform:rotate(360deg)}}
+@keyframes aw-shimmer{0%{opacity:.55}50%{opacity:1}100%{opacity:.55}}
+@keyframes aw-toast{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes aw-stamp{from{opacity:0;transform:scale(1.15) rotate(-8deg)}to{opacity:1;transform:scale(1) rotate(-8deg)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:1ms!important;animation-iteration-count:1!important;transition-duration:1ms!important}}
+</style>
+</helmet>
+
+<div style="{{ outerStyle }}">
+<div ref="{{ scrollRef }}" style="{{ scrollStyle }}">
+<div style="{{ rootVars }}">
+
+<sc-if value="{{ offline }}" hint-placeholder-val="{{ false }}">
+  <div role="status" style="background:#B42318;color:#FFFFFF;font-family:'Geist',system-ui,sans-serif;font-size:13px;padding:10px var(--pad);display:flex;gap:12px;justify-content:space-between;flex-wrap:wrap">
+    <span>You're offline. We can't confirm availability or take payment until you're back.</span>
+    <a href="{{ ct.tel }}" style="color:#FFFFFF;font-family:'Geist Mono',monospace">Call {{ ct.phone }}</a>
+  </div>
+</sc-if>
+
+<div style="position:sticky;top:0;z-index:40;height:0;display:flow-root">
+<header style="{{ navStyle }}">
+  <div aria-hidden="true" style="position:absolute;inset:0;border-radius:16px;background:rgba(245,242,234,0.86);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);border:1px solid rgba(0,0,99,0.08);box-shadow:0 14px 36px -20px rgba(20,16,10,0.45);opacity:{{ navSolid }};transition:opacity 280ms cubic-bezier(0.23,1,0.32,1);pointer-events:none"></div>
+  <div style="position:relative">
+  <div style="display:flex;align-items:center;gap:28px;padding:10px 10px 10px 20px;min-height:60px">
+    <a href="Website.dc.html" aria-label="Hotel A-Wise home" style="display:flex;align-items:center;gap:10px;color:var(--nf);text-decoration:none">
+      <svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="11" cy="11" r="5.5"></circle><circle cx="21" cy="11" r="5.5"></circle><circle cx="11" cy="21" r="5.5"></circle><circle cx="21" cy="21" r="5.5"></circle><rect x="12.5" y="12.5" width="7" height="7" transform="rotate(45 16 16)"></rect></svg>
+      <span style="font-family:var(--serif);font-size:22px;letter-spacing:-0.01em;white-space:nowrap">Hotel A-Wise</span>
+    </a>
+    
+    <div style="flex:1"></div>
+    <nav aria-label="Main" style="display:var(--d);gap:clamp(14px,2vw,28px);font-size:14px;min-width:0;flex-wrap:nowrap;white-space:nowrap">
+      <sc-for list="{{ navLinks }}" as="l" hint-placeholder-count="5">
+        <a data-mi-ul="" href="{{ l.href }}" aria-current="{{ l.current }}" style="color:var(--nf);text-decoration:none;position:relative;padding:6px 0;opacity:{{ l.op }}">{{ l.label }}</a>
+      </sc-for>
+    </nav>
+    
+    <a href="{{ bookHref }}" style="display:var(--d);align-items:center;height:max(42px, var(--tap-min, 0px));padding:0 18px;border-radius:10px;background:#000063;color:#F5F2EA;text-decoration:none;font-weight:500;font-size:14px;transition:transform 160ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.97)">Book a room</a>
+    <button onClick="{{ toggleMenu }}" aria-expanded="{{ menuOpen }}" aria-label="Menu" style="display:var(--mo);align-items:center;justify-content:center;height:44px;padding:0 14px;border-radius:10px;border:1px solid var(--nl);background:transparent;color:var(--nf);font-size:14px">{{ menuLabel }}</button>
+  </div>
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="padding:4px 20px 18px;display:flex;flex-direction:column;border-top:1px solid var(--nl);transform-origin:50% 0;animation:aw-menu 280ms cubic-bezier(0.23,1,0.32,1) both">
+      <sc-for list="{{ navLinks }}" as="l" hint-placeholder-count="5">
+        <a href="{{ l.href }}" onClick="{{ closeMenu }}" style="display:flex;align-items:center;justify-content:space-between;min-height:52px;color:var(--nf);text-decoration:none;font-family:var(--serif);font-size:24px;letter-spacing:-0.03em;border-bottom:1px solid var(--nl);animation:aw-menu-item 360ms cubic-bezier(0.23,1,0.32,1) both;animation-delay:{{ l.delay }}">{{ l.label }}<svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.45"><path d="M6 4l4 4-4 4"></path></svg></a>
+      </sc-for>
+      <a href="Checkout.dc.html#manage" style="display:flex;align-items:center;gap:8px;min-height:44px;margin-top:8px;color:var(--nm);font-size:14px;text-decoration:none;animation:aw-menu-item 360ms cubic-bezier(0.23,1,0.32,1) 220ms both"><aw-icon name="file" size="16"></aw-icon>Manage my booking</a>
+      
+    </div>
+  </sc-if>
+</div>
+</header>
+</div>
+
+<main style="font-family:'Geist',system-ui,sans-serif;padding:108px var(--pad) 120px;max-width:1360px;margin:0 auto">
+  <nav aria-label="Booking and rentals" style="display:flex;gap:4px;margin-bottom:32px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:4px;border-radius:20px;background:#FFFFFF;border:1px solid rgba(0,0,99,0.1);width:max-content;max-width:100%">
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5"><a href="{{ t.href }}" aria-current="{{ t.current }}" style="height:max(36px, var(--tap-min, 0px));padding:0 14px;display:flex;align-items:center;border-radius:9px;font-size:13.5px;text-decoration:none;white-space:nowrap;gap:8px;background:{{ t.bg }};color:{{ t.fg }};transition:background 220ms cubic-bezier(0.23,1,0.32,1),color 220ms cubic-bezier(0.23,1,0.32,1),transform 150ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.97)"><aw-icon name="{{ t.icon }}" size="16"></aw-icon>{{ t.label }}</a></sc-for>
+  </nav>
+
+<!-- ================= ROOM BOOKING ================= -->
+<sc-if value="{{ isBook }}" hint-placeholder-val="{{ true }}">
+  <sc-if value="{{ bookActive }}" hint-placeholder-val="{{ true }}">
+    <div data-screen-label="Booking · Step header" style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:28px">
+      <ol aria-label="Booking steps" style="list-style:none;margin:0;padding:0;display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;max-width:100%">
+        <sc-for list="{{ bookSteps }}" as="st" hint-placeholder-count="3"><li aria-current="{{ st.current }}" style="display:flex;align-items:center;gap:8px;height:34px;padding:0 12px;white-space:nowrap;flex-shrink:0;border-radius:999px;border:1px solid {{ st.bd }};background:{{ st.bg }};color:{{ st.fg }};font-size:13px"><aw-icon name="{{ st.icon }}" size="15"></aw-icon>{{ st.label }}</li></sc-for>
+      </ol>
+      <sc-if value="{{ holdShow }}" hint-placeholder-val="{{ false }}">
+        <div role="timer" aria-live="off" style="display:flex;align-items:center;gap:10px;height:34px;padding:0 12px;border-radius:999px;background:#00003A;color:#F5F2EA;font-size:13px">{{ dotEl }}<span>Room held for you</span><span style="font-family:'Geist Mono',monospace;color:#F2B544">{{ holdLeft }}</span></div>
+      </sc-if>
+    </div>
+
+    <sc-if value="{{ holdExpired }}" hint-placeholder-val="{{ false }}">
+      <div role="alert" style="margin-bottom:24px;padding:18px 20px;border-radius:10px;background:#FFFFFF;border:1.5px solid #B42318;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">
+        <div style="display:flex;flex-direction:column;gap:4px"><strong style="font-weight:500">Your 15-minute hold ran out.</strong><span style="font-size:14px;color:rgba(0,0,58,0.7)">We released the room so nobody gets double-booked. It may still be free. Check again and we'll hold it for another 15.</span></div>
+        <button onClick="{{ renewHold }}" style="height:44px;padding:0 18px;border:none;border-radius:10px;background:#000063;color:#F5F2EA;font-size:14px">Check again</button>
+      </div>
+    </sc-if>
+
+    <div style="display:grid;grid-template-columns:var(--c-main);gap:40px;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:32px;min-width:0">
+
+        <sc-if value="{{ step1 }}" hint-placeholder-val="{{ true }}">
+          <section data-screen-label="Booking · 1 Dates &amp; room" style="display:flex;flex-direction:column;gap:28px;animation:aw-up 300ms cubic-bezier(0.23,1,0.32,1)">
+            <h1 style="margin:0;font-family:var(--serif);font-weight:400;font-size:var(--h2);line-height:1;letter-spacing:-0.05em">When are you<br><em style="font-weight:300">coming?</em></h1>
+            <div style="background:#FFFFFF;border:1px solid rgba(0,0,99,0.14);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:16px">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+                <div style="display:flex;gap:24px;flex-wrap:wrap">
+                  <div style="display:flex;flex-direction:column;gap:2px"><span style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.08em;color:rgba(0,0,58,0.6)">CHECK-IN</span><span style="font-size:17px">{{ ciLabel }}</span></div>
+                  <div style="display:flex;flex-direction:column;gap:2px"><span style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.08em;color:rgba(0,0,58,0.6)">CHECK-OUT</span><span style="font-size:17px">{{ coLabel }}</span></div>
+                  <div style="display:flex;flex-direction:column;gap:2px"><span style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.08em;color:rgba(0,0,58,0.6)">GUESTS</span><div style="display:flex;align-items:center;gap:10px"><button aria-label="Fewer guests" onClick="{{ gMinus }}" style="width:max(32px, var(--tap-min, 0px));height:max(32px, var(--tap-min, 0px));border-radius:8px;border:1px solid rgba(0,0,99,0.25);background:#FFFFFF">−</button><span style="font-family:'Geist Mono',monospace;font-size:16px">{{ guests }}</span><button aria-label="More guests" onClick="{{ gPlus }}" style="width:max(32px, var(--tap-min, 0px));height:max(32px, var(--tap-min, 0px));border-radius:8px;border:1px solid rgba(0,0,99,0.25);background:#FFFFFF">+</button></div></div>
+                </div>
+                <div style="display:flex;gap:6px"><button onClick="{{ calPrev }}" aria-label="Previous month" disabled="{{ calPrevDisabled }}" style="width:max(40px, var(--tap-min, 0px));height:max(40px, var(--tap-min, 0px));border-radius:10px;border:1px solid rgba(0,0,99,0.2);background:#FFFFFF">←</button><button onClick="{{ calNext }}" aria-label="Next month" style="display:flex;align-items:center;justify-content:center;padding:0;width:max(40px, var(--tap-min, 0px));height:max(40px, var(--tap-min, 0px));border-radius:10px;border:1px solid rgba(0,0,99,0.2);background:#FFFFFF">→</button></div>
+              </div>
+              <div style="display:grid;grid-template-columns:var(--c-cal);gap:28px">
+                <sc-for list="{{ calMonths }}" as="mo" hint-placeholder-count="2">
+                  <div style="display:flex;flex-direction:column;gap:8px">
+                    <span style="font-family:var(--serif);font-size:20px">{{ mo.label }}</span>
+                    <div role="grid" aria-label="{{ mo.label }}" style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));row-gap:2px">
+                      <sc-for list="{{ weekdays }}" as="w" hint-placeholder-count="7"><span style="text-align:center;font-family:'Geist Mono',monospace;font-size:11px;color:rgba(0,0,58,0.5);padding:4px 0">{{ w }}</span></sc-for>
+                      <sc-for list="{{ mo.days }}" as="d" hint-placeholder-count="35"><button onClick="{{ d.on }}" disabled="{{ d.disabled }}" aria-label="{{ d.aria }}" aria-pressed="{{ d.pressed }}" style="height:max(42px, var(--tap-min, 0px));border:none;border-radius:{{ d.radius }};background:{{ d.bg }};color:{{ d.fg }};text-decoration:{{ d.deco }};visibility:{{ d.vis }};font-family:'Geist Mono',monospace;font-size:13px;box-shadow:{{ d.ring }};transition:transform 120ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.94)">{{ d.n }}</button></sc-for>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:rgba(0,0,58,0.65)">
+                <span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:14px;border-radius:4px;background:#000063"></span>Your stay</span>
+                <span style="display:flex;align-items:center;gap:6px"><span style="font-family:'Geist Mono',monospace;text-decoration:line-through">14</span>Fully booked</span>
+                <span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:14px;border-radius:4px;box-shadow:inset 0 0 0 1.5px #F2B544"></span>Today</span>
+                <span style="margin-left:auto">{{ calHint }}</span>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap"><h2 style="margin:0;font-family:var(--serif);font-weight:400;font-size:28px">Rooms for {{ rangeShort }}</h2><span style="font-family:'Geist Mono',monospace;font-size:12px;color:rgba(0,0,58,0.6)">Live · updated {{ clock }}</span></div>
+              <sc-if value="{{ roomsLoading }}" hint-placeholder-val="{{ false }}"><div aria-busy="true" style="display:flex;flex-direction:column;gap:10px"><sc-for list="{{ skel3 }}" as="x" hint-placeholder-count="4"><div style="height:112px;border-radius:12px;background:#F6E2B3;animation:aw-shimmer 1.4s ease-in-out infinite"></div></sc-for><span style="font-size:13px;color:rgba(0,0,58,0.6)">Checking which keys are on the hook…</span></div></sc-if>
+              <sc-if value="{{ allSoldOut }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:28px;border-radius:20px;background:#00003A;color:#F5F2EA;display:flex;flex-direction:column;gap:14px">
+                  <span style="font-family:'Geist Mono',monospace;font-size:12px;color:#F2B544">SOLD OUT · {{ rangeShort }}</span>
+                  <p style="margin:0;font-family:var(--serif);font-size:30px;line-height:1.1">Every key's on someone else's hook those nights. Sorry.</p>
+                  <span style="font-size:14px;opacity:0.75">The nearest nights with rooms free:</span>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap"><sc-for list="{{ altDates }}" as="a" hint-placeholder-count="3"><button onClick="{{ a.on }}" style="height:max(40px, var(--tap-min, 0px));padding:0 14px;border-radius:10px;border:1px solid rgba(245,242,234,0.35);background:transparent;color:#F5F2EA;font-family:'Geist Mono',monospace;font-size:13px">{{ a.label }}</button></sc-for></div>
+                  <span style="font-size:13px;opacity:0.75">Or call <a href="{{ ct.tel }}" style="color:#F5F2EA">{{ ct.phone }}</a>. Cancellations happen, and the desk knows first.</span>
+                </div>
+              </sc-if>
+              <sc-if value="{{ roomsReady }}" hint-placeholder-val="{{ true }}">
+                <div role="radiogroup" aria-label="Choose a room" style="display:flex;flex-direction:column;gap:10px" data-stagger="">
+                  <sc-for list="{{ roomOpts }}" as="o" hint-placeholder-count="5">
+                    <button role="radio" aria-checked="{{ o.checked }}" onClick="{{ o.on }}" disabled="{{ o.disabled }}" style="display:grid;grid-template-columns:var(--c-row);gap:16px;align-items:center;padding:12px;border-radius:20px;border:1.5px solid {{ o.bd }};background:{{ o.bg }};text-align:left;opacity:{{ o.op }};transition:transform 150ms cubic-bezier(0.23,1,0.32,1),border-color 150ms" style-active="transform:scale(0.985)">
+                      <div style="height:88px;border-radius:16px;overflow:hidden;background:#F6E2B3"><img src="{{ o.img }}" alt="" style="width:100%;height:100%;object-fit:cover;filter:saturate(0.92)"></div>
+                      <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+                        <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><span style="font-family:'Geist Mono',monospace;font-size:13px;padding:2px 8px;border-radius:5px;background:#000063;color:#F5F2EA">{{ o.code }}</span><span style="font-family:var(--serif);font-size:21px">{{ o.name }}</span></div>
+                        <span style="font-size:13px;color:rgba(0,0,58,0.65)">{{ o.meta }}</span>
+                        <span style="font-family:'Geist Mono',monospace;font-size:11px;align-self:flex-start;padding:3px 8px;border-radius:999px;background:{{ o.badgeBg }};color:{{ o.badgeFg }}">{{ o.badge }}</span>
+                      </div>
+                      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-family:'Geist Mono',monospace;white-space:nowrap"><span style="font-size:17px;font-weight:500">GHS {{ o.price }}</span><span style="font-size:11px;color:rgba(0,0,58,0.55)">per night</span></div>
+                    </button>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </section>
+        </sc-if>
+
+        <sc-if value="{{ step2 }}" hint-placeholder-val="{{ false }}">
+          <section data-screen-label="Booking · 2 Guest details" style="display:flex;flex-direction:column;gap:24px;animation:aw-up 300ms cubic-bezier(0.23,1,0.32,1)">
+            <h1 style="margin:0;font-family:var(--serif);font-weight:400;font-size:var(--h2);line-height:1;letter-spacing:-0.05em">Who's<br><em style="font-weight:300">checking in?</em></h1>
+            <p style="margin:0;font-size:15px;color:rgba(0,0,58,0.7);max-width:520px">No account needed. We'll send your receipt by SMS or WhatsApp, and by email if you give us one.</p>
+            <div style="display:grid;grid-template-columns:var(--c2);gap:16px;background:#FFFFFF;border:1px solid rgba(0,0,99,0.14);border-radius:20px;padding:20px">
+              <label style="display:flex;flex-direction:column;gap:6px;font-size:13px"><span style="display:flex;align-items:center;gap:8px"><aw-icon name="user" size="16"></aw-icon>Full name</span><input value="{{ gf.name }}" onChange="{{ gfName }}" placeholder="e.g. Kofi Mensah" autoComplete="name" aria-invalid="{{ ge.nameBad }}" style="height:48px;padding:0 14px;border-radius:10px;border:1.5px solid {{ ge.nameBd }};background:#F5F2EA;font-size:16px"><sc-if value="{{ ge.name }}" hint-placeholder-val="{{ false }}"><span role="alert" style="color:#B42318;font-size:12px">{{ ge.name }}</span></sc-if></label>
+              <label style="display:flex;flex-direction:column;gap:6px;font-size:13px"><span style="display:flex;align-items:center;gap:8px"><aw-icon name="smartphone" size="16"></aw-icon>Phone (for SMS / WhatsApp)</span><div style="display:flex;gap:6px"><dc-import name="Select" variant="field" mono="{{ true }}" width="128px" panel-width="200" aria-label="Country code" value="{{ gf.cc }}" options="{{ ccOpts }}" on-change="{{ gfCc }}" hint-size="128px,48px"></dc-import><input type="tel" autoComplete="tel-national" enterKeyHint="next" value="{{ gf.phone }}" onChange="{{ gfPhone }}" inputMode="tel" placeholder="055 555 7090" aria-invalid="{{ ge.phoneBad }}" style="flex:1;min-width:0;height:48px;padding:0 14px;border-radius:10px;border:1.5px solid {{ ge.phoneBd }};background:#F5F2EA;font-size:16px;font-family:'Geist Mono',monospace"></div><sc-if value="{{ ge.phone }}" hint-placeholder-val="{{ false }}"><span role="alert" style="color:#B42318;font-size:12px">{{ ge.phone }}</span></sc-if></label>
+              <label style="display:flex;flex-direction:column;gap:6px;font-size:13px"><span style="display:flex;align-items:center;gap:8px"><aw-icon name="mail" size="16"></aw-icon>Email (optional)</span><input value="{{ gf.email }}" onChange="{{ gfEmail }}" placeholder="you@example.com" type="email" autoComplete="email" style="height:48px;padding:0 14px;border-radius:10px;border:1.5px solid {{ ge.emailBd }};background:#F5F2EA;font-size:16px"><sc-if value="{{ ge.email }}" hint-placeholder-val="{{ false }}"><span role="alert" style="color:#B42318;font-size:12px">{{ ge.email }}</span></sc-if></label>
+              <label style="display:flex;flex-direction:column;gap:6px;font-size:13px"><span style="display:flex;align-items:center;gap:8px"><aw-icon name="clock" size="16"></aw-icon>Arrival time (any hour, we're up)</span><dc-import name="Select" variant="field" mono="{{ true }}" aria-label="Arrival time" label="Arrival time" value="{{ gf.arrival }}" options="{{ arrivalOpts }}" on-change="{{ gfArrival }}" hint-size="100%,48px"></dc-import></label>
+              <label style="grid-column:1 / -1;display:flex;flex-direction:column;gap:6px;font-size:13px">Special requests (optional)<textarea value="{{ gf.notes }}" onChange="{{ gfNotes }}" rows="3" placeholder="Late arrival, extra pillows, a quiet room at the end of the hall…" style="padding:12px 14px;border-radius:10px;border:1.5px solid rgba(0,0,99,0.2);background:#F5F2EA;font-size:16px;resize:vertical"></textarea></label>
+            </div>
+          </section>
+        </sc-if>
+
+        <sc-if value="{{ step3 }}" hint-placeholder-val="{{ false }}">
+          <section data-screen-label="Booking · 3 Pay" style="display:flex;flex-direction:column;gap:24px;animation:aw-up 300ms cubic-bezier(0.23,1,0.32,1)">
+            <h1 style="margin:0;font-family:var(--serif);font-weight:400;font-size:var(--h2);line-height:1;letter-spacing:-0.05em">Settle up,<br><em style="font-weight:300">however suits.</em></h1>
+            <sc-if value="{{ payFailed }}" hint-placeholder-val="{{ false }}">
+              <div role="alert" style="padding:18px 20px;border-radius:10px;background:#FFFFFF;border:1.5px solid #B42318;display:flex;flex-direction:column;gap:10px;animation:aw-pop 240ms cubic-bezier(0.23,1,0.32,1)">
+                <strong style="font-weight:500;color:#B42318">Payment didn't go through.</strong>
+                <span style="font-size:14px;color:rgba(0,0,58,0.75)">{{ failReason }} Nothing was taken from your account. Your room is still held for <span style="font-family:'Geist Mono',monospace">{{ holdLeft }}</span>.</span>
+                <div style="display:flex;gap:8px;flex-wrap:wrap"><button onClick="{{ startPay }}" style="height:max(42px, var(--tap-min, 0px));padding:0 16px;border:none;border-radius:10px;background:#000063;color:#F5F2EA;font-size:14px">Try again</button><button onClick="{{ switchToCard }}" style="height:max(42px, var(--tap-min, 0px));padding:0 16px;border-radius:10px;border:1px solid #000063;background:transparent;font-size:14px">Use a card instead</button><a href="{{ ct.tel }}" style="display:flex;align-items:center;height:max(42px, var(--tap-min, 0px));padding:0 4px;font-size:14px">Call the desk</a></div>
+              </div>
+            </sc-if>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <label for="aw-promo" style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.08em;color:rgba(0,0,58,0.6)">PROMO CODE (OPTIONAL)</label>
+              <sc-if value="{{ promoOn }}" hint-placeholder-val="{{ false }}">
+                <div role="status" style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 8px 8px 14px;border-radius:10px;background:#E5F2EA;color:#1F7A4D;font-size:14px"><span style="display:flex;align-items:center;gap:8px;min-width:0"><aw-icon name="check" size="16" style="flex-shrink:0"></aw-icon><span><strong style="font-family:'Geist Mono',monospace;font-weight:500">{{ promoCode }}</strong> · {{ promoLabel }}</span></span><button onClick="{{ removePromo }}" style="height:36px;padding:0 12px;border:none;border-radius:8px;background:transparent;color:#1F7A4D;font-size:13px;text-decoration:underline;text-underline-offset:3px">Remove</button></div>
+              </sc-if>
+              <sc-if value="{{ promoOff }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;gap:8px"><input id="aw-promo" value="{{ promo }}" onChange="{{ onPromo }}" onKeyDown="{{ promoKey }}" placeholder="e.g. AWISE3" autoComplete="off" autoCapitalize="characters" spellCheck="false" aria-invalid="{{ promoBad }}" aria-describedby="aw-promo-err" style="flex:1;min-width:0;height:48px;padding:0 14px;border-radius:10px;border:1.5px solid {{ promoBd }};background:#FFFFFF;font-size:16px;font-family:'Geist Mono',monospace"><button type="button" onClick="{{ applyPromo }}" style="height:48px;padding:0 18px;border-radius:10px;border:1px solid #000063;background:transparent;color:#000063;font-size:14px;font-weight:500">Apply</button></div>
+                <sc-if value="{{ promoErr }}" hint-placeholder-val="{{ false }}"><span id="aw-promo-err" role="alert" style="display:flex;align-items:center;gap:6px;font-size:13px;color:#B42318"><aw-icon name="alert" size="14"></aw-icon>{{ promoErr }}</span></sc-if>
+              </sc-if>
+            </div>
+            <fieldset style="border:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px">
+              <legend style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.08em;color:rgba(0,0,58,0.6);margin-bottom:10px">HOW MUCH NOW</legend>
+              <sc-for list="{{ planOpts }}" as="o" hint-placeholder-count="3">
+                <button role="radio" aria-checked="{{ o.checked }}" onClick="{{ o.on }}" style="display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:64px;padding:12px 16px;border-radius:10px;border:1.5px solid {{ o.bd }};background:{{ o.bg }};text-align:left;transition:transform 150ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.985)"><span style="display:flex;align-items:center;gap:14px"><span style="width:40px;height:40px;border-radius:12px;background:#F6E2B3;color:#000063;display:flex;align-items:center;justify-content:center;flex-shrink:0"><aw-icon name="{{ o.icon }}" size="20"></aw-icon></span><span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:500">{{ o.label }}</span><span style="font-size:13px;color:rgba(0,0,58,0.65)">{{ o.note }}</span></span></span><span style="font-family:'Geist Mono',monospace;font-size:15px">{{ o.amt }}</span></button>
+              </sc-for>
+            </fieldset>
+            <sc-if value="{{ needsMethod }}" hint-placeholder-val="{{ true }}">
+              <fieldset style="border:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px">
+                <legend style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.08em;color:rgba(0,0,58,0.6);margin-bottom:10px"><span style="display:inline-flex;align-items:center;gap:6px"><aw-icon name="lock" size="13"></aw-icon>PAY WITH · SECURED BY PAYSTACK</span></legend>
+                <div style="display:grid;grid-template-columns:var(--c4m);gap:8px">
+                  <sc-for list="{{ methodOpts }}" as="o" hint-placeholder-count="4"><button role="radio" aria-checked="{{ o.checked }}" onClick="{{ o.on }}" style="min-height:72px;padding:12px;border-radius:10px;border:1.5px solid {{ o.bd }};background:{{ o.bg }};display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:6px;text-align:left;transition:transform 150ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.97)"><span style="display:flex;gap:6px;align-items:center;height:30px"><sc-for list="{{ o.logos }}" as="lg" hint-placeholder-count="1"><aw-icon name="{{ lg }}" size="30"></aw-icon></sc-for></span><span style="font-size:14px;font-weight:500">{{ o.label }}</span></button></sc-for>
+                </div>
+                <sc-if value="{{ isMomo }}" hint-placeholder-val="{{ true }}">
+                  <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;max-width:360px"><span style="display:flex;align-items:center;gap:8px"><aw-icon name="smartphone" size="16"></aw-icon>{{ momoLabel }} number</span><input type="tel" autoComplete="tel-national" enterKeyHint="next" value="{{ momoNum }}" onChange="{{ onMomo }}" placeholder="024 412 3456" inputMode="tel" style="height:48px;padding:0 14px;border-radius:10px;border:1.5px solid {{ momoBd }};background:#FFFFFF;font-size:16px;font-family:'Geist Mono',monospace"><sc-if value="{{ momoErr }}" hint-placeholder-val="{{ false }}"><span role="alert" style="color:#B42318;font-size:12px">{{ momoErr }}</span></sc-if><span style="font-size:12px;color:rgba(0,0,58,0.6)">You'll get a prompt on this phone. Approve it with your MoMo PIN.</span></label>
+                </sc-if>
+                <sc-if value="{{ isCard }}" hint-placeholder-val="{{ false }}"><p style="margin:0;font-size:14px;color:rgba(0,0,58,0.7)">Visa or Mastercard. You'll enter card details in Paystack's secure window. We never see or store them.</p></sc-if>
+              </fieldset>
+            </sc-if>
+            <p style="margin:0;font-size:13px;line-height:1.55;color:rgba(0,0,58,0.65);max-width:600px">Free cancellation up to 48 hours before check-in, refunded to the way you paid. Inside 48 hours we keep the deposit. No-shows are charged the first night.</p>
+          </section>
+        </sc-if>
+      </div>
+
+      <aside aria-label="Booking summary" style="position:var(--sticky);top:88px;background:#FFFFFF;border:1px solid rgba(0,0,99,0.14);border-radius:20px;overflow:hidden">
+        <sc-if value="{{ hasSel }}" hint-placeholder-val="{{ false }}"><div style="height:140px;overflow:hidden;background:#F6E2B3"><img src="{{ sel.img }}" alt="{{ sel.name }} room" style="width:100%;height:100%;object-fit:cover;filter:saturate(0.92)"></div></sc-if>
+        <div style="padding:20px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px"><span style="font-family:var(--serif);font-size:22px">{{ sel.title }}</span><span style="font-family:'Geist Mono',monospace;font-size:12px;color:rgba(0,0,58,0.6)">{{ sel.code }}</span></div>
+          <div style="display:flex;flex-direction:column;gap:4px;font-size:14px;color:rgba(0,0,58,0.75)"><span>{{ rangeLong }}</span><span>{{ guests }} guest{{ guestsS }} · arriving {{ gf.arrival }}</span></div>
+          <div style="display:flex;flex-direction:column;gap:6px;padding-top:12px;border-top:1px solid rgba(0,0,99,0.12)">
+            <label style="display:flex;align-items:center;gap:10px;font-size:14px;min-height:32px"><input type="checkbox" checked="{{ bf }}" onChange="{{ toggleBf }}" disabled="{{ addonsLocked }}" style="width:18px;height:18px;accent-color:#000063">Breakfast, 7–10am<span style="margin-left:auto;font-family:'Geist Mono',monospace;font-size:12px;color:rgba(0,0,58,0.62)">{{ bfLabel }}</span></label>
+            <label style="display:flex;align-items:center;gap:10px;font-size:14px;min-height:32px"><input type="checkbox" checked="{{ rs }}" onChange="{{ toggleRs }}" disabled="{{ addonsLocked }}" style="width:18px;height:18px;accent-color:#000063">Room service<span style="margin-left:auto;font-family:'Geist Mono',monospace;font-size:12px;color:rgba(0,0,58,0.62)">{{ rsLabel }}</span></label>
+          </div>
+          <div style="border-top:1.5px dashed rgba(0,0,99,0.3);padding-top:12px;display:flex;flex-direction:column;gap:6px;font-family:'Geist Mono',monospace;font-size:13px">
+            <sc-for list="{{ receipt }}" as="l" hint-placeholder-count="2"><div style="display:flex;align-items:baseline"><span>{{ l.label }}</span><span style="flex:1;border-bottom:1.5px dotted rgba(0,0,58,0.35);margin:0 8px;transform:translateY(-4px)"></span><span>{{ l.amt }}</span></div></sc-for>
+            <div style="display:flex;align-items:baseline;font-size:16px;font-weight:500;padding-top:8px;margin-top:4px;border-top:1px solid rgba(0,0,99,0.2)"><span>TOTAL</span><span style="flex:1"></span><span>{{ totalLabel }}</span></div>
+            <sc-if value="{{ step3 }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:baseline;color:#000063"><span>DUE NOW</span><span style="flex:1"></span><span>{{ dueNowLabel }}</span></div></sc-if>
+          </div>
+          <div style="display:flex;gap:8px">
+            <sc-if value="{{ canBack }}" hint-placeholder-val="{{ false }}"><button onClick="{{ back }}" style="height:52px;padding:0 16px;border-radius:10px;border:1px solid rgba(0,0,99,0.3);background:transparent;font-size:14px">Back</button></sc-if>
+            <button onClick="{{ next }}" disabled="{{ nextDisabled }}" style="flex:1;min-height:52px;border:none;border-radius:10px;background:{{ nextBg }};color:{{ nextFg }};font-weight:600;font-size:15px;transition:transform 160ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.97)">{{ nextLabel }}</button>
+          </div>
+          <p style="margin:0;font-size:12px;line-height:1.5;color:rgba(0,0,58,0.6)">Prefer to talk? <a href="{{ ct.tel }}">Call</a> or <a href="{{ ct.wa }}">WhatsApp</a> <span style="font-family:'Geist Mono',monospace">{{ ct.phone }}</span></p>
+        </div>
+      </aside>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ bookDone }}" hint-placeholder-val="{{ false }}">
+    <section data-screen-label="Booking · Confirmed" style="position:relative;display:grid;grid-template-columns:var(--c-main);gap:40px;align-items:start;animation:aw-up 500ms cubic-bezier(0.23,1,0.32,1)">
+      <div style="display:flex;flex-direction:column;gap:24px;min-width:0">
+        <span style="display:flex;align-items:center;gap:10px;font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:0.06em;color:#1F7A4D">● {{ doneStatus }}</span>
+        <h1 style="margin:0;font-family:var(--serif);font-weight:400;font-size:var(--h1);line-height:0.95;letter-spacing:-0.05em">You're booked.<br><em style="font-weight:300">We'll leave the light on.</em></h1>
+        <p style="margin:0;font-size:16px;line-height:1.55;color:rgba(0,0,58,0.72);max-width:520px">{{ doneNote }}</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <a href="{{ icsHref }}" download="hotel-a-wise-booking.ics" style="display:flex;align-items:center;gap:8px;height:46px;padding:0 18px;border-radius:10px;background:#000063;color:#F5F2EA;text-decoration:none;font-size:14px"><aw-icon name="calendar" size="16"></aw-icon>Add to calendar</a>
+          <a href="https://www.google.com/maps/dir/?api=1&amp;destination=5.6455136,-0.2869356" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;height:46px;padding:0 18px;border-radius:10px;border:1px solid #000063;text-decoration:none;font-size:14px"><aw-icon name="googlemaps" size="16"></aw-icon>Directions</a>
+          <a href="{{ manageHref }}" style="display:flex;align-items:center;height:46px;padding:0 18px;border-radius:10px;border:1px solid rgba(0,0,99,0.3);text-decoration:none;font-size:14px">Manage booking</a>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:14px;color:rgba(0,0,58,0.72)"><span>Getting here: No. 1 Wisepak Lane, New Asofan, Accra. Tell your driver “A-Wise, Wisepak Lane”.</span><span>Questions? <a href="{{ ct.tel }}">{{ ct.phone }}</a> · <a href="{{ ct.wa }}">WhatsApp</a></span></div>
+      </div>
+      <div style="position:relative;background:#FFFFFF;border-radius:20px;border:1px solid rgba(0,0,99,0.14);padding:24px;overflow:hidden;display:flex;flex-direction:column;gap:14px">
+        <svg viewBox="0 0 32 32" width="280" height="280" fill="none" stroke="#000063" stroke-width="0.6" aria-hidden="true" style="position:absolute;right:-60px;bottom:-60px;opacity:0.06"><circle cx="11" cy="11" r="5.5"></circle><circle cx="21" cy="11" r="5.5"></circle><circle cx="11" cy="21" r="5.5"></circle><circle cx="21" cy="21" r="5.5"></circle><rect x="12.5" y="12.5" width="7" height="7" transform="rotate(45 16 16)"></rect></svg>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px"><div style="display:flex;flex-direction:column;gap:4px"><span style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.08em;color:rgba(0,0,58,0.6)">BOOKING REFERENCE</span><span style="font-family:'Geist Mono',monospace;font-size:30px;font-weight:500;letter-spacing:0.04em">{{ ref }}</span></div><span style="font-family:'Geist Mono',monospace;font-size:11px;padding:6px 10px;border:1.5px solid {{ stampColor }};color:{{ stampColor }};border-radius:6px;animation:aw-stamp 500ms cubic-bezier(0.23,1,0.32,1) 200ms both">{{ stamp }}</span></div>
+        <div style="display:flex;flex-direction:column;gap:4px;font-size:14px"><span style="font-family:var(--serif);font-size:22px">{{ sel.title }}</span><span style="color:rgba(0,0,58,0.7)">{{ rangeLong }} · {{ guests }} guest{{ guestsS }}</span><span style="color:rgba(0,0,58,0.7)">{{ gf.name }} · {{ gf.cc }} {{ gf.phone }}</span></div>
+        <div style="border-top:1.5px dashed rgba(0,0,99,0.3);padding-top:12px;display:flex;flex-direction:column;gap:6px;font-family:'Geist Mono',monospace;font-size:13px">
+          <sc-for list="{{ receipt }}" as="l" hint-placeholder-count="2"><div style="display:flex;align-items:baseline"><span>{{ l.label }}</span><span style="flex:1;border-bottom:1.5px dotted rgba(0,0,58,0.35);margin:0 8px;transform:translateY(-4px)"></span><span>{{ l.amt }}</span></div></sc-for>
+          <div style="display:flex;font-weight:500;padding-top:8px;border-top:1px solid rgba(0,0,99,0.2)"><span>TOTAL</span><span style="flex:1"></span><span>{{ totalLabel }}</span></div>
+          <div style="display:flex;color:#1F7A4D"><span>PAID</span><span style="flex:1"></span><span>{{ paidLabel }}</span></div>
+          <div style="display:flex"><span>BALANCE AT DESK</span><span style="flex:1"></span><span>{{ balanceLabel }}</span></div>
+        </div>
+        <span style="font-size:12px;color:rgba(0,0,58,0.6)">Receipt sent by SMS and WhatsApp{{ emailNote }}.</span>
+      </div>
+    </section>
+  </sc-if>
+</sc-if>
+
+<!-- ================= MANAGE BOOKING ================= -->
+<sc-if value="{{ isManage }}" hint-placeholder-val="{{ false }}">
+  <section data-screen-label="Manage my booking" style="display:grid;grid-template-columns:var(--c-main);gap:40px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <h1 style="margin:0;font-family:var(--serif);font-weight:400;font-size:var(--h2);line-height:1;letter-spacing:-0.05em">Manage<br><em style="font-weight:300">my booking.</em></h1>
+      <p style="margin:0;font-size:15px;line-height:1.55;color:rgba(0,0,58,0.72);max-width:460px">Your reference is in the SMS we sent, and looks like <span style="font-family:'Geist Mono',monospace">AW-7Q3K</span>. For the demo, try AW-7Q3K with 055 555 7090.</p>
+      <form onSubmit="{{ lookupBooking }}" noValidate="{{ true }}" aria-label="Find my booking" style="display:flex;flex-direction:column;gap:14px;max-width:440px">
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:13px"><span style="display:flex;align-items:center;gap:8px"><aw-icon name="hash" size="16"></aw-icon>Booking reference</span><input autoComplete="off" autoCapitalize="characters" spellCheck="false" value="{{ mRef }}" onChange="{{ onMRef }}" placeholder="AW-XXXX" aria-invalid="{{ mBad }}" style="height:48px;padding:0 14px;border-radius:10px;border:1.5px solid {{ mBd }};background:#FFFFFF;font-size:16px;font-family:'Geist Mono',monospace;text-transform:uppercase"></label>
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:13px"><span style="display:flex;align-items:center;gap:8px"><aw-icon name="phone" size="16"></aw-icon>Phone number you booked with</span><input type="tel" autoComplete="tel-national" enterKeyHint="go" value="{{ mPhone }}" onChange="{{ onMPhone }}" inputMode="tel" placeholder="055 555 7090" aria-invalid="{{ mBad }}" style="height:48px;padding:0 14px;border-radius:10px;border:1.5px solid {{ mBd }};background:#FFFFFF;font-size:16px;font-family:'Geist Mono',monospace"></label>
+        <sc-if value="{{ mErr }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:1.45;color:#B42318"><aw-icon name="alert" size="15" style="flex-shrink:0;margin-top:1px"></aw-icon><span>{{ mErr }}</span></span></sc-if>
+        <button type="submit" disabled="{{ mBusy }}" style="height:50px;border:none;border-radius:10px;background:#000063;color:#F5F2EA;font-size:15px;font-weight:500;transition:transform 160ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.97)">{{ mBtn }}</button>
+      </form>
+    </div>
+    <sc-if value="{{ mFound }}" hint-placeholder-val="{{ false }}">
+      <div aria-live="polite" style="background:#FFFFFF;border:1px solid rgba(0,0,99,0.14);border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:16px;animation:aw-pop 260ms cubic-bezier(0.23,1,0.32,1)">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><span style="font-family:'Geist Mono',monospace;font-size:22px;font-weight:500">{{ mb.ref }}</span><span style="font-family:'Geist Mono',monospace;font-size:11.5px;padding:4px 10px;border-radius:999px;background:{{ mb.statusBg }};color:{{ mb.statusFg }}">{{ mb.status }}</span></div>
+        <div style="display:flex;flex-direction:column;gap:4px"><span style="font-family:var(--serif);font-size:24px">{{ mb.title }}</span><span style="font-size:14px;color:rgba(0,0,58,0.72)">{{ mb.range }} · {{ mb.guestsLabel }} · {{ mb.guest }}</span></div>
+        <div style="font-family:'Geist Mono',monospace;font-size:13px;display:flex;flex-direction:column;gap:6px;border-top:1.5px dashed rgba(0,0,99,0.3);padding-top:12px">
+          <sc-for list="{{ mb.lines }}" as="l" hint-placeholder-count="3"><div style="display:flex;align-items:baseline;gap:8px;color:{{ l.color }};font-weight:{{ l.weight }}"><span>{{ l.k }}</span><span style="flex:1;border-bottom:1.5px dotted rgba(0,0,58,0.3);transform:translateY(-4px)"></span><span>{{ l.v }}</span></div></sc-for>
+        </div>
+        <sc-if value="{{ mCancelled }}" hint-placeholder-val="{{ false }}"><p style="margin:0;font-size:14px;line-height:1.55">{{ mCancelNote }}</p></sc-if>
+        <sc-if value="{{ mLocked }}" hint-placeholder-val="{{ false }}"><p style="margin:0;display:flex;gap:8px;font-size:14px;line-height:1.55;color:rgba(0,0,58,0.75)"><aw-icon name="info" size="16" style="flex-shrink:0;margin-top:2px"></aw-icon><span>{{ mLockNote }}</span></p></sc-if>
+        <sc-if value="{{ mActive }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ mEditing }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:12px;background:#F6E2B3">
+              <span style="font-size:14px;font-weight:500">Pick new dates</span>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><dc-import name="DatePicker" variant="field" bg="#FFFFFF" label="New check-in" value="{{ mCi }}" min="{{ today }}" on-change="{{ onMCi }}" range-start="{{ mCi }}" range-end="{{ mCo }}" disabled-dates="{{ soldDates }}" hint-size="100%,48px"></dc-import><dc-import name="DatePicker" variant="field" bg="#FFFFFF" label="New check-out" value="{{ mCo }}" min="{{ mCiPlus1 }}" on-change="{{ onMCo }}" range-start="{{ mCi }}" range-end="{{ mCo }}" hint-size="100%,48px"></dc-import></div>
+              <span aria-live="polite" style="font-size:13px;line-height:1.45;color:{{ mAvailColor }}">{{ mAvailNote }}</span>
+              <div style="display:flex;gap:8px;flex-wrap:wrap"><button onClick="{{ saveDates }}" disabled="{{ mSaveDisabled }}" style="height:44px;padding:0 16px;border:none;border-radius:10px;background:#000063;color:#F5F2EA;font-size:14px">Confirm new dates</button><button onClick="{{ cancelEdit }}" style="height:44px;padding:0 16px;border-radius:10px;border:1px solid rgba(0,0,99,0.3);background:transparent;font-size:14px">Keep current dates</button></div>
+            </div>
+          </sc-if>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><button onClick="{{ startEdit }}" disabled="{{ mEditing }}" style="display:flex;align-items:center;gap:8px;height:44px;padding:0 16px;border-radius:10px;border:1px solid #000063;background:transparent;font-size:14px"><aw-icon name="calendar" size="16"></aw-icon>Change dates</button><button onClick="{{ askCancel }}" style="display:flex;align-items:center;gap:8px;height:44px;padding:0 16px;border-radius:10px;border:1px solid #B42318;color:#B42318;background:transparent;font-size:14px"><aw-icon name="ban" size="16"></aw-icon>Cancel booking</button></div>
+          <span style="display:flex;gap:8px;font-size:12.5px;line-height:1.5;color:rgba(0,0,58,0.65)"><aw-icon name="info" size="15" style="flex-shrink:0;margin-top:1px"></aw-icon><span>{{ mPolicyNote }}</span></span>
+        </sc-if>
+      </div>
+    </sc-if>
+  </section>
+</sc-if>
+
+<!-- ================= RENTALS CATALOGUE ================= -->
+<sc-if value="{{ isRent }}" hint-placeholder-val="{{ false }}">
+  <section data-screen-label="Rentals · Catalogue" style="display:flex;flex-direction:column;gap:32px">
+    <ol aria-label="Reservation steps" style="list-style:none;margin:0;padding:0;display:flex;gap:6px;flex-wrap:wrap">
+      <sc-for list="{{ rentSteps }}" as="st" hint-placeholder-count="3"><li aria-current="{{ st.current }}" style="display:flex;align-items:center;gap:8px;height:34px;padding:0 12px;white-space:nowrap;flex-shrink:0;border-radius:999px;border:1px solid {{ st.bd }};background:{{ st.bg }};color:{{ st.fg }};font-size:13px"><aw-icon name="{{ st.icon }}" size="15"></aw-icon>{{ st.label }}</li></sc-for>
+    </ol>
+    <div style="display:grid;grid-template-columns:var(--c2);gap:32px;align-items:end">
+      <h1 style="margin:0;font-family:var(--serif);font-weight:400;font-size:var(--h1);line-height:0.95;letter-spacing:-0.05em">Rent for<br><em style="font-weight:300">the big day.</em></h1>
+      <p style="margin:0;font-size:16px;line-height:1.55;color:rgba(0,0,58,0.72);max-width:460px">{{ cp.rentIntro }}</p>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;padding:16px;border-radius:20px;background:#00003A;color:#F5F2EA">
+      <div style="display:flex;flex-direction:column;gap:6px;min-width:190px"><span style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.08em;opacity:0.9">FROM</span><dc-import name="DatePicker" variant="dark" value="{{ rFrom }}" min="{{ today }}" on-change="{{ onRFrom }}" range-start="{{ rFrom }}" range-end="{{ rTo }}" hint-size="190px,46px"></dc-import></div>
+      <div style="display:flex;flex-direction:column;gap:6px;min-width:190px"><span style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.08em;opacity:0.9">TO</span><dc-import name="DatePicker" variant="dark" value="{{ rTo }}" min="{{ rFrom }}" on-change="{{ onRTo }}" range-start="{{ rFrom }}" range-end="{{ rTo }}" hint-size="190px,46px"></dc-import></div>
+      <div style="display:flex;flex-direction:column;gap:2px;padding:0 8px 6px"><span style="font-family:'Geist Mono',monospace;font-size:20px">{{ rDays }} day{{ rDaysS }}</span><span style="font-size:12px;opacity:0.7">Stock shown for {{ rRangeLabel }}</span></div>
+      <div style="flex:1"></div>
+      <a href="#venues" style="color:#F5F2EA;font-size:13px;padding-bottom:12px">Need the venue too? <span aria-hidden="true">→</span></a>
+    </div>
+    <div style="display:grid;grid-template-columns:var(--c-main);gap:40px;align-items:start"><div style="display:flex;flex-direction:column;gap:32px;min-width:0">
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap"><h2 style="margin:0;font-family:var(--serif);font-weight:400;font-size:30px">Packs <em style="font-weight:300">(cheaper together)</em></h2><span style="font-size:13px;color:rgba(0,0,58,0.6)">Adds everything at once. Adjust quantities after.</span></div>
+      <div style="display:grid;grid-template-columns:var(--c3);gap:12px" data-stagger="">
+        <sc-for list="{{ bundles }}" as="b" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;gap:12px;padding:18px;border-radius:20px;border:1.5px solid {{ b.bd }};background:#FFFFFF">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><span style="font-family:var(--serif);font-size:24px">{{ b.name }}</span><span style="font-family:'Geist Mono',monospace;font-size:11px;padding:3px 8px;border-radius:999px;background:#F6E2B3;color:#000063">−{{ b.pct }}%</span></div>
+            <span style="font-size:13px;color:rgba(0,0,58,0.7)">{{ b.desc }}</span>
+            <div style="display:flex;align-items:baseline;font-family:'Geist Mono',monospace;font-size:13px"><span style="text-decoration:line-through;opacity:0.5">{{ b.was }}</span><span style="flex:1;border-bottom:1.5px dotted rgba(0,0,58,0.35);margin:0 8px;transform:translateY(-4px)"></span><span style="font-weight:500">{{ b.now }} / day</span></div>
+            <sc-if value="{{ b.short }}" hint-placeholder-val="{{ false }}"><span role="alert" style="font-size:12px;color:#B42318">{{ b.short }}</span></sc-if>
+            <button onClick="{{ b.on }}" disabled="{{ b.disabled }}" style="height:44px;border-radius:10px;border:1px solid #000063;background:{{ b.btnBg }};color:{{ b.btnFg }};font-size:14px;transition:transform 150ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.97)">{{ b.btn }}</button>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <h2 style="margin:0;font-family:var(--serif);font-weight:400;font-size:30px">Everything, by the unit</h2>
+      <sc-if value="{{ rentLoading }}" hint-placeholder-val="{{ false }}"><div style="display:grid;grid-template-columns:var(--c-items);gap:12px"><sc-for list="{{ skel3 }}" as="x" hint-placeholder-count="4"><div style="height:380px;border-radius:12px;background:#F6E2B3;animation:aw-shimmer 1.4s ease-in-out infinite"></div></sc-for></div></sc-if>
+      <sc-if value="{{ rentReady }}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid;grid-template-columns:var(--c-items);gap:12px" data-stagger="">
+          <sc-for list="{{ items }}" as="it" hint-placeholder-count="7">
+            <article style="display:flex;flex-direction:column;border-radius:20px;background:#FFFFFF;border:1px solid rgba(0,0,99,0.14);overflow:hidden;opacity:{{ it.op }}">
+              <div style="position:relative;aspect-ratio:var(--item-ar);background:#F5F2EA;display:flex;align-items:center;justify-content:center;padding:18px">
+                <sc-if value="{{ it.img }}" hint-placeholder-val="{{ true }}"><img src="{{ it.img }}" alt="{{ it.name }}" loading="lazy" style="max-height:100%;object-fit:contain;mix-blend-mode:multiply"></sc-if>
+                <sc-if value="{{ it.noImg }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:12px;border-radius:2px;background:repeating-linear-gradient(135deg,#E3E4F5 0 8px,#F5F2EA 8px 16px);display:flex;align-items:center;justify-content:center;font-family:'Geist Mono',monospace;font-size:11px;color:rgba(0,0,58,0.62)">Photo coming soon</div></sc-if>
+                <sc-if value="{{ it.custom }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:10px;left:10px;font-family:'Geist Mono',monospace;font-size:11px;padding:3px 7px;border-radius:4px;background:#00003A;color:#F5F2EA">NEW</span></sc-if>
+              </div>
+              <div style="padding:16px;display:flex;flex-direction:column;gap:10px;flex:1">
+                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-family:var(--serif);font-size:22px">{{ it.name }}</span><span style="font-size:13px;color:rgba(0,0,58,0.65)">{{ it.spec }}</span></div>
+                <div style="display:flex;align-items:baseline;font-family:'Geist Mono',monospace;font-size:13px"><span>GHS {{ it.price }}</span><span style="opacity:0.55"> /unit /day</span><span style="flex:1;border-bottom:1.5px dotted rgba(0,0,58,0.3);margin:0 8px;transform:translateY(-4px)"></span><span style="opacity:0.6">dep. {{ it.deposit }}</span></div>
+                <span style="align-self:flex-start;font-family:'Geist Mono',monospace;font-size:11px;padding:4px 8px;border-radius:999px;background:{{ it.badgeBg }};color:{{ it.badgeFg }}">{{ it.stockLabel }}</span>
+                <div style="flex:1"></div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div role="group" aria-label="{{ it.qtyAria }}" style="display:flex;align-items:center;border:1.5px solid {{ it.qtyBd }};border-radius:10px;overflow:hidden;background:#FFFFFF">
+                    <button onClick="{{ it.dec }}" disabled="{{ it.decDisabled }}" aria-label="Decrease" style="width:44px;height:44px;border:none;background:transparent;font-size:18px">−</button>
+                    <input autoComplete="off" enterKeyHint="done" value="{{ it.qty }}" onChange="{{ it.onQty }}" inputMode="numeric" aria-label="Quantity" style="width:56px;height:44px;border:none;text-align:center;font-family:'Geist Mono',monospace;font-size:16px;background:transparent">
+                    <button onClick="{{ it.inc }}" disabled="{{ it.incDisabled }}" aria-label="Increase" style="width:44px;height:44px;border:none;background:transparent;font-size:18px">+</button>
+                  </div>
+                  <span style="margin-left:auto;font-family:'Geist Mono',monospace;font-size:13px">{{ it.lineLabel }}</span>
+                </div>
+                <sc-if value="{{ it.err }}" hint-placeholder-val="{{ false }}"><span role="alert" style="font-size:12px;color:#B42318">{{ it.err }}</span></sc-if>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+    <aside aria-label="Your reservation" style="position:var(--sticky);top:96px;background:#FFFFFF;border:1px solid rgba(0,0,99,0.14);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px"><span style="font-family:var(--serif);font-size:26px;letter-spacing:-0.05em">Your reservation</span><span style="font-family:'Geist Mono',monospace;font-size:12px;color:rgba(0,0,58,0.6)">{{ rDays }} day{{ rDaysS }}</span></div>
+      <div style="display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:10px;background:#F6E2B3">
+        <sc-for list="{{ rPickupLines }}" as="pl" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:10px;font-size:13.5px"><span style="width:30px;height:30px;border-radius:9px;background:#FFFFFF;color:#000063;display:flex;align-items:center;justify-content:center;flex-shrink:0"><aw-icon name="{{ pl.icon }}" size="16"></aw-icon></span><span style="display:flex;flex-direction:column;min-width:0"><span style="font-size:11px;color:rgba(0,0,58,0.62)">{{ pl.k }}</span><span>{{ pl.v }}</span></span></div></sc-for>
+      </div>
+      <sc-if value="{{ cartEmpty }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:24px 12px;border:1.5px dashed rgba(0,0,99,0.2);border-radius:10px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center"><span style="width:48px;height:48px;border-radius:14px;background:rgba(0,0,99,0.06);color:#000063;display:flex;align-items:center;justify-content:center"><aw-icon name="tent" size="24"></aw-icon></span><span style="font-size:15px;font-weight:500">Nothing picked yet</span><span style="font-size:13px;color:rgba(0,0,58,0.65)">Add a pack, or tap + on any item.</span></div>
+      </sc-if>
+      <sc-if value="{{ cartHas }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column">
+          <sc-for list="{{ cartLines }}" as="cl" hint-placeholder-count="0">
+            <div style="display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(0,0,99,0.1)">
+              <div style="width:44px;height:44px;border-radius:8px;background:#F5F2EA;display:flex;align-items:center;justify-content:center;overflow:hidden"><sc-if value="{{ cl.img }}" hint-placeholder-val="{{ true }}"><img src="{{ cl.img }}" alt="" style="max-width:38px;max-height:38px;mix-blend-mode:multiply"></sc-if></div>
+              <div style="display:flex;flex-direction:column;gap:4px;min-width:0"><span style="font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ cl.name }}</span><div style="display:flex;align-items:center;gap:4px"><button onClick="{{ cl.dec }}" aria-label="Fewer" style="width:max(30px, var(--tap-min, 0px));height:max(30px, var(--tap-min, 0px));border-radius:8px;border:1px solid rgba(0,0,99,0.2);background:#FFFFFF">−</button><span style="font-family:'Geist Mono',monospace;font-size:12.5px;min-width:32px;text-align:center">{{ cl.qty }}</span><button onClick="{{ cl.inc }}" disabled="{{ cl.incDisabled }}" aria-label="More" style="width:max(30px, var(--tap-min, 0px));height:max(30px, var(--tap-min, 0px));border-radius:8px;border:1px solid rgba(0,0,99,0.2);background:#FFFFFF">+</button><button onClick="{{ cl.remove }}" aria-label="Remove" style="margin-left:2px;width:max(30px, var(--tap-min, 0px));height:max(30px, var(--tap-min, 0px));border-radius:8px;border:none;background:transparent;color:rgba(0,0,58,0.55);font-size:16px">×</button></div></div>
+              <span style="font-family:'Geist Mono',monospace;font-size:12.5px">{{ cl.amt }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-family:'Geist Mono',monospace;font-size:12.5px">
+          <div style="display:flex"><span>RENTAL</span><span style="flex:1"></span><span>{{ rSubLabel }}</span></div>
+          <sc-if value="{{ hasBundleDisc }}" hint-placeholder-val="{{ false }}"><div style="display:flex;color:#1F7A4D"><span>PACK DISCOUNT</span><span style="flex:1"></span><span>{{ bundleDiscLabel }}</span></div></sc-if>
+          <div style="display:flex;color:rgba(0,0,58,0.62)"><span>REFUNDABLE DEPOSIT</span><span style="flex:1"></span><span>{{ secDepLabel }}</span></div>
+          <div style="display:flex;font-size:15px;font-weight:500;padding-top:8px;border-top:1px solid rgba(0,0,99,0.2)"><span>TOTAL</span><span style="flex:1"></span><span>{{ rTotalLabel }}</span></div>
+        </div>
+      </sc-if>
+      <button data-mi-btn="" onClick="{{ rGoDetails }}" disabled="{{ rContinueDisabled }}" style="min-height:52px;border:none;border-radius:10px;background:{{ rContinueBg }};color:{{ rContinueFg }};font-weight:600;font-size:15px;transition:transform 160ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.97)">{{ rContinueLabel }}</button>
+      <p style="margin:0;font-size:12px;line-height:1.5;color:rgba(0,0,58,0.62)">No charge yet. On the next step, pay online or choose to pay when you collect. Questions? <a href="{{ ct.tel }}">Call</a> or <a href="{{ ct.wa }}">WhatsApp</a> the desk.</p>
+    </aside>
+    </div>
+  </section>
+</sc-if>
+
+<!-- ================= RENTAL CHECKOUT ================= -->
+<sc-if value="{{ isRentCo }}" hint-placeholder-val="{{ false }}">
+  <sc-if value="{{ rentActive }}" hint-placeholder-val="{{ true }}">
+    <ol aria-label="Order steps" style="list-style:none;margin:0 0 28px;padding:0;display:flex;gap:6px;flex-wrap:wrap">
+      <sc-for list="{{ rentSteps }}" as="st" hint-placeholder-count="3"><li aria-current="{{ st.current }}" style="display:flex;align-items:center;gap:8px;height:34px;padding:0 12px;white-space:nowrap;flex-shrink:0;border-radius:999px;border:1px solid {{ st.bd }};background:{{ st.bg }};color:{{ st.fg }};font-size:13px"><aw-icon name="{{ st.icon }}" size="15"></aw-icon>{{ st.label }}</li></sc-for>
+    </ol>
+    <sc-if value="{{ cartEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:48px 24px;border:1px dashed rgba(0,0,99,0.3);border-radius:12px;display:flex;flex-direction:column;gap:14px;align-items:flex-start"><span style="font-family:var(--serif);font-size:30px">Nothing reserved yet. Not a chair in sight.</span><a href="#rent" style="display:flex;align-items:center;height:46px;padding:0 18px;border-radius:10px;background:#000063;color:#F5F2EA;text-decoration:none;font-size:14px">Choose items</a></div>
+    </sc-if>
+    <sc-if value="{{ cartHas }}" hint-placeholder-val="{{ true }}">
+    <div style="display:grid;grid-template-columns:var(--c-main);gap:40px;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:24px;min-width:0">
+        <sc-if value="{{ rStep2 }}" hint-placeholder-val="{{ false }}">
+          <section data-screen-label="Rentals · 2 Details" style="display:flex;flex-direction:column;gap:20px;animation:aw-up 300ms cubic-bezier(0.23,1,0.32,1)">
+            <h1 style="margin:0;font-family:var(--serif);font-weight:400;font-size:var(--h2);line-height:1;letter-spacing:-0.05em">Who's<br><em style="font-weight:300">collecting?</em></h1>
+            <div style="display:grid;grid-template-columns:var(--c2);gap:16px;background:#FFFFFF;border:1px solid rgba(0,0,99,0.14);border-radius:20px;padding:20px">
+              <label style="display:flex;flex-direction:column;gap:6px;font-size:13px"><span style="display:flex;align-items:center;gap:8px"><aw-icon name="user" size="16"></aw-icon>Full name</span><input autoComplete="name" autoCapitalize="words" enterKeyHint="next" value="{{ rf.name }}" onChange="{{ rfName }}" placeholder="e.g. Abena Owusu" style="height:48px;padding:0 14px;border-radius:10px;border:1.5px solid {{ re.nameBd }};background:#F5F2EA;font-size:16px"><sc-if value="{{ re.name }}" hint-placeholder-val="{{ false }}"><span role="alert" style="color:#B42318;font-size:12px">{{ re.name }}</span></sc-if></label>
+              <label style="display:flex;flex-direction:column;gap:6px;font-size:13px"><span style="display:flex;align-items:center;gap:8px"><aw-icon name="phone" size="16"></aw-icon>Phone</span><input type="tel" autoComplete="tel-national" enterKeyHint="next" value="{{ rf.phone }}" onChange="{{ rfPhone }}" inputMode="tel" placeholder="055 555 7090" style="height:48px;padding:0 14px;border-radius:10px;border:1.5px solid {{ re.phoneBd }};background:#F5F2EA;font-size:16px;font-family:'Geist Mono',monospace"><sc-if value="{{ re.phone }}" hint-placeholder-val="{{ false }}"><span role="alert" style="color:#B42318;font-size:12px">{{ re.phone }}</span></sc-if></label>
+              <label style="display:flex;flex-direction:column;gap:6px;font-size:13px"><span style="display:flex;align-items:center;gap:8px"><aw-icon name="mail" size="16"></aw-icon>Email (optional)</span><input autoComplete="email" autoCapitalize="none" spellCheck="false" enterKeyHint="next" value="{{ rf.email }}" onChange="{{ rfEmail }}" placeholder="you@example.com" type="email" style="height:48px;padding:0 14px;border-radius:10px;border:1.5px solid rgba(0,0,99,0.2);background:#F5F2EA;font-size:16px"></label>
+              <label style="display:flex;flex-direction:column;gap:6px;font-size:13px"><span style="display:flex;align-items:center;gap:8px"><aw-icon name="sparkle" size="16"></aw-icon>What's the occasion?</span><dc-import name="Select" variant="field" aria-label="Occasion" value="{{ rf.occasion }}" options="{{ occasionOpts }}" on-change="{{ rfOccasion }}" hint-size="100%,48px"></dc-import></label>
+            </div>
+          <div style="display:flex;flex-direction:column;gap:12px;padding:18px;border-radius:20px;background:#F6E2B3">
+              <span style="display:flex;align-items:center;gap:8px;font-size:15px;font-weight:500"><aw-icon name="store" size="18"></aw-icon>Pickup &amp; return, no delivery</span>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px">
+                <sc-for list="{{ rPickupLines }}" as="pl" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:10px;font-size:14px"><span style="width:36px;height:36px;border-radius:10px;background:#FFFFFF;color:#000063;display:flex;align-items:center;justify-content:center;flex-shrink:0"><aw-icon name="{{ pl.icon }}" size="18"></aw-icon></span><span style="display:flex;flex-direction:column"><span style="font-size:11.5px;color:rgba(0,0,58,0.62)">{{ pl.k }}</span><span>{{ pl.v }}</span></span></div></sc-for>
+              </div>
+              <span style="font-size:13px;color:rgba(0,0,58,0.72)">Bring a vehicle big enough. 200 chairs don't fit in a Corolla, we've checked.</span>
+              <a href="https://www.google.com/maps/dir/?api=1&amp;destination=5.6455136,-0.2869356" target="_blank" rel="noopener" style="align-self:flex-start;display:inline-flex;align-items:center;gap:8px;height:max(42px, var(--tap-min, 0px));padding:0 14px;border-radius:10px;background:#FFFFFF;color:#00003A;text-decoration:none;font-size:14px"><aw-icon name="googlemaps" size="16"></aw-icon>Get directions</a>
+            </div>
+          </section>
+        </sc-if>
+        <sc-if value="{{ rStep3 }}" hint-placeholder-val="{{ false }}">
+          <section data-screen-label="Rentals · 3 Pay" style="display:flex;flex-direction:column;gap:20px;animation:aw-up 300ms cubic-bezier(0.23,1,0.32,1)">
+            <h1 style="margin:0;font-family:var(--serif);font-weight:400;font-size:var(--h2);line-height:1;letter-spacing:-0.05em">How would you<br><em style="font-weight:300">like to pay?</em></h1>
+            <sc-if value="{{ rPayFailed }}" hint-placeholder-val="{{ false }}"><div role="alert" style="padding:16px 18px;border-radius:10px;background:#FFFFFF;border:1.5px solid #B42318;display:flex;flex-direction:column;gap:8px"><strong style="font-weight:500;color:#B42318">Payment didn't go through.</strong><span style="font-size:14px">{{ failReason }} Nothing was charged. Your items are held for <span style="font-family:'Geist Mono',monospace">{{ holdLeft }}</span>.</span><div style="display:flex;gap:8px"><button onClick="{{ startPay }}" style="height:max(42px, var(--tap-min, 0px));padding:0 16px;border:none;border-radius:10px;background:#000063;color:#F5F2EA;font-size:14px">Try again</button><button onClick="{{ switchToCard }}" style="height:max(42px, var(--tap-min, 0px));padding:0 16px;border-radius:10px;border:1px solid #000063;background:transparent;font-size:14px">Use a card</button></div></div></sc-if>
+            <div style="padding:16px 18px;border-radius:10px;background:#F6E2B3;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.55">
+              <strong style="font-weight:500">Security deposit &amp; damage policy</strong>
+              <span>We hold a refundable security deposit of <span style="font-family:'Geist Mono',monospace">{{ secDepLabel }}</span>. When everything comes back, we count it in front of you. Missing or broken items are deducted at the per-unit deposit rate, and the rest is refunded the way you paid within 48 hours. Paying at pickup? The deposit is paid at the desk too. Light dirt is fine. Burns, tears and anything that's gone home with Auntie are not.</span>
+            </div>
+            <fieldset style="border:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px">
+              <legend style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.08em;color:rgba(0,0,58,0.6);margin-bottom:10px">PAY ONLINE OR AT PICKUP</legend>
+              <sc-for list="{{ rPlanOpts }}" as="o" hint-placeholder-count="2"><button role="radio" aria-checked="{{ o.checked }}" onClick="{{ o.on }}" style="display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:64px;padding:12px 16px;border-radius:10px;border:1.5px solid {{ o.bd }};background:{{ o.bg }};text-align:left"><span style="display:flex;align-items:center;gap:14px"><span style="width:40px;height:40px;border-radius:12px;background:#F6E2B3;color:#000063;display:flex;align-items:center;justify-content:center;flex-shrink:0"><aw-icon name="{{ o.icon }}" size="20"></aw-icon></span><span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:500">{{ o.label }}</span><span style="font-size:13px;color:rgba(0,0,58,0.65)">{{ o.note }}</span></span></span><span style="font-family:'Geist Mono',monospace;font-size:15px">{{ o.amt }}</span></button></sc-for>
+            </fieldset>
+            <sc-if value="{{ rNeedsMethod }}" hint-placeholder-val="{{ true }}"><div style="display:grid;grid-template-columns:var(--c4m);gap:8px">
+              <sc-for list="{{ methodOpts }}" as="o" hint-placeholder-count="4"><button role="radio" aria-checked="{{ o.checked }}" onClick="{{ o.on }}" style="min-height:72px;padding:12px;border-radius:10px;border:1.5px solid {{ o.bd }};background:{{ o.bg }};display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:6px;text-align:left"><span style="display:flex;gap:6px;align-items:center;height:30px"><sc-for list="{{ o.logos }}" as="lg" hint-placeholder-count="1"><aw-icon name="{{ lg }}" size="30"></aw-icon></sc-for></span><span style="font-size:14px;font-weight:500">{{ o.label }}</span></button></sc-for>
+            </div>
+            <sc-if value="{{ isMomo }}" hint-placeholder-val="{{ true }}"><label style="display:flex;flex-direction:column;gap:6px;font-size:13px;max-width:360px"><span style="display:flex;align-items:center;gap:8px"><aw-icon name="smartphone" size="16"></aw-icon>{{ momoLabel }} number</span><input type="tel" autoComplete="tel-national" enterKeyHint="next" value="{{ momoNum }}" onChange="{{ onMomo }}" placeholder="024 412 3456" inputMode="tel" style="height:48px;padding:0 14px;border-radius:10px;border:1.5px solid {{ momoBd }};background:#FFFFFF;font-size:16px;font-family:'Geist Mono',monospace"><sc-if value="{{ momoErr }}" hint-placeholder-val="{{ false }}"><span role="alert" style="color:#B42318;font-size:12px">{{ momoErr }}</span></sc-if></label></sc-if>
+          </sc-if>
+          </section>
+        </sc-if>
+      </div>
+      <aside aria-label="Order summary" style="position:var(--sticky);top:88px;background:#FFFFFF;border:1px solid rgba(0,0,99,0.14);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-family:var(--serif);font-size:22px">Your reservation</span><span style="font-family:'Geist Mono',monospace;font-size:12px;color:rgba(0,0,58,0.6)">{{ rDays }} day{{ rDaysS }} · {{ rRangeLabel }}</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(0,0,58,0.72)"><aw-icon name="store" size="16"></aw-icon>Pickup · {{ rPickupShort }}</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-family:'Geist Mono',monospace;font-size:12.5px;border-top:1.5px dashed rgba(0,0,99,0.3);padding-top:12px">
+          <sc-for list="{{ orderLines }}" as="l" hint-placeholder-count="3"><div style="display:flex;align-items:baseline;color:{{ l.color }}"><span>{{ l.label }}</span><span style="flex:1;border-bottom:1.5px dotted rgba(0,0,58,0.3);margin:0 8px;transform:translateY(-4px)"></span><span>{{ l.amt }}</span></div></sc-for>
+          <div style="display:flex;font-size:15px;font-weight:500;padding-top:8px;border-top:1px solid rgba(0,0,99,0.2)"><span>TOTAL</span><span style="flex:1"></span><span>{{ rTotalLabel }}</span></div>
+          <sc-if value="{{ rStep3 }}" hint-placeholder-val="{{ false }}"><div style="display:flex;color:#000063"><span>DUE NOW</span><span style="flex:1"></span><span>{{ rDueLabel }}</span></div></sc-if>
+        </div>
+        <div style="display:flex;gap:8px"><button onClick="{{ rBack }}" style="height:52px;padding:0 16px;border-radius:10px;border:1px solid rgba(0,0,99,0.3);background:transparent;font-size:14px">Back</button><button onClick="{{ rNext }}" style="flex:1;min-height:52px;border:none;border-radius:10px;background:#000063;color:#F5F2EA;font-weight:600;font-size:15px;transition:transform 160ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.97)">{{ rNextLabel }}</button></div>
+      </aside>
+    </div>
+    </sc-if>
+  </sc-if>
+  <sc-if value="{{ rentDone }}" hint-placeholder-val="{{ false }}">
+    <section data-screen-label="Rentals · Confirmed" style="display:grid;grid-template-columns:var(--c-main);gap:40px;align-items:start;animation:aw-up 500ms cubic-bezier(0.23,1,0.32,1)">
+      <div style="display:flex;flex-direction:column;gap:22px">
+        <span style="font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:0.06em;color:#1F7A4D">● RESERVED · {{ rDoneStatus }}</span>
+        <h1 style="margin:0;font-family:var(--serif);font-weight:400;font-size:var(--h1);line-height:0.95;letter-spacing:-0.05em">Chairs: sorted.<br><em style="font-weight:300">Go plan the rest.</em></h1>
+        <p style="margin:0;font-size:16px;line-height:1.55;color:rgba(0,0,58,0.72);max-width:520px">{{ rDoneNote }}</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><a href="{{ pickIcsHref }}" download="hotel-a-wise-pickup.ics" style="display:flex;align-items:center;gap:8px;height:46px;padding:0 18px;border-radius:10px;background:#000063;color:#F5F2EA;text-decoration:none;font-size:14px"><aw-icon name="calendar" size="16"></aw-icon>Add pickup to calendar</a><a href="https://www.google.com/maps/dir/?api=1&amp;destination=5.6455136,-0.2869356" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;height:46px;padding:0 18px;border-radius:10px;border:1px solid #000063;text-decoration:none;font-size:14px"><aw-icon name="googlemaps" size="16"></aw-icon>Directions</a><a href="#rent" onClick="{{ newOrder }}" style="display:flex;align-items:center;height:46px;padding:0 18px;border-radius:10px;border:1px solid #000063;text-decoration:none;font-size:14px">Start another order</a></div>
+      </div>
+      <div style="position:relative;background:#FFFFFF;border-radius:20px;border:1px solid rgba(0,0,99,0.14);padding:24px;overflow:hidden;display:flex;flex-direction:column;gap:12px">
+        <svg viewBox="0 0 32 32" width="260" height="260" fill="none" stroke="#000063" stroke-width="0.6" aria-hidden="true" style="position:absolute;right:-60px;bottom:-60px;opacity:0.06"><circle cx="11" cy="11" r="5.5"></circle><circle cx="21" cy="11" r="5.5"></circle><circle cx="11" cy="21" r="5.5"></circle><circle cx="21" cy="21" r="5.5"></circle><rect x="12.5" y="12.5" width="7" height="7" transform="rotate(45 16 16)"></rect></svg>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><span style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.08em;color:rgba(0,0,58,0.6)">RESERVATION REFERENCE</span><span style="font-family:'Geist Mono',monospace;font-size:11px;padding:6px 10px;border:1.5px solid {{ rStampColor }};color:{{ rStampColor }};border-radius:6px;transform:rotate(-6deg)">{{ rStamp }}</span></div>
+        <span style="font-family:'Geist Mono',monospace;font-size:30px;font-weight:500;letter-spacing:0.04em">{{ rRef }}</span>
+        <div style="display:flex;flex-direction:column;gap:6px;font-family:'Geist Mono',monospace;font-size:12.5px;border-top:1.5px dashed rgba(0,0,99,0.3);padding-top:12px">
+          <sc-for list="{{ orderLines }}" as="l" hint-placeholder-count="3"><div style="display:flex;align-items:baseline;color:{{ l.color }}"><span>{{ l.label }}</span><span style="flex:1;border-bottom:1.5px dotted rgba(0,0,58,0.3);margin:0 8px;transform:translateY(-4px)"></span><span>{{ l.amt }}</span></div></sc-for>
+          <div style="display:flex;font-weight:500;padding-top:8px;border-top:1px solid rgba(0,0,99,0.2)"><span>TOTAL</span><span style="flex:1"></span><span>{{ rTotalLabel }}</span></div>
+          <div style="display:flex;color:{{ rPaidColor }}"><span>{{ rPaidKey }}</span><span style="flex:1"></span><span>{{ rPaidAmt }}</span></div>
+        </div>
+      </div>
+    </section>
+  </sc-if>
+</sc-if>
+
+<!-- ================= VENUES ================= -->
+<sc-if value="{{ isVenues }}" hint-placeholder-val="{{ false }}">
+  <section data-screen-label="Venues &amp; enquiry" style="display:flex;flex-direction:column;gap:48px">
+    <div style="display:grid;grid-template-columns:var(--c2);gap:32px;align-items:end">
+      <h1 style="margin:0;font-family:var(--serif);font-weight:400;font-size:var(--h1);line-height:0.95;letter-spacing:-0.05em">Host it<br><em style="font-weight:300">at ours.</em></h1>
+      <p style="margin:0;font-size:16px;line-height:1.55;color:rgba(0,0,58,0.72);max-width:460px">{{ cp.venueIntro }}</p>
+    </div>
+    <div style="display:grid;grid-template-columns:var(--c2);gap:20px" data-stagger="">
+      <sc-for list="{{ venues }}" as="v" hint-placeholder-count="2">
+        <article data-mi-card="" style="display:flex;flex-direction:column;gap:12px">
+          <div style="aspect-ratio:4/3;overflow:hidden;border-radius:16px;background:#F6E2B3"><img data-mi-img="" src="{{ v.img }}" alt="{{ v.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;filter:saturate(0.9) contrast(1.04)"></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px"><h2 style="margin:0;font-family:var(--serif);font-weight:400;font-size:30px">{{ v.name }}</h2><span style="font-family:'Geist Mono',monospace;font-size:13px">{{ v.cap }}</span></div>
+          <p style="margin:0;font-size:15px;line-height:1.55;color:rgba(0,0,58,0.72)">{{ v.desc }}</p>
+          <button onClick="{{ v.on }}" style="align-self:flex-start;height:44px;padding:0 16px;border-radius:10px;border:1px solid #000063;background:{{ v.bg }};color:{{ v.fg }};font-size:14px">{{ v.btn }}</button>
+        </article>
+      </sc-for>
+    </div>
+    <sc-if value="{{ venueSent }}" hint-placeholder-val="{{ false }}">
+      <div role="status" style="padding:24px;border-radius:20px;background:#00003A;color:#F5F2EA;display:flex;flex-direction:column;gap:8px;animation:aw-pop 260ms cubic-bezier(0.23,1,0.32,1)"><span style="font-family:'Geist Mono',monospace;font-size:12px;color:#F2B544">ENQUIRY {{ venueRef }} RECEIVED</span><span style="font-family:var(--serif);font-size:28px">Thank you. The events desk will call you within the hour with a quote.</span></div>
+    </sc-if>
+    <form onSubmit="{{ submitVenue }}" aria-label="Venue enquiry" style="display:grid;grid-template-columns:var(--c2);gap:16px;background:#FFFFFF;border:1px solid rgba(0,0,99,0.14);border-radius:20px;padding:24px">
+      <span style="grid-column:1 / -1;font-family:var(--serif);font-size:26px">Enquire about {{ venueName }}</span>
+      <label style="display:flex;flex-direction:column;gap:6px;font-size:13px"><span style="display:flex;align-items:center;gap:8px"><aw-icon name="calendar" size="16"></aw-icon>Event date</span><dc-import name="DatePicker" variant="field" placeholder="Pick the day" value="{{ vf.date }}" min="{{ today }}" on-change="{{ vfDate }}" error="{{ ve.date }}" with-year="{{ true }}" hint-size="100%,48px"></dc-import><sc-if value="{{ ve.date }}" hint-placeholder-val="{{ false }}"><span role="alert" style="color:#B42318;font-size:12px">{{ ve.date }}</span></sc-if></label>
+      <div role="group" aria-label="Number of guests" style="grid-column:1 / -1;display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:20px;background:#F5F2EA;border:1.5px solid rgba(0,0,99,0.12)">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <span style="font-size:13px">How many guests?</span>
+            <span style="font-size:12px;color:rgba(0,0,58,0.6)">{{ vCapNote }}</span>
+          </div>
+          <div style="display:flex;align-items:center;border:1.5px solid rgba(0,0,99,0.2);border-radius:10px;background:#FFFFFF;overflow:hidden">
+            <button type="button" onClick="{{ vGMinus }}" disabled="{{ vGMinDis }}" aria-label="10 fewer guests" style="width:48px;height:52px;border:none;background:transparent;font-size:20px;transition:transform 120ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.92)">−</button>
+            <div style="min-width:92px;display:flex;flex-direction:column;align-items:center;justify-content:center" aria-live="polite"><span style="font-family:'Geist Mono',monospace;font-size:24px;font-weight:500;line-height:1">{{ vf.guests }}</span><span style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.08em;color:rgba(0,0,58,0.55);margin-top:3px">GUESTS</span></div>
+            <button type="button" onClick="{{ vGPlus }}" disabled="{{ vGMaxDis }}" aria-label="10 more guests" style="width:48px;height:52px;border:none;background:transparent;font-size:20px;transition:transform 120ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.92)">+</button>
+          </div>
+        </div>
+        <div role="radiogroup" aria-label="Quick pick" style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;padding:4px;border-radius:10px;background:#FFFFFF;border:1px solid rgba(0,0,99,0.12)">
+          <sc-for list="{{ vTicks }}" as="t" hint-placeholder-count="5"><button type="button" role="radio" aria-checked="{{ t.checked }}" onClick="{{ t.on }}" style="height:max(40px, var(--tap-min, 0px));border:none;border-radius:7px;background:{{ t.bg }};color:{{ t.fg }};font-family:'Geist Mono',monospace;font-size:13px;transition:background 180ms cubic-bezier(0.23,1,0.32,1),transform 120ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.96)">{{ t.label }}</button></sc-for>
+        </div>
+        <div aria-hidden="true" style="display:grid;grid-template-columns:repeat(20,1fr);gap:3px">
+          <sc-for list="{{ vSeats }}" as="st" hint-placeholder-count="20"><span style="height:8px;border-radius:2px;background:{{ st.bg }};transition:background 200ms cubic-bezier(0.23,1,0.32,1)"></span></sc-for>
+        </div>
+        <span style="font-family:'Geist Mono',monospace;font-size:11px;color:rgba(0,0,58,0.6)">{{ vSuggest }}</span>
+      </div>
+      <label style="display:flex;flex-direction:column;gap:6px;font-size:13px"><span style="display:flex;align-items:center;gap:8px"><aw-icon name="user" size="16"></aw-icon>Name</span><input autoComplete="name" autoCapitalize="words" enterKeyHint="next" value="{{ vf.name }}" onChange="{{ vfName }}" placeholder="e.g. Lydia Mensah" style="height:48px;padding:0 14px;border-radius:10px;border:1.5px solid {{ ve.nameBd }};background:#F5F2EA;font-size:16px"><sc-if value="{{ ve.name }}" hint-placeholder-val="{{ false }}"><span role="alert" style="color:#B42318;font-size:12px">{{ ve.name }}</span></sc-if></label>
+      <label style="display:flex;flex-direction:column;gap:6px;font-size:13px"><span style="display:flex;align-items:center;gap:8px"><aw-icon name="phone" size="16"></aw-icon>Phone</span><input type="tel" autoComplete="tel-national" enterKeyHint="next" value="{{ vf.phone }}" onChange="{{ vfPhone }}" placeholder="055 555 7090" inputMode="tel" style="height:48px;padding:0 14px;border-radius:10px;border:1.5px solid {{ ve.phoneBd }};background:#F5F2EA;font-size:16px;font-family:'Geist Mono',monospace"><sc-if value="{{ ve.phone }}" hint-placeholder-val="{{ false }}"><span role="alert" style="color:#B42318;font-size:12px">{{ ve.phone }}</span></sc-if></label>
+      <label style="grid-column:1 / -1;display:flex;flex-direction:column;gap:6px;font-size:13px">Tell us about it<textarea value="{{ vf.notes }}" onChange="{{ vfNotes }}" rows="3" placeholder="Wedding reception, 150 guests, we'd like canopies and catering space…" style="padding:12px 14px;border-radius:10px;border:1.5px solid rgba(0,0,99,0.2);background:#F5F2EA;font-size:16px"></textarea></label>
+      <button type="submit" style="grid-column:1 / -1;min-height:52px;border:none;border-radius:10px;background:#000063;color:#F5F2EA;font-size:15px;font-weight:500">Send enquiry</button>
+    </form>
+  </section>
+</sc-if>
+
+</main>
+<footer data-screen-label="Footer" style="font-family:'Geist',system-ui,sans-serif">
+  <div style="position:relative;height:var(--foot-h);overflow:hidden;background:#1A1712">
+    <img src="{{ imFooter }}" alt="The first-floor hallway at Hotel A-Wise: yellow walls, carved wooden doors, polished tiles" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 60%">
+    <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,16,10,0.05) 0%,rgba(20,16,10,0.15) 50%,rgba(20,16,10,0.6) 100%)"></div>
+    <div style="position:absolute;left:var(--pad);right:var(--pad);bottom:clamp(24px,4vw,56px);display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap">
+      <p style="margin:0;color:#FFFFFF;font-family:var(--serif);font-weight:400;font-size:var(--foot-type);font-weight:300;line-height:1.02;letter-spacing:-0.05em">Hotel A-Wise</p>
+      <a href="{{ bookHref }}" style="width:var(--foot-btn);height:var(--foot-btn);border-radius:50%;background:#000063;color:#F5F2EA;display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;font-size:clamp(15px,1.4vw,20px);font-weight:500;line-height:1.25;box-shadow:0 0 0 10px rgba(255,255,255,0.12);transition:transform 220ms cubic-bezier(0.23,1,0.32,1)" style-hover="transform:scale(1.04)" style-active="transform:scale(0.97)">Book your<br>stay</a>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:var(--c-foot)">
+    <div style="background:#000063;color:#F5F2EA;padding:clamp(40px,5vw,72px) var(--pad) 40px;display:flex;flex-direction:column;justify-content:space-between;gap:48px">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <span style="font-family:var(--serif);font-size:28px;letter-spacing:-0.05em">Pages</span>
+        <div style="display:grid;grid-template-columns:auto auto;justify-content:start">
+          <div style="display:flex;flex-direction:column;gap:22px;padding-right:48px;border-right:1px solid rgba(245,242,234,0.35)">
+            <a href="Website.dc.html" style="color:#F5F2EA;text-decoration:none;font-size:18px">Home</a>
+            <a href="Website.dc.html#rooms" style="color:#F5F2EA;text-decoration:none;font-size:18px">Rooms</a>
+            <a href="Checkout.dc.html#rent" style="color:#F5F2EA;text-decoration:none;font-size:18px">Rentals</a>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:22px;padding-left:48px">
+            <a href="Website.dc.html#gallery" style="color:#F5F2EA;text-decoration:none;font-size:18px">Gallery</a>
+            <a href="Website.dc.html#contact" style="color:#F5F2EA;text-decoration:none;font-size:18px">Contact</a>
+            <a href="Checkout.dc.html#venues" style="color:#F5F2EA;text-decoration:none;font-size:18px">Venues</a>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline"><span style="font-family:var(--serif);font-size:22px;letter-spacing:-0.05em">© 2026 Hotel A-Wise</span><a href="Admin.dc.html" style="color:rgba(245,242,234,0.55);font-size:12px">Staff login</a></div>
+    </div>
+    <div style="background:#FFFFFF;color:#00003A;padding:clamp(40px,5vw,64px) var(--pad) 40px;display:flex;flex-direction:column;gap:24px">
+      <span style="font-family:var(--serif);font-size:30px;color:#000063;letter-spacing:-0.05em">Contact info</span>
+      <div style="display:grid;grid-template-columns:var(--c-info)">
+        <div style="display:flex;flex-direction:column;gap:14px;padding:4px 32px 32px 0;border-right:var(--info-bd)">
+          <span style="display:flex;align-items:center;gap:8px;font-size:15px;color:rgba(0,0,58,0.7)"><aw-icon name="pin" size="18"></aw-icon>Address</span>
+          <span style="font-size:15px;line-height:1.55">No. 1 Wisepak Lane, New Asofan, Accra.<br>Or “Hotel A-Wise” on <a href="https://www.google.com/maps/search/?api=1&amp;query=5.6455136,-0.2869356" target="_blank" rel="noopener">Google Maps</a>.</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;padding:var(--info-p2);border-right:var(--info-bd)">
+          <span style="display:flex;align-items:center;gap:8px;font-size:15px;color:rgba(0,0,58,0.7)"><aw-icon name="phone" size="18"></aw-icon>Phone</span>
+          <a href="{{ ct.tel }}" style="font-size:15px;color:#00003A;text-decoration:none">{{ ct.phone }}</a>
+          
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;padding:var(--info-p3)">
+          <span style="display:flex;align-items:center;gap:8px;font-size:15px;color:rgba(0,0,58,0.7)"><aw-icon name="mail" size="18"></aw-icon>Email</span>
+          <a href="{{ ct.mail }}" style="font-size:15px;color:#00003A;text-decoration:none">{{ ct.email }}</a>
+        </div>
+      </div>
+      <form onSubmit="{{ submitNews }}" aria-label="Newsletter" style="margin-top:auto;display:flex;gap:8px;max-width:460px;flex-wrap:wrap;align-items:flex-end">
+        <label style="flex:1;min-width:200px;display:flex;flex-direction:column;gap:6px;font-size:13px;color:rgba(0,0,58,0.65)">The occasional letter: rates and openings, no spam
+          <input autoComplete="email" autoCapitalize="none" spellCheck="false" enterKeyHint="next" type="email" value="{{ news }}" onChange="{{ onNews }}" placeholder="you@example.com" style="height:46px;padding:0 14px;border-radius:10px;border:1.5px solid rgba(0,0,99,0.2);background:#F5F2EA;font-size:16px"></label>
+        <button type="submit" style="height:46px;padding:0 18px;border-radius:10px;border:none;background:#000063;color:#F5F2EA;font-size:14px;transition:transform 160ms cubic-bezier(0.23,1,0.32,1)" style-active="transform:scale(0.97)">Subscribe</button>
+      </form>
+    </div>
+  </div>
+</footer>
+<sc-if value="{{ mobileBar }}" hint-placeholder-val="{{ false }}"><div aria-hidden="true" style="height:calc(84px + env(safe-area-inset-bottom))"></div></sc-if>
+</div>
+</div>
+
+<!-- mobile sticky action bar (booking) -->
+<sc-if value="{{ mobileBar }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:0;right:0;bottom:0;z-index:50;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:#F5F2EA;border-top:1px solid rgba(0,0,99,0.16);display:flex;align-items:center;gap:12px;font-family:'Geist',system-ui,sans-serif">
+    <div style="display:flex;flex-direction:column;flex:1;min-width:0"><span style="font-family:'Geist Mono',monospace;font-size:15px;font-weight:500">{{ mobileBarAmt }}</span><span style="font-size:12px;color:rgba(0,0,58,0.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ mobileBarNote }}</span></div>
+    <button onClick="{{ mobileBarAction }}" disabled="{{ mobileBarDisabled }}" style="height:48px;padding:0 20px;border:none;border-radius:10px;background:#000063;color:#F5F2EA;font-weight:600;font-size:15px">{{ mobileBarLabel }}</button>
+  </div>
+</sc-if>
+
+<!-- payment sheet -->
+<sc-if value="{{ payOpen }}" hint-placeholder-val="{{ false }}">
+  <div role="dialog" aria-modal="true" aria-label="Payment" style="position:fixed;inset:0;z-index:90;background:rgba(0,0,40,0.6);display:flex;align-items:center;justify-content:center;padding:16px;animation:aw-fade 200ms cubic-bezier(0.23,1,0.32,1);font-family:'Geist',system-ui,sans-serif">
+    <div style="width:min(400px,100%);max-height:calc(100dvh - 32px);overflow-y:auto;overscroll-behavior:contain;background:#FFFFFF;border-radius:22px;padding:28px 24px;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;animation:aw-pop 260ms cubic-bezier(0.23,1,0.32,1)">
+      <span style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.06em;color:rgba(0,0,58,0.55)">PAYSTACK · SECURE CHECKOUT</span>
+      {{ loaderEl }}
+      <span style="font-family:var(--serif);font-size:24px;line-height:1.2">{{ payTitle }}</span>
+      <span style="font-size:14px;color:rgba(0,0,58,0.7)">{{ payBody }}</span>
+      <span style="font-family:'Geist Mono',monospace;font-size:20px">{{ payAmt }}</span>
+      <div style="width:100%;border-top:1px dashed rgba(0,0,99,0.25);padding-top:14px;display:flex;flex-direction:column;gap:8px">
+        <span style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.06em;color:rgba(0,0,58,0.5)">TEST MODE · SIMULATE THE RESPONSE</span>
+        <div style="display:flex;gap:8px"><button onClick="{{ payApprove }}" style="flex:1;height:44px;border:none;border-radius:10px;background:#1F7A4D;color:#FFFFFF;font-size:14px">Approve</button><button onClick="{{ payDecline }}" style="flex:1;height:44px;border-radius:10px;border:1px solid #B42318;color:#B42318;background:transparent;font-size:14px">Decline</button></div>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ cancelModal }}" hint-placeholder-val="{{ false }}">
+  <div role="dialog" aria-modal="true" aria-label="Cancel booking" style="position:fixed;inset:0;z-index:90;background:rgba(0,0,40,0.6);display:flex;align-items:center;justify-content:center;padding:16px;animation:aw-fade 200ms cubic-bezier(0.23,1,0.32,1);font-family:'Geist',system-ui,sans-serif">
+    <div style="width:min(440px,100%);max-height:calc(100dvh - 32px);overflow-y:auto;overscroll-behavior:contain;background:#FFFFFF;border-radius:22px;padding:24px;display:flex;flex-direction:column;gap:14px;animation:aw-pop 260ms cubic-bezier(0.23,1,0.32,1)">
+      <span style="font-family:var(--serif);font-size:26px">Cancel {{ mb.ref }}?</span>
+      <p style="margin:0;font-size:14px;line-height:1.55;color:rgba(0,0,58,0.75)">{{ mCancelBody }}</p>
+      <div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap"><button onClick="{{ closeCancel }}" style="height:44px;padding:0 16px;border-radius:10px;border:1px solid rgba(0,0,99,0.3);background:transparent;font-size:14px">Keep my booking</button><button onClick="{{ confirmCancel }}" style="height:44px;padding:0 16px;border:none;border-radius:10px;background:#B42318;color:#FFFFFF;font-size:14px">Yes, cancel it</button></div>
+    </div>
+  </div>
+</sc-if>
+
+{{ toastEl }}
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;viewport&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;auto&quot;,&quot;desktop&quot;,&quot;tablet&quot;,&quot;mobile&quot;],&quot;default&quot;:&quot;auto&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Preview&quot;},&quot;simulate&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;none&quot;,&quot;loading&quot;,&quot;soldout&quot;,&quot;paymentFailed&quot;,&quot;holdExpired&quot;,&quot;notEnoughStock&quot;,&quot;emptyCart&quot;,&quot;offline&quot;],&quot;default&quot;:&quot;none&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;States&quot;},&quot;payAtHotel&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;CMS settings&quot;}}">
+const IMG = 'uploads/Hotel-A-Wise-Images-web/';
+const p = s => IMG + s;
+const EASE = 'cubic-bezier(0.23,1,0.32,1)';
+const ROOMS = [
+  { code:'STD', name:'Standard', beds:'1 queen bed', guests:2, img:p('02-rooms/standard-room.jpg'), opts:[{name:'Standard', price:150, base:3}] },
+  { code:'EXE', name:'Executive', beds:'Large double bed', guests:2, img:p('02-rooms/executive-room-1.jpg'), opts:[{name:'Executive', price:200, base:2},{name:'Executive Plus', price:250, base:1}] },
+  { code:'VIP', name:'VIP', beds:'Large double bed', guests:2, img:p('02-rooms/vip-room-1.jpg'), opts:[{name:'VIP', price:300, base:1}] },
+  { code:'DBL', name:'Double', beds:'2 double beds', guests:4, img:p('02-rooms/double-bed-room.jpg'), opts:[{name:'Double', price:400, base:2}] },
+];
+const ITEMS = [
+  { id:'canopy', name:'Canopy', spec:'10 × 10 ft, white, steel frame', price:250, deposit:100, stock:12, booked:4, img:p('05-services-and-rentals/canopy-rental.jpg') },
+  { id:'longtable', name:'Long table', spec:'6 ft, seats 6–8, foldable', price:40, deposit:20, stock:30, booked:12, img:p('05-services-and-rentals/table-rental.jpg') },
+  { id:'shorttable', name:'Short table', spec:'4 ft, seats 4, foldable', price:25, deposit:15, stock:40, booked:8, img:p('05-services-and-rentals/table-rental.jpg') },
+  { id:'foldchair', name:'Foldable chair', spec:'Padded seat, blue, steel legs', price:5, deposit:2, stock:300, booked:160, img:p('05-services-and-rentals/plastic-chair-rental.jpg') },
+  { id:'chair', name:'Regular plastic chair', spec:'Stackable, blue, with arms', price:3, deposit:1, stock:400, booked:120, img:p('04-spaces/first-floor-porch.jpg'), crop:true },
+  { id:'cloth', name:'Tablecloth', spec:'White, fits long tables', price:15, deposit:5, stock:60, booked:10, img:null, custom:true },
+  { id:'cover', name:'Chair cover', spec:'White stretch cover with sash', price:4, deposit:1, stock:200, booked:200, img:null, custom:true },
+];
+ITEMS[4].img = null; ITEMS[4].noPhoto = true;
+const TYPE_LABEL = { STD:'Standard', EXE:'Executive', 'EXE+':'Executive Plus', VIP:'VIP', DBL:'Double' };
+const ROOMS_DEF = JSON.parse(JSON.stringify(ROOMS));
+const applyRoomInfo = RI => { if (!RI) return; ROOMS.forEach((r, i) => { const d = ROOMS_DEF[i], ri = RI[r.code] || {}; r.name = String(ri.name||'').trim() || d.name; r.beds = String(ri.beds||'').trim() || d.beds; r.guests = +ri.guests || d.guests; r.opts.forEach((o, j) => { const k = j === 1 ? 'EXE+' : r.code; o.name = String((RI[k]||{}).name||'').trim() || d.opts[j].name; }); }); Object.keys(TYPE_LABEL).forEach(k => { if (RI[k] && String(RI[k].name||'').trim()) TYPE_LABEL[k] = RI[k].name.trim(); }); };
+const BUNDLES = [
+  { id:'wedding', name:'Wedding pack', pct:10, desc:'4 canopies, 100 foldable chairs, 10 long tables.', items:{canopy:4, foldchair:100, longtable:10} },
+  { id:'funeral', name:'Funeral pack', pct:10, desc:'6 canopies, 200 regular chairs, 10 long tables.', items:{canopy:6, chair:200, longtable:10} },
+  { id:'party', name:'Party pack', pct:8, desc:'2 canopies, 50 regular chairs, 6 short tables.', items:{canopy:2, chair:50, shorttable:6} },
+];
+const ZONES = [
+  { id:'z1', label:'New Asofan, Ofankor · GHS 50', fee:50 },
+  { id:'z2', label:'Pokuase, Amasaman, Achimota · GHS 100', fee:100 },
+  { id:'z3', label:'Accra Central, Osu, East Legon · GHS 180', fee:180 },
+  { id:'z4', label:'Tema, Kasoa · GHS 250', fee:250 },
+];
+const METHODS = [
+  { id:'mtn', logos:['mtn'], label:'MTN MoMo', tag:'MTN', tagBg:'#F2B544', tagFg:'#00003A', momo:true },
+  { id:'telecel', logos:['telecel'], label:'Telecel Cash', tag:'TELECEL', tagBg:'#B42318', tagFg:'#FFFFFF', momo:true },
+  { id:'at', logos:['airteltigo'], label:'AirtelTigo Money', tag:'AT', tagBg:'#000063', tagFg:'#FFFFFF', momo:true },
+  { id:'card', logos:['visa','mastercard'], label:'Visa / Mastercard', tag:'CARD', tagBg:'#F6E2B3', tagFg:'#000063', momo:false },
+];
+const ymd = d => d.toISOString().slice(0,10);
+const addDays = (s,n) => { const d = new Date(s+'T00:00:00Z'); d.setUTCDate(d.getUTCDate()+n); return ymd(d); };
+const diff = (a,b) => Math.round((new Date(b+'T00:00:00Z') - new Date(a+'T00:00:00Z'))/864e5);
+const ghs = n => 'GHS ' + Math.round(n).toLocaleString('en-GH');
+const fmt = (s, o) => new Date(s+'T00:00:00Z').toLocaleDateString('en-GB', { timeZone:'UTC', ...o });
+const short = s => fmt(s, {day:'numeric', month:'short'});
+const long = s => fmt(s, {weekday:'short', day:'numeric', month:'short'});
+const okPhone = v => /^0?[235]\d{8}$/.test(v.replace(/\D/g,'').replace(/^233/,''));
+const rnd = n => Array.from({length:n}, () => 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'[Math.floor(Math.random()*31)]).join('');
+const ARRIVALS = ['Not sure yet', ...Array.from({length:24}, (_,h) => String(h).padStart(2,'0') + ':00')];
+
+class Component extends DCLogic {
+  scrollRef = React.createRef();
+  constructor(props) {
+    super(props);
+    const T = ymd(new Date());
+    this.T = T;
+    this.sold = [addDays(T,5), addDays(T,6), addDays(T,13)];
+    this.busy = addDays(T,9);
+    this.state = {
+      hash:'', vw:window.innerWidth, ci:T, co:addDays(T,2), guests:2, sel:null, bf:false, rs:false, calOffset:0, pickEnd:false,
+      step:1, holdEnd:0, gf:{name:'',cc:'+233',phone:'',email:'',arrival:'Not sure yet',notes:''}, ge:{},
+      plan:'deposit', method:'mtn', momoNum:'', momoErr:'', pay:null, failed:null, ref:'', doneStatus:'', roomsLoading:false,
+      mRef:'', mPhone:'', mErr:'', mFound:false, mStatus:'Confirmed', mEditing:false, mCi:addDays(T,21), mCo:addDays(T,23), cancelModal:false, mBusy:false,
+      rFrom:addDays(T,7), rTo:addDays(T,8), cart:{}, qtyErr:{}, bundlesOn:{}, cartOpen:false, dragY:0, dragging:false,
+      rStep:2, fulfil:'pickup', zone:'z1', setup:false, rf:{address:'',name:'',phone:'',email:'',occasion:'Wedding'}, re:{}, rPlan:'online', rRef:'', rentDone:false,
+      tRef:'', tPhone:'', tErr:'', tFound:null,
+      venue:0, vf:{date:'',guests:150,name:'',phone:'',notes:''}, ve:{}, venueSent:false, venueRef:'',
+      toasts:[], online:navigator.onLine,
+    };
+  }
+  componentDidMount() {
+    const hookS = () => { if (window.AWStore) { this._unsubS = window.AWStore.subscribe(() => this.forceUpdate()); this.forceUpdate(); } else this._ws = setTimeout(hookS, 30); }; hookS();
+    this.parseHash(true);
+    this._tick = setInterval(() => this.forceUpdate(), 1000);
+    this._hash = () => this.parseHash(false);
+    this._resize = () => this.setState({vw:window.innerWidth});
+    this._key = e => { if (e.key==='Escape') this.setState({cartOpen:false, cancelModal:false}); };
+    this._on = () => this.setState({online:true}); this._off = () => this.setState({online:false});
+    window.addEventListener('hashchange', this._hash); window.addEventListener('resize', this._resize); window.addEventListener('keydown', this._key);
+    window.addEventListener('online', this._on); window.addEventListener('offline', this._off);
+    if ((this.props.simulate||'')==='holdExpired') this.setState({step:2, sel:'VIP:0', holdEnd:Date.now()-1000});
+    if ((this.props.simulate||'')==='paymentFailed') this.setState({step:3, sel:'VIP:0', holdEnd:Date.now()+11*60e3, failed:'MTN said the prompt timed out before a PIN was entered.', gf:{...this.state.gf, name:'Kofi Mensah', phone:'0244123456'}, momoNum:'0244123456'});
+    if ((this.props.simulate||'')==='notEnoughStock') this.setState({cart:{foldchair:150}, qtyErr:{foldchair:`Only 140 foldable chairs free for those dates. We've added the 140 we have.`}});
+  }
+  componentDidUpdate() { const lock = !!(this.state.pay || this.state.cancelModal || (this.mobile() && this.state.menu)); if (lock !== !!this._awLocked) { this._awLocked = lock; window.__awLock = Math.max(0, (window.__awLock || 0) + (lock ? 1 : -1)); document.documentElement.style.overflow = window.__awLock > 0 ? 'hidden' : ''; } }
+  componentWillUnmount() {
+    clearInterval(this._tick); clearTimeout(this._ws); this._unsubS && this._unsubS(); window.removeEventListener('hashchange', this._hash); window.removeEventListener('resize', this._resize);
+    window.removeEventListener('keydown', this._key); window.removeEventListener('online', this._on); window.removeEventListener('offline', this._off);
+  }
+  parseHash(first) {
+    const h = (location.hash||'#book').slice(1) || 'book';
+    const [route, q] = h.split('?'); const params = Object.fromEntries(new URLSearchParams(q||''));
+    const up = { hash:route, cartOpen:false };
+    if (route==='book' && first) {
+      if (params.ci) up.ci = params.ci; if (params.co) up.co = params.co; if (params.g) up.guests = +params.g;
+      if (params.room) up.sel = `${params.room}:${params.tier||0}`; if (params.bf==='1') up.bf = true; if (params.rs==='1') up.rs = true;
+      up.roomsLoading = true; setTimeout(() => this.setState({roomsLoading:false}), 700);
+    }
+    if (route==='manage' && params.ref) { up.mRef = params.ref; up.mPhone = params.phone || ''; setTimeout(() => this.lookup(), 0); }
+    if (route==='rent' && params.from) { up.rFrom = params.from; up.rTo = params.to && diff(params.from, params.to) >= 0 ? params.to : params.from; }
+    this.setState(up);
+    const el = this.scrollRef.current; if (el) el.scrollTop = 0; window.scrollTo(0,0);
+  }
+  lookup() {
+    const s = this.state, S = window.AWStore, ref = s.mRef.trim().toUpperCase();
+    if (!ref || !s.mPhone.trim()) { this.setState({mErr:'Enter your booking reference and phone number.', mFound:''}); return; }
+    this.setState({mBusy:true, mErr:''});
+    setTimeout(() => { const b = S ? (S.get('bookings') || []).find(x => x.ref.toUpperCase()===ref && S.samePhone(x.phone, this.state.mPhone)) : null;
+      if (b) this.setState({mFound:b.ref, mBusy:false, mEditing:false, mCi:b.ci, mCo:addDays(b.ci, b.nights)}); else this.setState({mFound:'', mBusy:false, mErr:'We couldn\'t find a booking with that reference and phone number. Check the SMS we sent, or call ' + (((window.AWStore && window.AWStore.get('settings')) || {}).phone || '+233 55 555 7090') + '.'}); }, 450);
+  }
+  toast(title, body) {
+    const id = Date.now()+Math.random();
+    this.setState(s => ({toasts:[...s.toasts, {id,title,body}].slice(-3)}));
+    setTimeout(() => this.setState(s => ({toasts:s.toasts.filter(t => t.id!==id)})), 4200);
+  }
+  ew() { const v = this.props.viewport||'auto'; return v==='mobile' ? 390 : v==='tablet' ? 820 : v==='desktop' ? Math.max(this.state.vw, 1280) : this.state.vw; }
+  mobile() { return this.ew() < 1024; }
+  avail(code, i) {
+    const s = this.state, sim = this.props.simulate||'none';
+    if (sim==='soldout') return 0;
+    const S = window.AWStore; if (S) return S.freeRooms(code==='EXE' && i===1 ? 'EXE+' : code, s.ci, s.co).length;
+    const r = ROOMS.find(x => x.code===code); let n = r.opts[i].base;
+    const days = []; for (let d = s.ci; d < s.co; d = addDays(d,1)) days.push(d);
+    if (days.some(d => this.sold.includes(d))) return 0;
+    if (days.includes(this.busy)) { if (code==='VIP' || (code==='EXE' && i===1)) return 0; n = Math.max(1, n-1); }
+    return n;
+  }
+  isSold(d) { const S = window.AWStore; return S ? (S.nightBlackout(d) || S.nightFull(d)) : this.sold.includes(d); }
+  items() { const S = window.AWStore; return (S ? S.get('items') : ITEMS).map(it => ({ ...it, img: it.img || '' })); }
+  saveBooking(ref, x) {
+    const S = window.AWStore, s = this.state; if (!S || !s.sel) return;
+    const [code, idx] = s.sel.split(':'), type = code==='EXE' && +idx===1 ? 'EXE+' : code, free = S.freeRooms(type, s.ci, s.co);
+    S.update('bookings', l => [{ ref, guest:s.gf.name.trim(), phone:s.gf.phone.trim(), cc:s.gf.cc, email:s.gf.email.trim(), code:type, room:free[0] || '', ci:s.ci, nights:diff(s.ci, s.co), guests:s.guests, status:x.status, total:x.total, paid:x.paid, source:'Web', method:x.method, arrival: s.gf.arrival==='Not sure yet' ? '' : s.gf.arrival, requests:s.gf.notes.trim(), bf:s.bf, rs:s.rs, promo:(this._bt||{}).promo || '', note:'', live:true, createdAt:new Date().toISOString() }, ...(l || [])]);
+    if (this._bt && this._bt.promo) S.promoUse(this._bt.promo);
+  }
+  saveRental(ref, paidPct, method) {
+    const S = window.AWStore, s = this.state; if (!S) return;
+    S.update('rentals', l => [{ ref, who:s.rf.name.trim(), phone:s.rf.phone.trim(), email:s.rf.email.trim(), occasion:s.rf.occasion, from:s.rFrom, to:s.rTo, items:{ ...s.cart }, fulfil:'Pickup', status:'Reserved', paidPct, method, discount: Math.round((this._rt && this._rt.disc) || 0), live:true, createdAt:new Date().toISOString() }, ...(l || [])]);
+  }
+  itemAvail(it) { const S = window.AWStore; if (S && (this.props.simulate||'none') !== 'soldout') return S.itemFree(it.id, this.state.rFrom, this.state.rTo); return this._itemAvailOld(it); }
+  _itemAvailOld(it) { const sim = this.props.simulate||'none'; return sim==='soldout' ? 0 : Math.max(0, it.stock - it.booked - (diff(this.T, this.state.rFrom) % 3 === 0 ? 0 : 0)); }
+  setQty(id, q) {
+    const it = this.items().find(x => x.id===id), max = this.itemAvail(it);
+    let v = Math.max(0, Math.floor(+q || 0)); const err = {...this.state.qtyErr};
+    if (v > max) { err[id] = max===0 ? `${it.name}s are all booked for those dates.` : `Only ${max} free for those dates. That's the lot.`; v = max; } else delete err[id];
+    const cart = {...this.state.cart}; if (v) cart[id] = v; else delete cart[id];
+    this.setState({cart, qtyErr:err});
+  }
+  doTrack() {
+    const s = this.state;
+    if (s.tRef.trim().toUpperCase()==='AWR-2611' && okPhone(s.tPhone)) this.setState({tFound:'demo', tErr:''});
+    else if (s.rRef && s.tRef.trim().toUpperCase()===s.rRef) this.setState({tFound:'new', tErr:''});
+    else this.setState({tFound:null, tErr:"We couldn't find that order. Check the reference on your SMS, or call " + (((window.AWStore && window.AWStore.get('settings')) || {}).phone || '+233 55 555 7090') + "."});
+  }
+  startPay(forWhat) {
+    const s = this.state;
+    const m = METHODS.find(x => x.id===s.method);
+    if (m.momo && !okPhone(s.momoNum)) { this.setState({momoErr:'Enter the MoMo number that should get the prompt.'}); return; }
+    this.setState({pay:forWhat, failed:null, momoErr:''});
+  }
+  finishPay(ok) {
+    const s = this.state, which = s.pay;
+    if (!ok) { this.setState({pay:null, failed: s.method==='card' ? 'Your bank declined the card.' : 'The prompt was declined or timed out.'}); return; }
+    if (which==='room') { const ref = 'AW-'+rnd(4), t = this._bt || {total:0, dueNow:0}; this.saveBooking(ref, { status:'Confirmed', total:t.total, paid:t.dueNow, method:(METHODS.find(x => x.id===s.method)||{}).label || '' }); this.setState({pay:null, step:4, ref, doneStatus: s.plan==='full' ? 'PAID IN FULL · CONFIRMED' : 'DEPOSIT PAID · CONFIRMED'}); this.toast('Booking confirmed.', 'Receipt sent by SMS and WhatsApp.'); }
+    else { const rref = 'AWR-'+rnd(4); this.saveRental(rref, 1, (METHODS.find(x => x.id===s.method)||{}).label || ''); this.setState({pay:null, rentDone:true, rRef:rref}); this.toast('Items reserved and paid.', 'Show your reference when you collect.'); }
+    const el = this.scrollRef.current; if (el) el.scrollTop = 0; window.scrollTo(0,0);
+  }
+  chipSel(on) { return { bd: on ? '#000063' : 'rgba(0,0,99,0.2)', bg: on ? '#F6E2B3' : '#FFFFFF', checked: on ? 'true' : 'false' }; }
+  stepChip(i, cur) { const done = i < cur, now = i===cur; return { bd: now ? '#000063' : 'rgba(0,0,99,0.2)', bg: now ? '#000063' : done ? '#F6E2B3' : 'transparent', fg: now ? '#F5F2EA' : '#00003A', current: now ? 'step' : 'false' }; }
+
+  renderVals() {
+    const s = this.state, sim = this.props.simulate||'none', m = this.mobile(), T = this.T, vp = this.props.viewport||'auto', ew = this.ew(), ph = ew < 640, tab = m && !ph;
+    const framed = (vp==='mobile' && s.vw > 520) || (vp==='tablet' && s.vw > 900);
+    const now = new Date(), clock = String(now.getUTCHours()).padStart(2,'0')+':'+String(now.getUTCMinutes()).padStart(2,'0');
+    const route = s.hash || 'book';
+    const isBook = route==='book', isManage = route==='manage', isRent = route==='rent', isRentCo = route==='rent/checkout', isTrack = route==='track', isVenues = route==='venues';
+
+    const vars = {
+      '--pad': ph ? '20px' : tab ? '32px' : '48px', '--h1': ph ? '40px' : tab ? 'clamp(48px,7vw,68px)' : 'clamp(56px,6.4vw,104px)', '--h2': ph ? '34px' : tab ? '48px' : 'clamp(40px,4.2vw,64px)',
+      '--c-main': m ? '1fr' : 'minmax(0,1fr) 380px', '--c2': ph ? '1fr' : 'minmax(0,1fr) minmax(0,1fr)', '--c3': ph ? '1fr' : tab ? 'repeat(auto-fit,minmax(220px,1fr))' : 'repeat(3,minmax(0,1fr))',
+      '--c-cal': ph ? '1fr' : '1fr 1fr', '--c-row': ph ? '72px minmax(0,1fr) auto' : '120px minmax(0,1fr) auto', '--c4m': ph ? '1fr 1fr' : 'repeat(4,minmax(0,1fr))',
+      '--c-items': ph ? '1fr' : 'repeat(auto-fill,minmax(240px,1fr))', '--sticky': m ? 'static' : 'sticky', '--tap-min': m ? '44px' : '0px', '--item-ar': m ? '16/9' : '4/3', '--serif':"'Cormorant Garamond', Georgia, serif", '--navgap': m ? '10px' : 'max(20px, calc(var(--pad) - 16px))', '--wide': m ? 'none' : 'inline', '--foot-h': m ? '260px' : 'clamp(280px, 34vw, 420px)', '--foot-type': m ? '40px' : 'clamp(52px, 6vw, 96px)', '--foot-btn': m ? '108px' : 'clamp(130px, 11vw, 170px)', '--c-foot': m ? '1fr' : 'minmax(0,5fr) minmax(0,7fr)', '--c-info': m ? '1fr' : 'repeat(3, auto)', '--info-bd': m ? 'none' : '1px solid rgba(0,0,99,0.2)', '--info-p2': m ? '4px 0 24px' : '4px 32px 32px', '--info-p3': m ? '4px 0 24px' : '4px 0 32px 32px',
+      '--d': m ? 'none' : 'flex', '--mo': m ? 'flex' : 'none', '--db': m ? 'none' : 'inline', '--mb': m ? 'block' : 'none',
+      background:'#F5F2EA', color:'#00003A', minHeight:'100%',
+    };
+    const outerStyle = framed ? { width: vp==='tablet' ? 820 : 390, height: vp==='tablet' ? 'min(1180px, calc(100vh - 48px))' : 844, margin:'24px auto', borderRadius: vp==='tablet' ? 28 : 44, border:'10px solid #00003A', overflow:'hidden', transform:'translateZ(0)', position:'relative', boxShadow:'0 40px 80px -30px rgba(0,0,40,0.5)' } : { position:'relative', minHeight:'100vh' };
+    const scaled = ph && s.cartOpen;
+    const scrollStyle = { ...(framed ? { height:'100%', overflowY:'auto' } : {}), transform: scaled ? 'scale(0.94)' : 'none', borderRadius: scaled ? 18 : 0, transition:`transform 420ms ${EASE}`, transformOrigin:'50% 0' };
+    if (typeof document !== 'undefined') document.body.style.background = framed ? '#F6E2B3' : '#F5F2EA';
+
+    const dotEl = React.createElement('span', { 'aria-hidden':true, style:{ width:8, height:8, borderRadius:'50%', background:'#F2B544', display:'inline-block', flexShrink:0, animation:'aw-breathe 2.8s ease-in-out infinite' } });
+    const loaderEl = React.createElement('svg', { viewBox:'0 0 32 32', width:52, height:52, fill:'none', stroke:'#000063', strokeWidth:1.2, style:{ animation:'aw-spin 2.4s cubic-bezier(0.77,0,0.175,1) infinite' } },
+      React.createElement('circle',{cx:11,cy:11,r:5.5}), React.createElement('circle',{cx:21,cy:11,r:5.5}), React.createElement('circle',{cx:11,cy:21,r:5.5}), React.createElement('circle',{cx:21,cy:21,r:5.5}), React.createElement('rect',{x:12.5,y:12.5,width:7,height:7,transform:'rotate(45 16 16)'}));
+    const toastEl = React.createElement('div', { 'aria-live':'polite', style:{ position:'fixed', right:16, bottom: m ? 84 : 24, zIndex:95, width:'min(360px, calc(100% - 32px))', pointerEvents:'none' } },
+      s.toasts.map((t,i) => { const k = s.toasts.length-1-i; return React.createElement('div', { key:t.id, role:'status', style:{ position:'absolute', right:0, bottom:0, width:'100%', background:'#00003A', color:'#F5F2EA', borderRadius:10, padding:'14px 16px', fontFamily:"'Geist',system-ui,sans-serif", boxShadow:'0 12px 32px -12px rgba(0,0,40,0.5)', transform:`translateY(${-k*12}px) scale(${1-k*0.05})`, transition:`transform 300ms ${EASE}`, animation:`aw-toast 320ms ${EASE}`, display:'flex', gap:10 } },
+        React.createElement('span', { style:{ width:8, height:8, borderRadius:'50%', background:'#F2B544', marginTop:6, flexShrink:0 } }),
+        React.createElement('div', null, React.createElement('div', { style:{fontSize:14, fontWeight:500} }, t.title), t.body ? React.createElement('div', { style:{fontSize:13, opacity:0.75, marginTop:2} }, t.body) : null)); }));
+
+    // ---------- booking ----------
+    const S = window.AWStore, db = S ? S.all() : null, setg = db ? db.settings : {}, rates = db ? db.rates : null;
+    const bfP = +setg.bfPrice || 50, rsF = +setg.rsFee || 20, depPct = +setg.deposit || 30;
+    if (db) applyRoomInfo(db.roomInfo);
+    const nights = Math.max(0, diff(s.ci, s.co));
+    const [selCode, selIdx] = s.sel ? [s.sel.split(':')[0], +s.sel.split(':')[1]] : [null, 0];
+    const selRoom = ROOMS.find(r => r.code===selCode);
+    const selOpt0 = selRoom ? selRoom.opts[selIdx] : null, selOpt = selOpt0 && rates ? { ...selOpt0, price: rates[selCode==='EXE' && selIdx===1 ? 'EXE+' : selCode] } : selOpt0;
+    const selAvail = selRoom ? this.avail(selCode, selIdx) : 0;
+    const validSel = selRoom && selAvail > 0 && s.guests <= selRoom.guests && nights > 0;
+    const receipt = []; let total = 0;
+    const selType = selCode==='EXE' && selIdx===1 ? 'EXE+' : selCode;
+    let roomSub = 0;
+    if (selOpt && nights) { const sp = S ? S.stayPrice(selType, s.ci, nights) : { base:selOpt.price*nights, total:selOpt.price*nights, lines:[] }; receipt.push({label:`${selOpt.name.toUpperCase()} × ${nights}`, amt:ghs(sp.base)}); sp.lines.forEach(l => receipt.push({label:l.name.toUpperCase(), amt:(l.amt < 0 ? '− ' : '+ ') + ghs(Math.abs(l.amt))})); total += sp.total; roomSub = sp.total; }
+    if (s.bf && nights) { receipt.push({label:`BREAKFAST × ${s.guests} × ${nights}`, amt:ghs(bfP*s.guests*nights)}); total += bfP*s.guests*nights; }
+    if (s.rs) { receipt.push({label:'ROOM SERVICE', amt:ghs(rsF)}); total += rsF; }
+    let promoRes = null;
+    if (s.promoApplied && S && selOpt && nights) { promoRes = S.promoCheck(s.promoApplied, selType, nights, roomSub, s.bf ? bfP*s.guests*nights : 0); if (promoRes.ok && promoRes.discount > 0) { receipt.push({label:`PROMO ${promoRes.code}`, amt:'− ' + ghs(promoRes.discount)}); total -= promoRes.discount; } }
+    if (s.promoApplied && promoRes && !promoRes.ok) setTimeout(() => this.setState({promoApplied:'', promoErr:promoRes.err}), 0);
+    if (!receipt.length) receipt.push({label:'PICK A ROOM', amt:'—'});
+    const deposit = Math.ceil(total*depPct/100/10)*10;
+    const payAtHotel = this.props.payAtHotel !== false && setg.payAtHotel !== false;
+    if (!payAtHotel && s.plan==='hotel') setTimeout(() => this.setState({plan:'deposit'}), 0);
+    const dueNow = s.plan==='full' ? total : s.plan==='deposit' ? deposit : 0;
+    this._bt = { total, dueNow, promo: promoRes && promoRes.ok ? promoRes.code : '' };
+    const holdMs = s.holdEnd - Date.now();
+    const holdExpired = s.step>=2 && s.step<4 && s.holdEnd && holdMs <= 0;
+    const holdLeft = holdMs > 0 ? `${String(Math.floor(holdMs/60000)).padStart(2,'0')}:${String(Math.floor(holdMs/1000)%60).padStart(2,'0')}` : '00:00';
+
+    // calendar
+    const base = new Date(T+'T00:00:00Z'); base.setUTCDate(1); base.setUTCMonth(base.getUTCMonth()+s.calOffset);
+    const monthsN = ph ? 1 : 2;
+    const calMonths = Array.from({length:monthsN}, (_,k) => {
+      const first = new Date(base); first.setUTCMonth(first.getUTCMonth()+k);
+      const y = first.getUTCFullYear(), mo = first.getUTCMonth(), lead = (first.getUTCDay()+6)%7, dim = new Date(Date.UTC(y,mo+1,0)).getUTCDate();
+      const days = [];
+      for (let i=0;i<lead;i++) days.push({ n:'', vis:'hidden', disabled:true, bg:'transparent', fg:'inherit', deco:'none', radius:'0', ring:'none', aria:'', pressed:'false', on:null });
+      for (let d=1; d<=dim; d++) {
+        const key = ymd(new Date(Date.UTC(y,mo,d)));
+        const past = key < T, sold = sim==='soldout' || (!past && this.isSold(key));
+        const isStart = key===s.ci, isEnd = key===s.co, inRange = key > s.ci && key < s.co;
+        const disabled = past || (sold && !isEnd);
+        days.push({ n:d, vis:'visible', disabled,
+          bg: isStart||isEnd ? '#000063' : inRange ? '#F6E2B3' : 'transparent',
+          fg: isStart||isEnd ? '#F5F2EA' : past ? 'rgba(0,0,58,0.25)' : sold ? 'rgba(0,0,58,0.35)' : '#00003A',
+          deco: sold && !past ? 'line-through' : 'none', radius: isStart ? '8px 0 0 8px' : isEnd ? '0 8px 8px 0' : inRange ? '0' : '8px',
+          ring: key===T && !isStart ? 'inset 0 0 0 1.5px #F2B544' : 'none', pressed: isStart||isEnd ? 'true' : 'false',
+          aria: `${fmt(key,{weekday:'long',day:'numeric',month:'long'})}${sold ? ', fully booked' : ''}${past ? ', past' : ''}`,
+          on: () => {
+            if (!s.pickEnd || key <= s.ci) this.setState({ ci:key, co:addDays(key,1), pickEnd:true, roomsLoading:true }, () => setTimeout(() => this.setState({roomsLoading:false}), 450));
+            else {
+              let blocked = false; for (let d2 = addDays(s.ci,1); d2 < key; d2 = addDays(d2,1)) if (this.isSold(d2)) blocked = true;
+              if (blocked) { this.toast('A fully booked night sits in between.', 'Pick dates on one side of it, or call us.'); return; }
+              this.setState({ co:key, pickEnd:false, roomsLoading:true }, () => setTimeout(() => this.setState({roomsLoading:false}), 450));
+            }
+          } });
+      }
+      return { label: first.toLocaleDateString('en-GB',{month:'long', year:'numeric', timeZone:'UTC'}), days };
+    });
+
+    const roomOpts = [];
+    ROOMS.forEach(r => r.opts.forEach((o,i) => {
+      const a = this.avail(r.code, i), tooMany = s.guests > r.guests, key = `${r.code}:${i}`, on = s.sel===key;
+      const badge = tooMany ? `Sleeps ${r.guests}` : a===0 ? 'Sold out these dates' : a===1 ? 'Last one' : `${a} left`;
+      const tone = tooMany || a===0 ? ['#EFE9E6','#B42318'] : a===1 ? ['#F2B544','#00003A'] : ['#F6E2B3','#000063'];
+      roomOpts.push({ code:r.code, name:o.name, img: S ? S.img('room.'+r.code, r.img) : r.img, price: rates ? rates[r.code==='EXE' && i===1 ? 'EXE+' : r.code] : o.price, meta:`${r.beds} · up to ${r.guests} guests`, badge, badgeBg:tone[0], badgeFg:tone[1],
+        disabled: a===0 || tooMany, op: a===0 || tooMany ? 0.55 : 1, ...this.chipSel(on), bd: on ? '#000063' : 'rgba(0,0,99,0.16)', bg: on ? '#FFFFFF' : '#FFFFFF',
+        on: () => this.setState({sel:key}) });
+    }));
+    const allSoldOut = !s.roomsLoading && roomOpts.every(o => o.disabled && !o.badge.startsWith('Sleeps'));
+    const altDates = [7,10,14].map(n => { const a = addDays(T,n); return { label:`${short(a)} → ${short(addDays(a,nights||1))}`, on:() => this.setState({ci:a, co:addDays(a,nights||1)}) }; });
+
+    const ge = s.ge, gbd = k => ge[k] ? '#B42318' : 'rgba(0,0,99,0.2)';
+    const nextLabel = s.step===1 ? (validSel ? `Continue · ${ghs(total)}` : selRoom && selAvail===0 ? 'Room not available' : 'Choose a room') : s.step===2 ? 'Continue to payment' : s.plan==='hotel' ? 'Confirm booking' : `Pay ${ghs(dueNow)}`;
+    const next = () => {
+      if (s.step===1) { if (!validSel) return; this.setState({step:2, holdEnd: s.holdEnd > Date.now() ? s.holdEnd : Date.now()+15*60e3}); }
+      else if (s.step===2) {
+        const err = {}; if (s.gf.name.trim().length < 2) err.name = "We'll need a name for the key.";
+        if (s.gf.cc==='+233' ? !okPhone(s.gf.phone) : !/^\d{7,12}$/.test(s.gf.phone.replace(/\D/g,''))) err.phone = s.gf.cc==='+233' ? 'Enter a Ghana mobile number, like 055 555 7090.' : 'Enter a valid phone number.';
+        if (s.gf.email && !/^\S+@\S+\.\S+$/.test(s.gf.email)) err.email = 'Check the email address.';
+        if (Object.keys(err).length) { this.setState({ge:err}); return; }
+        this.setState({step:3, momoNum: s.momoNum || s.gf.phone});
+      } else {
+        if (s.plan==='hotel') { const ref = 'AW-'+rnd(4); this.saveBooking(ref, { status:'Pending payment', total, paid:0, method:'' }); this.setState({step:4, ref, doneStatus:'CONFIRMED · PAY AT HOTEL'}); this.toast('Booking confirmed.', 'Pay at the desk when you arrive.'); }
+        else this.startPay('room');
+      }
+      const el = this.scrollRef.current; if (el) el.scrollTop = 0; window.scrollTo(0,0);
+    };
+    const bookActive = isBook && s.step < 4;
+    const icsBody = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:Hotel A-Wise · ${selOpt?selOpt.name:''} (${s.ref})\nDTSTART;VALUE=DATE:${s.ci.replace(/-/g,'')}\nDTEND;VALUE=DATE:${s.co.replace(/-/g,'')}\nLOCATION:No. 1 Wisepak Lane, New Asofan, Accra\nEND:VEVENT\nEND:VCALENDAR`;
+
+    // ---------- rentals ----------
+    const rDays = Math.max(1, diff(s.rFrom, s.rTo)+1);
+    const items = this.items().map(it => {
+      const av = this.itemAvail(it), q = s.cart[it.id]||0;
+      const tone = av===0 ? ['#EFE9E6','#B42318'] : av < 20 ? ['#F2B544','#00003A'] : ['#F6E2B3','#000063'];
+      return { ...it, img: it.img || '', noImg: !it.img, custom: !!it.custom, qty: q, qtyAria:`${it.name} quantity`,
+        stockLabel: av===0 ? `All booked for ${short(s.rFrom)}` : `${av} available on ${short(s.rFrom)}`, badgeBg:tone[0], badgeFg:tone[1], op: av===0 ? 0.6 : 1,
+        lineLabel: q ? ghs(q*it.price*rDays) : '', err: s.qtyErr[it.id] || '', qtyBd: s.qtyErr[it.id] ? '#B42318' : 'rgba(0,0,99,0.2)',
+        dec: () => this.setQty(it.id, q - (it.stock>=100 ? 10 : 1)), inc: () => this.setQty(it.id, q + (it.stock>=100 ? 10 : 1)),
+        decDisabled: q===0, incDisabled: q>=av, onQty: e => this.setQty(it.id, e.target.value) };
+    });
+    let rSub = 0, secDep = 0; this.items().forEach(it => { const q = s.cart[it.id]||0; rSub += q*it.price*rDays; secDep += q*it.deposit; });
+    let bundleDisc = 0;
+    const bundles = BUNDLES.map(b => {
+      const full = Object.entries(b.items).reduce((t,[id,q]) => t + q*this.items().find(i=>i.id===id).price, 0);
+      const short_ = Object.entries(b.items).find(([id,q]) => this.itemAvail(this.items().find(i=>i.id===id)) < q);
+      const on = s.bundlesOn[b.id] && Object.entries(b.items).every(([id,q]) => (s.cart[id]||0) >= q);
+      if (on) bundleDisc += full*rDays*b.pct/100;
+      return { ...b, was: ghs(full), now: ghs(full*(1-b.pct/100)), bd: on ? '#000063' : 'rgba(0,0,99,0.14)',
+        short: short_ ? `Not enough ${this.items().find(i=>i.id===short_[0]).name.toLowerCase()}s free on these dates for this pack.` : '',
+        disabled: !!short_ || on, btn: on ? 'Added to reservation ✓' : 'Add this pack', btnBg: on ? '#000063' : 'transparent', btnFg: on ? '#F5F2EA' : '#000063',
+        on: () => { const cart = {...s.cart}; Object.entries(b.items).forEach(([id,q]) => cart[id] = Math.max(cart[id]||0, q)); this.setState({cart, bundlesOn:{...s.bundlesOn, [b.id]:true}}); this.toast(`${b.name} added to your reservation.`, `${b.pct}% off those items.`); } };
+    });
+    const cartCount = Object.keys(s.cart).length;
+    const cartLines = this.items().filter(it => s.cart[it.id]).map(it => { const q = s.cart[it.id], step = it.stock>=100 ? 10 : 1; return { name:it.name, img:it.img||'', qty:q, amt:ghs(q*it.price*rDays),
+      dec:() => this.setQty(it.id, q-step), inc:() => this.setQty(it.id, q+step), incDisabled: q >= this.itemAvail(it), remove:() => this.setQty(it.id, 0) }; });
+    this._rt = { disc:bundleDisc }; const rNet = rSub - bundleDisc, rTotal = rNet + secDep, rDep = rTotal;
+    const rDue = s.rPlan==='online' ? rTotal : 0, rReturn = addDays(s.rTo, 1);
+    const orderLines = [
+      ...this.items().filter(it => s.cart[it.id]).map(it => ({ label:`${it.name.toUpperCase()} × ${s.cart[it.id]}`, amt:ghs(s.cart[it.id]*it.price*rDays), color:'inherit' })),
+      ...(bundleDisc ? [{label:'PACK DISCOUNT', amt:'− '+ghs(bundleDisc), color:'#1F7A4D'}] : []),
+      {label:'SECURITY DEPOSIT', amt:ghs(secDep), color:'rgba(0,0,58,0.6)'},
+    ];
+    const re = s.re, rbd = k => re[k] ? '#B42318' : 'rgba(0,0,99,0.2)';
+    const rNext = () => {
+      if (s.rStep<=2) { const err = {}; if (s.rf.name.trim().length<2) err.name = 'Who will collect? We check the name at the desk.'; if (!okPhone(s.rf.phone)) err.phone = "That doesn't look like a Ghana mobile number. Try 055 555 7090."; if (Object.keys(err).length) { this.setState({re:err}); return; } this.setState({rStep:3, momoNum: s.momoNum || s.rf.phone}); }
+      else if (s.rPlan==='pickup') { const rref = 'AWR-'+rnd(4); this.saveRental(rref, 0, ''); this.setState({rentDone:true, rRef:rref}); this.toast('Items reserved.', 'Pay at the desk when you collect.'); }
+      else this.startPay('rent');
+      const el = this.scrollRef.current; if (el) el.scrollTop = 0; window.scrollTo(0,0);
+    };
+    const rGoDetails = () => { if (!cartCount) return; this.setState({rStep:2, holdEnd: s.holdEnd > Date.now() ? s.holdEnd : Date.now()+15*60e3}); location.hash = 'rent/checkout'; };
+    const rPickupLines = [
+      { icon:'pin', k:'Pick up at', v:'No. 1 Wisepak Lane, New Asofan' },
+      { icon:'clock', k:'From', v:`7am, ${long(s.rFrom)}` },
+      { icon:'undo', k:'Return by', v:`6pm, ${long(rReturn)}` },
+    ];
+    const pickIcs = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:Collect rentals · Hotel A-Wise (${s.rRef})\nDTSTART:${s.rFrom.replace(/-/g,'')}T070000Z\nDTEND:${s.rFrom.replace(/-/g,'')}T080000Z\nLOCATION:No. 1 Wisepak Lane, New Asofan, Accra\nEND:VEVENT\nEND:VCALENDAR`;
+    const isMomo = METHODS.find(x=>x.id===s.method).momo;
+    const methodOpts = METHODS.map(x => ({ ...x, ...this.chipSel(s.method===x.id), on:() => this.setState({method:x.id, momoErr:''}) }));
+
+    const cartStyle = ph ? { position:'fixed', left:0, right:0, bottom:0, zIndex:70, maxHeight:'86%', background:'#F5F2EA', borderRadius:'16px 16px 0 0', padding:'0 20px 20px', display:'flex', flexDirection:'column', gap:12, fontFamily:"'Geist',system-ui,sans-serif", transform: s.cartOpen ? `translateY(${s.dragY}px)` : 'translateY(110%)', transition: s.dragging ? 'none' : `transform 420ms ${EASE}`, boxShadow:'0 -20px 40px -20px rgba(0,0,40,0.4)' }
+      : { position:'fixed', top:0, right:0, bottom:0, zIndex:70, width:420, background:'#F5F2EA', padding:24, display:'flex', flexDirection:'column', gap:12, fontFamily:"'Geist',system-ui,sans-serif", transform: s.cartOpen ? 'translateX(0)' : 'translateX(105%)', transition:`transform 360ms ${EASE}`, boxShadow:'-20px 0 40px -20px rgba(0,0,40,0.35)' };
+
+    // track
+    const tOrder = s.tFound==='new' ? { ref:s.rRef, summary:`${cartCount} items · ${short(s.rFrom)}`, driver:'Pickup at No. 1 Wisepak Lane from 7am. Bring your reference.', at:0 } : { ref:'AWR-2611', summary:'4 canopies, 100 chairs, 10 tables · Sat', driver:'Collected Sat 07:52 by Abena. Return by 6pm Sunday.', at:2 };
+    const TS = [['Reserved','Items set aside for your dates.','Thu 09:14'],['Ready for pickup','Counted and waiting at the front desk.','Sat 06:30'],['Collected','Signed out at Wisepak Lane.','Sat 07:52'],['Returned','Brought back and counted together.',''],['Completed','Deposit refunded.','']];
+    const tSteps = TS.map(([label,note,time],i) => { const done = i < tOrder.at, cur = i===tOrder.at; return { label, note, time: i<=tOrder.at ? time : '',
+      dot: done ? '#000063' : cur ? '#F2B544' : '#FFFFFF', ring: done||cur ? 'none' : 'inset 0 0 0 1.5px rgba(0,0,99,0.3)', weight: cur ? 600 : 400, color: i>tOrder.at ? 'rgba(0,0,58,0.45)' : '#00003A' }; });
+
+    // venues
+    const VEN = [
+      { name: String(setg.venue0Name||'').trim() || 'Event compound', cap: String(setg.venue0Cap||'').trim() ? setg.venue0Cap.trim() + ' guests' : '100–200 guests', img: S ? S.img('venue.0', p('05-services-and-rentals/private-events.jpg')) : p('05-services-and-rentals/private-events.jpg'), alt:'The compound set for a wedding under white canopies', desc: String(setg.venue0Desc||'').trim() || "Gated, on our own grounds, with the hotel right there for guests who'd rather not drive home. Pair it with our canopies and chairs.", min:100, max:200 },
+      { name: String(setg.venue1Name||'').trim() || 'Conference room', cap: String(setg.venue1Cap||'').trim() || '2nd floor', img: S ? S.img('venue.1', p('04-spaces/conference-room-angle-2.jpg')) : p('04-spaces/conference-room-angle-2.jpg'), alt:'Second-floor conference room with long tables and blue chairs', desc: String(setg.venue1Desc||'').trim() || 'Big windows, ceiling fans, AC and tables you can arrange how you like. Meetings, trainings, small receptions.', min:10, max:60 },
+    ];
+    const ve = s.ve, vbd = k => ve[k] ? '#B42318' : 'rgba(0,0,99,0.2)';
+    const v = VEN[s.venue];
+
+    const mobileBar = m && ((bookActive) || (isRent) || (isRentCo && !s.rentDone && cartCount>0));
+    const tabs = [['Book a room','#book','book'],['Manage booking','#manage','manage'],['Rentals','#rent','rent'],['Venues','#venues','venues']].map(([label,href,r]) => ({ icon:{book:'key',manage:'file',rent:'tent',track:'pkg',venues:'building'}[r], label, href, current: route.startsWith(r) ? 'page' : 'false', bg: route.startsWith(r) ? '#000063' : 'transparent', fg: route.startsWith(r) ? '#F5F2EA' : '#00003A' }));
+
+    return {
+      outerStyle, scrollStyle, scrollRef:this.scrollRef, rootVars:vars,
+      navSolid:1, navStyle:{ position:'relative', margin:'14px var(--navgap) 0', borderRadius:16, fontFamily:"'Geist',system-ui,sans-serif", '--nf':'#00003A', '--nm':'rgba(0,0,58,0.65)', '--nl':'rgba(0,0,99,0.12)', color:'var(--nf)' },
+      navLinks: [['Rooms','Website.dc.html#rooms','x'],['Rentals','#rent','rent'],['Venues','#venues','venues'],['Gallery','Website.dc.html#gallery','x'],['Contact','Website.dc.html#contact','x']].map(([label,href,r], i) => ({ delay:(40 + i*35)+'ms', label, href, current: route.startsWith(r) ? 'page':'false', op: route.startsWith(r) ? 1 : 0.78 })),
+      menuOpen: !!s.menu, menuLabel: s.menu ? 'Close' : 'Menu', toggleMenu:() => this.setState({menu:!s.menu}), closeMenu:() => this.setState({menu:false}),
+      bookHref:'#book', news: s.news || '', onNews: e => this.setState({news:e.target.value}),
+      submitNews: e => { e.preventDefault(); if (!/^\S+@\S+\.\S+$/.test(s.news || '')) { this.toast('That email needs a second look.'); return; } this.setState({news:''}); this.toast("You're on the list.", 'One letter a month, at most.'); }, offline: sim==='offline' || !s.online, dotEl, loaderEl, toastEl, clock, today:T, tabs,
+      showCartBtn: false, cartCount, cartAria:`Open cart, ${cartCount} items`, openCart:() => this.setState({cartOpen:true, dragY:0}), closeCart:() => this.setState({cartOpen:false}),
+      isBook, isManage, isRent, isRentCo, isTrack, isVenues, bookActive, bookDone: isBook && s.step===4,
+      bookSteps: ['Dates & room','Your details','Pay'].map((label,i) => ({ icon:['calendar','user','card'][i], n:'0'+(i+1), label, ...this.stepChip(i+1, s.step) })),
+      holdShow: s.step>=2 && !holdExpired, holdLeft, holdExpired, renewHold:() => this.setState({holdEnd:Date.now()+15*60e3}),
+      step1: s.step===1, step2: s.step===2, step3: s.step===3,
+      ciLabel: long(s.ci), coLabel: long(s.co), guests:s.guests, guestsS: s.guests===1 ? '' : 's',
+      gMinus:() => this.setState({guests:Math.max(1,s.guests-1)}), gPlus:() => this.setState({guests:Math.min(4,s.guests+1)}),
+      calPrev:() => this.setState({calOffset:Math.max(0,s.calOffset-1)}), calNext:() => this.setState({calOffset:s.calOffset+1}), calPrevDisabled: s.calOffset===0,
+      calMonths, weekdays:['M','T','W','T','F','S','S'], calHint: s.pickEnd ? 'Now pick your check-out' : `${nights} night${nights===1?'':'s'} · tap a date to change`,
+      rangeShort: `${short(s.ci)} – ${short(s.co)}`, rangeLong: `${long(s.ci)} → ${long(s.co)} · ${nights} night${nights===1?'':'s'}`,
+      roomsLoading: s.roomsLoading || sim==='loading', allSoldOut: allSoldOut && sim!=='loading', roomsReady: !s.roomsLoading && sim!=='loading' && !allSoldOut, roomOpts, altDates, skel3:[1,2,3,4],
+      hasSel: !!selRoom, sel: selRoom ? { img: S ? S.img('room.'+selRoom.code, selRoom.img) : selRoom.img, name:selRoom.name, title:`${selOpt.name} Room`, code:selRoom.code } : { img:'', name:'', title:'No room yet', code:'' },
+      bf:s.bf, rs:s.rs, toggleBf:() => this.setState({bf:!s.bf}), toggleRs:() => this.setState({rs:!s.rs}), addonsLocked: s.step>=3,
+      receipt, totalLabel: ghs(total), dueNowLabel: ghs(dueNow),
+      canBack: s.step>1, back:() => this.setState({step:s.step-1, failed:null}), next, nextLabel, nextDisabled: (s.step===1 && !validSel) || holdExpired, nextBg: (s.step===1 && !validSel) || holdExpired ? 'rgba(0,0,58,0.08)' : '#000063', nextFg: (s.step===1 && !validSel) || holdExpired ? 'rgba(0,0,58,0.45)' : '#F5F2EA',
+      gf:s.gf, ge:{...ge, nameBd:gbd('name'), phoneBd:gbd('phone'), emailBd:gbd('email'), nameBad: ge.name?'true':'false', phoneBad: ge.phone?'true':'false'},
+      gfName: e => this.setState({gf:{...s.gf, name:e.target.value}, ge:{...ge, name:''}}), gfPhone: e => this.setState({gf:{...s.gf, phone:e.target.value}, ge:{...ge, phone:''}}),
+      gfEmail: e => this.setState({gf:{...s.gf, email:e.target.value}, ge:{...ge, email:''}}), gfCc: e => this.setState({gf:{...s.gf, cc:e.target.value}}),
+      gfArrival: e => this.setState({gf:{...s.gf, arrival:e.target.value}}), gfNotes: e => this.setState({gf:{...s.gf, notes:e.target.value}}), arrivalOpts: ARRIVALS, ccOpts:[{value:'+233',label:'GH +233'},{value:'+234',label:'NG +234'},{value:'+225',label:'CI +225'},{value:'+44',label:'UK +44'},{value:'+1',label:'US +1'}], soldDates:this.sold, zoneOpts: ZONES.map(z => ({value:z.id, label:z.label.split(' · ')[0], sub:z.label.split(' · ')[1]})), occasionOpts:['Wedding','Funeral','Outdooring','Birthday','Church event','Corporate','Other'],
+      planOpts: [['full','Pay in full','Done and dusted. Nothing to pay at the desk.', ghs(total)], ['deposit',`Pay a ${depPct}% deposit`,'The rest at check-in, cash or MoMo.', ghs(deposit)], ...(payAtHotel ? [['hotel','Pay at the hotel','We hold the room. Pay when you arrive.', 'GHS 0']] : [])]
+        .map(([id,label,note,amt]) => ({ icon: id==='full' ? 'wallet' : id==='deposit' ? 'cash' : 'building', label, note, amt, ...this.chipSel(s.plan===id), on:() => this.setState({plan:id}) })),
+      needsMethod: s.plan!=='hotel', methodOpts, isMomo, isCard: !isMomo, momoLabel: METHODS.find(x=>x.id===s.method).label, momoNum:s.momoNum, onMomo: e => this.setState({momoNum:e.target.value, momoErr:''}), momoErr:s.momoErr, momoBd: s.momoErr ? '#B42318' : 'rgba(0,0,99,0.2)',
+      payFailed: !!s.failed && isBook, rPayFailed: !!s.failed && isRentCo, failReason: s.failed || '', startPay:() => this.startPay(isBook ? 'room' : 'rent'), switchToCard:() => this.setState({method:'card', failed:null}),
+      payOpen: !!s.pay, payTitle: isMomo ? 'Check your phone.' : 'Complete payment in the Paystack window.', payBody: isMomo ? `We've sent a prompt to ${s.momoNum}. Enter your MoMo PIN to approve.` : 'Enter your card details. 3-D Secure may ask for an OTP.',
+      payAmt: s.pay==='room' ? ghs(dueNow) : ghs(rDue), payApprove:() => this.finishPay(true), payDecline:() => this.finishPay(false),
+      ref:s.ref, doneStatus:s.doneStatus, stamp: s.plan==='hotel' ? 'PAY AT DESK' : s.plan==='full' ? 'PAID' : 'DEPOSIT PAID', stampColor: s.plan==='hotel' ? '#000063' : '#1F7A4D',
+      paidLabel: ghs(s.plan==='hotel' ? 0 : dueNow), balanceLabel: ghs(total - (s.plan==='hotel' ? 0 : dueNow)), emailNote: s.gf.email ? `, and to ${s.gf.email}` : '',
+      doneNote: `We've texted ${s.gf.phone || 'you'} your reference. The desk is staffed all night, so arrive whenever you arrive. Say the reference at reception and we'll hand you the key.`,
+      icsHref: 'data:text/calendar;charset=utf8,' + encodeURIComponent(icsBody),
+      promo: s.promo || '', promoErr: s.promoErr || '', promoBad: s.promoErr ? 'true' : 'false', promoBd: s.promoErr ? '#B42318' : 'rgba(0,0,99,0.2)', promoOn: !!(promoRes && promoRes.ok), promoOff: !(promoRes && promoRes.ok), promoCode: promoRes && promoRes.ok ? promoRes.code : '', promoLabel: promoRes && promoRes.ok ? promoRes.label + (promoRes.breakfast && !s.bf ? ' (tick breakfast to use it)' : promoRes.discount ? ` · you save ${ghs(promoRes.discount)}` : '') : '',
+      onPromo: e => this.setState({promo:e.target.value.toUpperCase().replace(/\s+/g,''), promoErr:''}),
+      applyPromo:() => { if (!S) return; if (!selOpt || !nights) { this.setState({promoErr:'Pick a room and dates first.'}); return; } const r = S.promoCheck(s.promo, selType, nights, roomSub, bfP*s.guests*nights); if (!r.ok) { this.setState({promoErr:r.err}); return; } this.setState({promoApplied:r.code, promoErr:'', promo:'', ...(r.breakfast ? {bf:true} : {})}); this.toast('Code applied.', r.label); },
+      promoKey: e => { if (e.key === 'Enter') { e.preventDefault(); e.currentTarget.parentElement.querySelector('button').click(); } },
+      removePromo:() => this.setState({promoApplied:'', promoErr:''}),
+      // manage
+      mRef:s.mRef, mPhone:s.mPhone, mErr:s.mErr, mBusy:!!s.mBusy, mBtn: s.mBusy ? 'Looking…' : 'Find my booking', mBad: s.mErr ? 'true' : 'false', mBd: s.mErr ? '#B42318' : 'rgba(0,0,99,0.2)',
+      onMRef: e => this.setState({mRef:e.target.value, mErr:''}), onMPhone: e => this.setState({mPhone:e.target.value, mErr:''}),
+      lookupBooking: e => { e.preventDefault(); this.lookup(); },
+      cp: { rentIntro: String(setg.rentIntro || '').trim() || 'Pick your dates, choose what you need, and reserve it like a room. Collect from No. 1 Wisepak Lane, and pay online now or when you pick up.', venueIntro: String(setg.venueIntro || '').trim() || 'Two spaces, quoted per event. Tell us the date and the headcount and we\'ll call back with a price, usually the same day.' },
+      ct: (() => { const phone = String(setg.phone || '+233 55 555 7090').trim(), digits = phone.replace(/\D/g,''), waNum = String(setg.wa || '233555557090').replace(/\D/g,''), email = String(setg.email || 'info@hotelawise.com').trim(); return { phone, tel:'tel:+' + (digits.startsWith('233') ? digits : '233' + digits.replace(/^0/,'')), wa:'https://wa.me/' + waNum, email, mail:'mailto:' + email }; })(),
+      imFooter: S ? S.img('footer', p('04-spaces/spacious-hallway.jpg')) : p('04-spaces/spacious-hallway.jpg'),
+      manageHref: `#manage?ref=${s.ref}&phone=${encodeURIComponent(s.gf.phone)}`, bfLabel:`${bfP} per guest, per day`, rsLabel:`+ ${rsF}`, mCiPlus1: addDays(s.mCi, 1),
+      ...(() => {
+        const b = S && s.mFound ? (db.bookings || []).find(x => x.ref===s.mFound) : null;
+        if (!b) return { mFound:false, mb:{ lines:[] }, mCancelled:false, mActive:false, mLocked:false, mEditing:false };
+        const rate = (rates || {})[b.code] || 0, base = rate*b.nights, extras = Math.max(0, b.total - S.stayPrice(b.code, b.ci, b.nights).total), co = addDays(b.ci, b.nights);
+        const hoursOut = (new Date(b.ci+'T14:00:00Z') - Date.now())/36e5, free = hoursOut > 48, depAmt = Math.min(b.paid, Math.ceil(b.total*depPct/100/10)*10);
+        const refundAmt = free ? b.paid : Math.max(0, b.paid - depAmt);
+        const tone = b.status==='Cancelled' || b.status==='No-show' ? ['#FBE9E7','#B42318'] : b.status==='Pending payment' ? ['#FCEFD2','#7A4E00'] : ['#F6E2B3','#000063'];
+        const nN = Math.max(0, diff(s.mCi, s.mCo)), newTotal = (nN ? S.stayPrice(b.code, s.mCi, nN).total : 0) + extras;
+        const freeRooms = nN > 0 ? (b.room && S.roomFree(b.room, s.mCi, s.mCo, b.ref) ? [b.room] : S.freeRooms(b.code, s.mCi, s.mCo, b.ref)) : [];
+        const unchanged = s.mCi===b.ci && s.mCo===co, okDates = nN > 0 && freeRooms.length > 0;
+        const payWay = b.method ? b.method : 'the way you paid';
+        return {
+          mFound:true, mEditing: !!s.mEditing,
+          mb:{ ref:b.ref, status:b.status, statusBg:tone[0], statusFg:tone[1], title:`${TYPE_LABEL[b.code] || b.code} room`, range:`${long(b.ci)} → ${long(co)}`, guestsLabel:`${b.guests||2} guest${(b.guests||2)===1?'':'s'}`, guest:b.guest,
+            lines:[{k:`${b.code} × ${b.nights} night${b.nights===1?'':'s'}`, v:ghs(base), color:'inherit', weight:400}, ...(extras ? [{k:'EXTRAS', v:ghs(extras), color:'inherit', weight:400}] : []), {k:'TOTAL', v:ghs(b.total), color:'inherit', weight:500}, {k: b.method ? `PAID · ${b.method.toUpperCase()}` : 'PAID', v:ghs(b.paid), color:'#1F7A4D', weight:400}, {k:'BALANCE AT THE DESK', v:ghs(Math.max(0, b.total-b.paid)), color:'inherit', weight:400}] },
+          mCancelled: b.status==='Cancelled', mCancelNote: b.refund ? `Cancelled. ${ghs(b.refund)} is on its way back to ${payWay}, usually within 1–3 working days. We'll text you when it lands.` : 'This booking is cancelled. We hope to see you another time.',
+          mLocked: ['Checked-in','Checked-out','No-show'].includes(b.status), mLockNote: b.status==='Checked-in' ? 'You\'re checked in, so changes go through the front desk. Call ' + (((window.AWStore && window.AWStore.get('settings')) || {}).phone || '+233 55 555 7090') + ' or ask at reception.' : 'This stay has ended, so it can\'t be changed online. Questions? Call ' + (((window.AWStore && window.AWStore.get('settings')) || {}).phone || '+233 55 555 7090') + '.',
+          mActive: ['Confirmed','Pending payment'].includes(b.status),
+          mPolicyNote: free ? `Free cancellation until ${long(addDays(b.ci,-2))}, 2pm.${b.paid ? ` You'd get the full ${ghs(b.paid)} back.` : ''}` : `You're inside 48 hours of check-in, so the ${ghs(depAmt)} deposit is kept if you cancel.`,
+          mCancelBody: b.paid ? (free ? `You're more than 48 hours out, so this one's free. We'll refund the full ${ghs(b.paid)} to ${payWay}.` : `You're inside 48 hours of check-in, so we keep the ${ghs(depAmt)} deposit${refundAmt ? ` and refund ${ghs(refundAmt)} to ${payWay}` : ''}.`) : 'Nothing has been paid on this booking, so there\'s nothing to refund. The room goes back on sale straight away.',
+          mAvailNote: nN < 1 ? 'Check-out must be after check-in.' : unchanged ? 'These are your current dates.' : okDates ? `Free for those dates. New total ${ghs(newTotal)}${newTotal > b.paid ? `, ${ghs(newTotal - b.paid)} due at check-in` : ''}.` : `Sorry, the ${TYPE_LABEL[b.code]} room is booked on one of those nights. Try other dates.`,
+          mAvailColor: okDates && !unchanged ? '#1F7A4D' : nN < 1 || !okDates ? '#B42318' : 'rgba(0,0,58,0.65)', mSaveDisabled: !okDates || unchanged,
+          startEdit:() => this.setState({mEditing:true, mCi:b.ci, mCo:co}), cancelEdit:() => this.setState({mEditing:false, mCi:b.ci, mCo:co}),
+          onMCi: e => { const v = e.target.value; this.setState({mCi:v, mCo: diff(v, s.mCo) < 1 ? addDays(v,1) : s.mCo}); }, onMCo: e => this.setState({mCo:e.target.value}),
+          saveDates:() => { if (!okDates) return; S.update('bookings', l => l.map(x => x.ref===b.ref ? { ...x, ci:s.mCi, nights:nN, room:freeRooms[0], total:newTotal, live:true } : x)); S.log('Guest (online)', 'Changed dates', `${b.ref} · ${b.guest}`, `${long(b.ci)} → ${long(s.mCi)}, ${nN} night${nN===1?'':'s'}`); this.setState({mEditing:false}); this.toast('Dates changed.', 'We\'ve sent a new confirmation by SMS.'); },
+          askCancel:() => this.setState({cancelModal:true}), closeCancel:() => this.setState({cancelModal:false}), cancelModal:s.cancelModal,
+          confirmCancel:() => { S.update('bookings', l => l.map(x => x.ref===b.ref ? { ...x, status:'Cancelled', refund:refundAmt, live:true } : x)); if (refundAmt) S.update('refunds', l => [{ id:'rf'+Date.now(), ref:b.ref, who:b.guest, reason: free ? 'Guest cancelled online, more than 48 hours out' : 'Guest cancelled online, inside 48 hours', by:'Guest (online)', amount:refundAmt, status:'Pending approval' }, ...(l || [])]); S.log('Guest (online)', 'Cancelled booking', `${b.ref} · ${b.guest}`, `${b.status} → Cancelled`); this.setState({cancelModal:false}); this.toast('Booking cancelled.', refundAmt ? `${ghs(refundAmt)} refund on its way.` : 'The room is back on sale.'); },
+        };
+      })(),
+      soldDates: S ? Array.from({length:120}, (_,i) => addDays(T,i)).filter(d => S.nightBlackout(d)) : this.sold,
+      // rent
+      rFrom:s.rFrom, rTo:s.rTo, onRFrom: e => { const v = e.target.value; this.setState({rFrom:v, rTo: diff(v, s.rTo) < 0 ? v : s.rTo}); }, onRTo: e => this.setState({rTo:e.target.value}),
+      rDays, rDaysS: rDays===1 ? '' : 's', rRangeLabel: rDays===1 ? short(s.rFrom) : `${short(s.rFrom)} – ${short(s.rTo)}`, rFromLabel: long(s.rFrom),
+      bundles, items, rentLoading: sim==='loading', rentReady: sim!=='loading',
+      cartOpen:s.cartOpen, cartHidden: s.cartOpen ? 'false' : 'true', cartStyle, cartLines, cartEmpty: cartCount===0 || sim==='emptyCart', cartHas: cartCount>0 && sim!=='emptyCart',
+      rSubLabel: ghs(rSub), hasBundleDisc: bundleDisc>0, bundleDiscLabel:'− '+ghs(bundleDisc), secDepLabel: ghs(secDep), rSubNetLabel: ghs(rSub - bundleDisc),
+      dragStart: e => { this._dy = e.clientY; this._dt = Date.now(); this.setState({dragging:true}); e.currentTarget.setPointerCapture && e.currentTarget.setPointerCapture(e.pointerId); },
+      dragMove: e => { if (s.dragging) this.setState({dragY:Math.max(0, e.clientY - this._dy)}); },
+      dragEnd: e => { if (!s.dragging) return; const dy = Math.max(0, e.clientY-this._dy), vel = dy/Math.max(1, Date.now()-this._dt); this.setState({dragging:false, dragY:0, cartOpen: !(dy>140 || vel>0.5)}); },
+      rentActive: !s.rentDone, rentDone: s.rentDone,
+      rGoDetails, rPickupLines, rNeedsMethod: s.rPlan==='online', rPickupShort: `Wisepak Lane · ${short(s.rFrom)}`,
+      rContinueDisabled: !cartCount, rContinueBg: cartCount ? '#000063' : 'rgba(0,0,58,0.12)', rContinueFg: cartCount ? '#F5F2EA' : 'rgba(0,0,58,0.45)',
+      rContinueLabel: cartCount ? `Continue · ${ghs(rTotal)}` : 'Choose items to continue',
+      rDoneStatus: s.rPlan==='online' ? 'PAID ONLINE' : 'PAY AT PICKUP', rPaidKey: s.rPlan==='online' ? 'PAID' : 'DUE AT PICKUP', rPaidAmt: ghs(rTotal), rPaidColor: s.rPlan==='online' ? '#1F7A4D' : '#7A4E00',
+      rStamp: s.rPlan==='online' ? 'PAID' : 'PAY AT DESK', rStampColor: s.rPlan==='online' ? '#1F7A4D' : '#000063',
+      pickIcsHref: 'data:text/calendar;charset=utf8,' + encodeURIComponent(pickIcs),
+      rentSteps: ['Dates & items','Your details','Pay'].map((label,i) => ({ icon:['calendar','user','card'][i], n:'0'+(i+1), label, ...this.stepChip(i+1, isRent ? 1 : s.rStep) })),
+      rStep1: s.rStep===1, rStep2: s.rStep===2, rStep3: s.rStep===3,
+      fulfilOpts: [['delivery','Deliver to my venue','We drop off the day before or the morning of, and collect after.'],['pickup','I\'ll pick up','Collect from Wisepak Lane. No delivery fee.']].map(([id,label,note]) => ({ icon: id==='delivery' ? 'truck' : 'store', label, note, ...this.chipSel(s.fulfil===id), on:() => this.setState({fulfil:id}) })),
+      isDelivery: s.fulfil==='delivery', isPickup: s.fulfil==='pickup', zones:ZONES, zone:s.zone, onZone: e => this.setState({zone:e.target.value}), setup:s.setup, toggleSetup:() => this.setState({setup:!s.setup}),
+      rf:s.rf, re:{...re, addressBd:rbd('address'), nameBd:rbd('name'), phoneBd:rbd('phone')},
+      rfAddress: e => this.setState({rf:{...s.rf, address:e.target.value}, re:{}}), rfName: e => this.setState({rf:{...s.rf, name:e.target.value}, re:{...re, name:''}}),
+      rfPhone: e => this.setState({rf:{...s.rf, phone:e.target.value}, re:{...re, phone:''}}), rfEmail: e => this.setState({rf:{...s.rf, email:e.target.value}}), rfOccasion: e => this.setState({rf:{...s.rf, occasion:e.target.value}}),
+      rPlanOpts: [['online','Pay online now','MoMo or card. At pickup, just show your reference.', ghs(rTotal)], ['pickup','Pay when you collect','Cash, MoMo or card at the front desk. We hold your items until 10am on pickup day.', 'GHS 0 now']].map(([id,label,note,amt]) => ({ icon: id==='online' ? 'smartphone' : 'store', label, note, amt, ...this.chipSel(s.rPlan===id), on:() => this.setState({rPlan:id, failed:null}) })),
+      orderLines, rTotalLabel: ghs(rTotal), rDueLabel: ghs(rDue),
+      rBack:() => { if (s.rStep<=2) location.hash = 'rent'; else this.setState({rStep:s.rStep-1, failed:null}); }, rNext, rNextLabel: s.rStep===3 ? (s.rPlan==='online' ? `Pay ${ghs(rDue)}` : 'Reserve items') : 'Continue to payment',
+      rRef:s.rRef, rDoneNote: `Reference ${s.rRef}. Collect from No. 1 Wisepak Lane, New Asofan, from 7am on ${long(s.rFrom)}, and bring everything back by 6pm on ${long(rReturn)}. ${s.rPlan==='online' ? 'You\'re fully paid, so just show your reference.' : `Pay ${ghs(rTotal)} at the desk when you collect: cash, MoMo or card.`} We\'ve sent the details by SMS and WhatsApp.`,
+      trackHref: `#track?ref=${s.rRef}&phone=${encodeURIComponent(s.rf.phone)}`, newOrder:() => this.setState({cart:{}, bundlesOn:{}, rentDone:false, rStep:2}),
+      // track
+      tRef:s.tRef, tPhone:s.tPhone, tErr:s.tErr, tFound: !!s.tFound, tOrder, tSteps,
+      onTRef: e => this.setState({tRef:e.target.value, tErr:''}), onTPhone: e => this.setState({tPhone:e.target.value, tErr:''}), lookupOrder: e => { e.preventDefault(); this.doTrack(); },
+      // venues
+      venues: VEN.map((x,i) => ({ ...x, btn: s.venue===i ? 'Selected below' : 'Enquire about this', bg: s.venue===i ? '#000063' : 'transparent', fg: s.venue===i ? '#F5F2EA' : '#000063', on:() => this.setState({venue:i, vf:{...s.vf, guests: Math.min(Math.max(s.vf.guests, x.min), x.max)}}) })),
+      ...(() => { const g = s.vf.guests, stepT = (v.max - v.min) / 4, ticks = v.min===100 ? [100,125,150,175,200] : [10,20,30,45,60], st = v.min===100 ? 10 : 5;
+        const setG = n => this.setState({vf:{...s.vf, guests:Math.min(v.max, Math.max(v.min, n))}});
+        const filled = Math.round((g - v.min) / (v.max - v.min) * 20);
+        const canop = Math.ceil(g / 40), tables = Math.ceil(g / 8);
+        return {
+          vTicks: ticks.map(n => ({ label: n===v.max ? n+'' : n, checked: g===n ? 'true':'false', bg: g===n ? '#000063' : 'transparent', fg: g===n ? '#F5F2EA' : '#00003A', on:() => setG(n) })),
+          vGMinus:() => setG(g - st), vGPlus:() => setG(g + st), vGMinDis: g<=v.min, vGMaxDis: g>=v.max,
+          vSeats: Array.from({length:20}, (_,i) => ({ bg: i < Math.max(1, filled) ? (g >= v.max ? '#F2B544' : '#000063') : 'rgba(0,0,99,0.12)' })),
+          vCapNote: g >= v.max ? `That's the ${v.name.toLowerCase()} at full house.` : `${v.name} holds ${v.min}–${v.max}. Room for ${v.max - g} more.`,
+          vSuggest: v.min===100 ? `SUGGESTED: ${canop} CANOPIES · ${g} CHAIRS · ${tables} TABLES` : `SUGGESTED: ${Math.ceil(g/6)} TABLES · ${g} CHAIRS, CLASSROOM OR BOARDROOM`,
+        }; })(),
+      venueName: v.name.toLowerCase().replace('event ','the ').replace('conference','the conference'), vMin:v.min, vMax:v.max, vf:s.vf, ve:{...ve, dateBd:vbd('date'), nameBd:vbd('name'), phoneBd:vbd('phone')},
+      vfDate: e => this.setState({vf:{...s.vf, date:e.target.value}, ve:{...ve, date:''}}), vfGuests: e => this.setState({vf:{...s.vf, guests:+e.target.value}}),
+      vfName: e => this.setState({vf:{...s.vf, name:e.target.value}, ve:{...ve, name:''}}), vfPhone: e => this.setState({vf:{...s.vf, phone:e.target.value}, ve:{...ve, phone:''}}), vfNotes: e => this.setState({vf:{...s.vf, notes:e.target.value}}),
+      submitVenue: e => { e.preventDefault(); const err = {}; if (!s.vf.date) err.date = 'Which day?'; if (s.vf.name.trim().length<2) err.name = 'Your name, please.'; if (!okPhone(s.vf.phone)) err.phone = "That doesn't look like a Ghana number.";
+        if (Object.keys(err).length) { this.setState({ve:err}); return; } const vref = 'EQ-'+rnd(3); if (S) S.update('enq', l => [{ ref:vref, who:s.vf.name.trim(), phone:s.vf.phone.trim(), what: s.vf.notes.trim() ? s.vf.notes.trim().slice(0,60) : 'Event enquiry', venue: s.venue===0 ? 'Compound' : 'Conference room', guests:s.vf.guests, date:s.vf.date, stage:'New', quote:'', notes:s.vf.notes.trim(), live:true, createdAt:new Date().toISOString() }, ...(l || [])]); this.setState({venueSent:true, venueRef:vref, vf:{date:'',guests:v.min===100?150:20,name:'',phone:'',notes:''}}); this.toast('Enquiry sent.', 'The events desk will call you within the hour.'); },
+      venueSent:s.venueSent, venueRef:s.venueRef,
+      // mobile bar
+      mobileBar, mobileBarAmt: bookActive ? (selOpt && nights ? ghs(s.step===3 ? dueNow : total) : 'No room yet') : (cartCount ? ghs(rSub - bundleDisc) : 'Nothing picked yet'),
+      mobileBarNote: bookActive ? (selOpt ? `${selOpt.name} · ${nights} night${nights===1?'':'s'}` : 'Pick dates and a room') : `${cartCount} item${cartCount===1?'':'s'} · ${rDays} day${rDays===1?'':'s'}`,
+      mobileBarLabel: bookActive ? (s.step===3 ? (s.plan==='hotel' ? 'Confirm' : 'Pay') : 'Continue') : isRent ? (cartCount ? 'Continue' : 'Choose items') : s.rStep===3 ? 'Pay' : 'Continue',
+      mobileBarAction: bookActive ? next : isRent ? rGoDetails : rNext, mobileBarDisabled: (bookActive && s.step===1 && !validSel) || (isRent && !cartCount),
+    };
+  }
+}
+
+</script>
+</body>
+</html>

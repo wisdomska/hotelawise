@@ -1,0 +1,112 @@
+'use server';
+// Public-site server actions. Each one validates input with Zod, checks
+// Turnstile and a rate limit, and never trusts anything from the browser.
+import { z } from 'zod';
+import { checkContact, type ContactErrors } from '@/lib/contact-form';
+import { isIsoDate, nightsBetween } from '@/lib/dates';
+import * as schema from '@/server/db/schema';
+import { verifyTurnstile } from '@/server/integrations/turnstile';
+import { db } from '@/server/platform/db';
+import { allow } from '@/server/platform/rate-limit';
+import { clientIp } from '@/server/platform/request';
+
+export type FormResult = { ok: true; title: string; body?: string } | { ok: false; error: string; field?: string };
+
+// Shown when the database can't be reached (or isn't connected yet): the visitor
+// still has a way through, and nothing is silently lost.
+const UNSAVED = 'We couldn’t send that just now. Please call or WhatsApp us instead.';
+
+const email = z.string().trim().toLowerCase().email('Enter a valid email address.').max(254);
+
+export async function subscribeNewsletter(_prev: FormResult | null, form: FormData): Promise<FormResult> {
+  const parsed = email.safeParse(form.get('email'));
+  if (!parsed.success) return { ok: false, field: 'email', error: parsed.error.issues[0]?.message ?? 'Enter a valid email address.' };
+  const ip = await clientIp();
+  if (!(await allow('newsletter', ip))) return { ok: false, error: 'Too many tries. Give it a few minutes.' };
+  if (!(await verifyTurnstile(String(form.get('cf-turnstile-response') ?? ''), ip))) {
+    return { ok: false, error: 'We couldn’t confirm you’re not a bot. Refresh and try again.' };
+  }
+  let added: { id: string }[];
+  try {
+    added = await (
+      await db()
+    )
+      .insert(schema.newsletterSubscribers)
+      .values({ email: parsed.data, source: 'footer' })
+      .onConflictDoNothing()
+      .returning({ id: schema.newsletterSubscribers.id });
+  } catch (err) {
+    console.error('newsletter signup failed', err);
+    return { ok: false, error: 'We couldn’t add you just now. Try again in a little while.' };
+  }
+  return added.length
+    ? { ok: true, title: 'You’re on the list.', body: 'One letter a month, at most.' }
+    : { ok: true, title: 'You’re already on the list.', body: 'Nothing more to do.' };
+}
+
+export type AvailabilityResult = { ok: true; free: number } | { ok: false; error: string };
+
+const stayQuery = z
+  .object({
+    variant: z.enum(['STD', 'EXE', 'EXE_PLUS', 'VIP', 'DBL']),
+    checkIn: z.string().refine(isIsoDate),
+    checkOut: z.string().refine(isIsoDate),
+  })
+  .refine((q) => q.checkOut > q.checkIn && nightsBetween(q.checkIn, q.checkOut) <= 60);
+
+/** Free rooms of one rate for the chosen dates (room page › Reserve). Read-only, so no Turnstile. */
+export async function checkRoomAvailability(variant: string, checkIn: string, checkOut: string): Promise<AvailabilityResult> {
+  const q = stayQuery.safeParse({ variant, checkIn, checkOut });
+  if (!q.success) return { ok: false, error: 'Pick a check-out date after your check-in.' };
+  if (!(await allow('availability', await clientIp()))) return { ok: false, error: 'Too many checks. Give it a minute.' };
+  if (!process.env.DATABASE_URL) {
+    const { defaultSiteData } = await import('@/server/content/site-data');
+    const v = defaultSiteData()
+      .rooms.flatMap((r) => r.variants)
+      .find((x) => x.code === q.data.variant);
+    return { ok: true, free: v?.roomCount ?? 0 };
+  }
+  const { freeRoomsForStay } = await import('@/server/services/tonight');
+  return { ok: true, free: await freeRoomsForStay(await db(), q.data.variant, q.data.checkIn, q.data.checkOut, new Date()) };
+}
+
+export type ContactResult = { ok: true; title: string; body: string } | { ok: false; error?: string; errors?: ContactErrors };
+
+export async function sendContactMessage(_prev: ContactResult | null, form: FormData): Promise<ContactResult> {
+  const field = (k: string) => String(form.get(k) ?? '');
+  const checked = checkContact({
+    subject: field('subject'),
+    name: field('name'),
+    dialCode: field('dialCode'),
+    phone: field('phone'),
+    email: field('email'),
+    message: field('message'),
+  });
+  if (!checked.ok) return { ok: false, errors: checked.errors };
+  const ip = await clientIp();
+  if (!(await allow('contact', ip))) return { ok: false, error: 'Too many messages. Give it a few minutes, or call us.' };
+  if (!(await verifyTurnstile(field('cf-turnstile-response'), ip))) {
+    return { ok: false, error: 'We couldn’t confirm you’re not a bot. Refresh and try again.' };
+  }
+  const m = checked.value;
+  try {
+    await (await db()).insert(schema.messages).values({
+      fromName: m.name,
+      contact: m.email ? `${m.phone} · ${m.email}` : m.phone,
+      subject: m.subject,
+      body: m.message,
+    });
+  } catch (err) {
+    console.error('contact message not saved', err);
+    return { ok: false, error: UNSAVED };
+  }
+  try {
+    const { getSiteData, setting } = await import('@/server/content/site-data');
+    const { sendContactNotice } = await import('@/server/integrations/email');
+    await sendContactNotice(setting<string>(await getSiteData(), 'contact.email'), m);
+  } catch (err) {
+    // The message is saved in the inbox either way; a failed email must not lose it.
+    console.error('contact notice email failed', err);
+  }
+  return { ok: true, title: 'Message sent.', body: 'Reception will reply within the hour.' };
+}

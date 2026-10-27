@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:96px}
+button,a,label,input,select,textarea,[role=button],[role=option]{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+:focus:not(:focus-visible){outline:none}
+img{-webkit-user-drag:none}
+@media (max-width:760px){input,textarea{font-size:16px!important}}
+
+@keyframes awsl-pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+@keyframes awsl-sheet{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes awsl-fade{from{opacity:0}to{opacity:1}}
+</style>
+</helmet>
+<div ref="{{ rootRef }}" style="position:relative;min-width:0;width:{{ width }}">
+  <button type="button" ref="{{ trigRef }}" onClick="{{ toggle }}" onKeyDown="{{ onTrigKey }}" aria-haspopup="listbox" aria-expanded="{{ openStr }}" aria-label="{{ ariaLabel }}" style="{{ trigStyle }}">
+    <span style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0">
+      <sc-if value="{{ showLabel }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;opacity:0.6">{{ label }}</span></sc-if>
+      <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;font-family:{{ font }};opacity:{{ valOp }}">{{ display }}</span>
+    </span>
+    <svg aria-hidden="true" data-mi-icon="down" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:0.6;transition:transform 200ms cubic-bezier(0.23,1,0.32,1);transform:rotate({{ chev }})"><path d="M4 6l4 4 4-4"></path></svg>
+  </button>
+  <sc-if value="{{ open }}" hint-placeholder-val="{{ false }}">
+    <sc-if value="{{ sheet }}" hint-placeholder-val="{{ false }}"><div onClick="{{ close }}" style="position:fixed;inset:0;z-index:199;background:rgba(20,16,10,0.4);animation:awsl-fade 200ms cubic-bezier(0.23,1,0.32,1)"></div></sc-if>
+    <div ref="{{ panelRef }}" role="listbox" aria-label="{{ ariaLabel }}" tabindex="-1" onKeyDown="{{ onKey }}" style="{{ panelStyle }}">
+      <sc-if value="{{ sheet }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:2px 0 8px"><div style="width:40px;height:4px;border-radius:2px;background:rgba(0,0,58,0.18)"></div><span style="font-family:var(--serif,'Cormorant Garamond',Georgia,serif);font-size:20px;letter-spacing:-0.03em">{{ sheetTitle }}</span></div></sc-if>
+      <sc-for list="{{ opts }}" as="o" hint-placeholder-count="4">
+        <button type="button" role="option" aria-selected="{{ o.sel }}" onClick="{{ o.on }}" onMouseEnter="{{ o.hover }}" style="{{ o.style }}">
+          <span style="display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:0"><span style="font-family:{{ font }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%">{{ o.label }}</span><sc-if value="{{ o.sub }}" hint-placeholder-val="{{ false }}"><span style="font-size:11.5px;opacity:0.6">{{ o.sub }}</span></sc-if></span>
+          <span aria-hidden="true" style="font-size:12px;opacity:{{ o.checkOp }}">✓</span>
+        </button>
+      </sc-for>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:320,&quot;height&quot;:360},&quot;value&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;options&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;Array&lt;string|{value:string,label:string,sub?:string}&gt;&quot;},&quot;onChange&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;(e:{target:{value:string}})=&gt;void&quot;},&quot;label&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;placeholder&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Choose…&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;variant&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;field&quot;,&quot;compact&quot;,&quot;chip&quot;,&quot;bare&quot;],&quot;default&quot;:&quot;field&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;mono&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;dark&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;error&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;bg&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#F5F2EA&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;chipBg&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;string&quot;},&quot;chipFg&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;string&quot;},&quot;width&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;100%&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;panelWidth&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:200,&quot;tsType&quot;:&quot;number&quot;},&quot;ariaLabel&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+const EASE = 'cubic-bezier(0.23,1,0.32,1)';
+const norm = o => typeof o === 'string' || typeof o === 'number' ? { value:String(o), label:String(o) } : { value:String(o.value), label:o.label, sub:o.sub };
+class Component extends DCLogic {
+  rootRef = React.createRef(); trigRef = React.createRef(); panelRef = React.createRef();
+  state = { open:false, active:0, pos:null, sheet:false };
+  componentDidMount() {
+    this._down = e => { if (this.state.open && this.rootRef.current && !this.rootRef.current.contains(e.target)) this.setState({open:false}); };
+    this._scroll = e => { if (!this.state.open || this.state.sheet) return; if (this.panelRef.current && e && e.target && this.panelRef.current.contains(e.target)) return; this.reflow(); };
+    document.addEventListener('pointerdown', this._down); window.addEventListener('scroll', this._scroll, true); window.addEventListener('resize', this._scroll);
+    if (window.visualViewport) window.visualViewport.addEventListener('resize', this._scroll);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this._raf); document.removeEventListener('pointerdown', this._down); window.removeEventListener('scroll', this._scroll, true); window.removeEventListener('resize', this._scroll); if (window.visualViewport) window.visualViewport.removeEventListener('resize', this._scroll); }
+  componentDidUpdate(pp, ps) { if (this.state.open && !this.state.sheet && !ps.open) this.reflow(); const lock = !!(this.state.open && this.state.sheet); if (lock !== !!this._awLocked) { this._awLocked = lock; window.__awLock = Math.max(0, (window.__awLock || 0) + (lock ? 1 : -1)); document.documentElement.style.overflow = window.__awLock > 0 ? 'hidden' : ''; } }
+  cbRect() {
+    const t = this.trigRef.current; let anc = t && t.parentElement;
+    while (anc && anc !== document.body && anc !== document.documentElement) { const cs = getComputedStyle(anc); if ((cs.transform && cs.transform !== 'none') || (cs.filter && cs.filter !== 'none') || (cs.backdropFilter && cs.backdropFilter !== 'none') || (cs.webkitBackdropFilter && cs.webkitBackdropFilter !== 'none') || (cs.contain && /paint|layout|strict|content/.test(cs.contain))) break; anc = anc.parentElement; }
+    return anc && anc !== document.body && anc !== document.documentElement ? anc.getBoundingClientRect() : { left:0, top:0, width:window.innerWidth, height:window.innerHeight };
+  }
+  place(estH, W) {
+    const t = this.trigRef.current; if (!t) return null;
+    const r = t.getBoundingClientRect(), vw = window.innerWidth, vh = window.innerHeight, M = 8, G = 8, base = this.cbRect();
+    const pnl = this.panelRef.current;
+    const natural = pnl ? Math.max(pnl.scrollHeight, pnl.offsetHeight) : estH;
+    const H = Math.min(natural || estH, vh - 2*M);
+    const below = vh - r.bottom - G - M, above = r.top - G - M;
+    let side, top;
+    if (H <= below) { side = 'below'; top = r.bottom + G; }
+    else if (H <= above) { side = 'above'; top = r.top - G - H; }
+    else { side = below >= above ? 'below' : 'above'; top = side === 'below' ? r.bottom + G : r.top - G - H; top = Math.max(M, Math.min(top, vh - M - H)); }
+    const left = Math.max(M, Math.min(r.left, vw - W - M));
+    const offscreen = r.bottom < 0 || r.top > vh;
+    return { top: top - base.top, left: left - base.left, maxH: vh - 2*M, side, w: W, offscreen };
+  }
+  reflow() {
+    if (!this.state.open || this.state.sheet) return;
+    cancelAnimationFrame(this._raf);
+    this._raf = requestAnimationFrame(() => { const p = this.place(this._estH || 380, this._W || 312); if (!p) return; if (p.offscreen) { this.setState({open:false}); return; }
+      const o = this.state.pos || {}; if (Math.abs((o.top||0) - p.top) > 0.5 || Math.abs((o.left||0) - p.left) > 0.5 || o.side !== p.side || o.maxH !== p.maxH) this.setState({pos:{...p, ready:true}}); else if (!o.ready) this.setState({pos:{...o, ready:true}}); });
+  }
+  opts() { return (this.props.options || []).map(norm); }
+  openIt() {
+    const t = this.trigRef.current; if (!t) return;
+    const r = t.getBoundingClientRect(), W = Math.max(r.width, Number(this.props.panelWidth) || 200);
+    const n = this.opts().length, H = Math.min(320, n*44 + 12);
+    const sheet = this.cbRect().width < 640 && n > 5;
+    this._estH = H; this._W = W;
+    const idx = Math.max(0, this.opts().findIndex(o => o.value === String(this.props.value)));
+    this.setState({ open:true, sheet, active:idx, pos:{...this.place(H, W), ready:false} },
+      () => { this.reflow(); setTimeout(() => { const p = this.panelRef.current; if (p) { p.focus({preventScroll:true}); const el = p.querySelectorAll('[role=option]')[idx]; if (el) p.scrollTop = el.offsetTop - p.clientHeight/2 + 22; } }, 10); });
+  }
+  close(refocus) { this.setState({open:false}); if (refocus && this.trigRef.current) this.trigRef.current.focus(); }
+  pick(o) { this.props.onChange && this.props.onChange({ target:{ value:o.value } }); this.close(true); }
+  renderVals() {
+    let p = this.props; const s = this.state, opts = this.opts(), v = String(p.value ?? ''), variant = p.variant || 'field';
+    const cur = opts.find(o => o.value === v);
+    p = { ...p, height: p.height ? Number(p.height) : undefined, fontSize: p.fontSize ? Number(p.fontSize) : undefined, panelWidth: p.panelWidth ? Number(p.panelWidth) : undefined };
+    const font = p.mono ? "'Geist Mono',monospace" : 'inherit';
+    const trig = {
+      field: { width:'100%', height:p.height || 48, padding:'0 14px', borderRadius:10, border:`1.5px solid ${p.error ? '#B42318' : s.open ? '#000063' : 'rgba(0,0,99,0.2)'}`, background:p.bg || '#F5F2EA', color:'#00003A', fontSize:p.fontSize || 16 },
+      compact: { width:'100%', height:p.height || 34, padding:'0 10px', borderRadius:8, border:`1px solid ${s.open ? 'var(--ink, #000063)' : 'var(--line2, rgba(0,0,99,0.2))'}`, background:p.bg || 'var(--bg, #F5F2EA)', color:'var(--ink, #00003A)', fontSize:p.fontSize || 12.5 },
+      chip: { width:'100%', height:p.height || 32, padding:'0 10px', borderRadius:8, border:'none', background:p.chipBg || '#F6E2B3', color:p.chipFg || '#00003A', fontSize:12 },
+      bare: { width:'100%', minHeight:28, padding:0, border:'none', background:'transparent', color:'inherit', fontSize:18 },
+    }[variant];
+    const trigStyle = { ...trig, display:'flex', alignItems:'center', justifyContent:'space-between', gap:8, textAlign:'left', cursor:'pointer', fontFamily:"'Geist',system-ui,sans-serif", transition:`border-color 150ms ${EASE}` };
+    const dark = !!p.dark;
+    const panelStyle = s.sheet
+      ? { position:'fixed', left:0, right:0, bottom:0, zIndex:200, maxHeight:'70%', overflowY:'auto', background:'#F5F2EA', borderRadius:'18px 18px 0 0', padding:'14px 12px calc(22px + env(safe-area-inset-bottom))', overscrollBehavior:'contain', boxShadow:'0 -20px 40px -20px rgba(20,16,10,0.45)', animation:`awsl-sheet 360ms ${EASE}`, outline:'none', fontFamily:"'Geist',system-ui,sans-serif", color:'#00003A', display:'flex', flexDirection:'column', gap:2 }
+      : { position:'fixed', zIndex:200, left: s.pos ? s.pos.left : 0, top: s.pos ? s.pos.top : 0, width: s.pos ? s.pos.w : 200, maxHeight: s.pos ? Math.min(320, s.pos.maxH) : 320, overflowY:'auto', overscrollBehavior:'contain', visibility: s.pos && s.pos.ready ? 'visible' : 'hidden',
+          background: dark ? 'rgba(14,14,62,0.96)' : 'rgba(255,255,255,0.94)', WebkitBackdropFilter:'blur(18px) saturate(1.4)', backdropFilter:'blur(18px) saturate(1.4)', border: dark ? '1px solid rgba(227,228,245,0.16)' : '1px solid rgba(0,0,99,0.1)', borderRadius:12, padding:6,
+          boxShadow:'0 24px 50px -20px rgba(20,16,10,0.45)', outline:'none', fontFamily:"'Geist',system-ui,sans-serif", color: dark ? '#ECEBF4' : '#00003A', display:'flex', flexDirection:'column', gap:2,
+          animation: s.pos && s.pos.ready ? `awsl-pop 180ms ${EASE}` : 'none', transformOrigin: s.pos && s.pos.side === 'above' ? '50% 100%' : '50% 0' };
+    const move = d => this.setState({ active: Math.max(0, Math.min(opts.length-1, s.active + d)) }, () => { const pnl = this.panelRef.current; const el = pnl && pnl.querySelectorAll('[role=option]')[this.state.active]; if (el && el.scrollIntoViewIfNeeded) el.scrollIntoViewIfNeeded(false); else if (el && pnl) pnl.scrollTop = el.offsetTop - pnl.clientHeight/2; });
+    return {
+      rootRef:this.rootRef, trigRef:this.trigRef, panelRef:this.panelRef, width: p.width || '100%',
+      trigStyle, font, label:p.label || '', showLabel: !!p.label && variant==='bare', ariaLabel: p.ariaLabel || p.label || 'Choose',
+      display: cur ? cur.label : (p.placeholder || 'Choose…'), valOp: cur ? 1 : 0.5, chev: s.open ? '180deg' : '0deg',
+      open:s.open, openStr: s.open ? 'true':'false', sheet:s.sheet, sheetTitle: p.label || p.ariaLabel || 'Choose',
+      toggle:() => s.open ? this.close() : this.openIt(), close:() => this.close(true), panelStyle,
+      opts: opts.map((o,i) => { const sel = o.value === v, act = i === s.active;
+        return { ...o, sub:o.sub || '', sel: sel ? 'true':'false', checkOp: sel ? 1 : 0, hover:() => this.setState({active:i}), on:() => this.pick(o),
+          style:{ width:'100%', minHeight: s.sheet ? 48 : 40, padding:'0 12px', border:'none', borderRadius:8, display:'flex', alignItems:'center', justifyContent:'space-between', gap:12, textAlign:'left', fontSize: s.sheet ? 16 : 14, cursor:'pointer', flexShrink:0,
+            background: act ? (dark ? 'rgba(227,228,245,0.1)' : 'rgba(242,181,68,0.28)') : 'transparent', color:'inherit', fontWeight: sel ? 500 : 400, transition:`background 120ms ${EASE}` } }; }),
+      onTrigKey: e => { if (!s.open && (e.key==='ArrowDown' || e.key==='ArrowUp')) { e.preventDefault(); this.openIt(); } },
+      onKey: e => { const k = e.key;
+        if (k==='Escape') { e.preventDefault(); this.close(true); } else if (k==='ArrowDown') { e.preventDefault(); move(1); } else if (k==='ArrowUp') { e.preventDefault(); move(-1); }
+        else if (k==='Home') { e.preventDefault(); this.setState({active:0}); } else if (k==='End') { e.preventDefault(); this.setState({active:opts.length-1}); }
+        else if (k==='Enter' || k===' ') { e.preventDefault(); opts[s.active] && this.pick(opts[s.active]); } else if (k==='Tab') this.close();
+        else if (k.length===1) { const i = opts.findIndex(o => o.label.toLowerCase().startsWith(k.toLowerCase())); if (i>=0) this.setState({active:i}); } },
+    };
+  }
+}
+
+</script>
+</body>
+</html>
