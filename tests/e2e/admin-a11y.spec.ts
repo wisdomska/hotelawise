@@ -101,6 +101,8 @@ for (const theme of ['light', 'dark'] as const) {
       .first()
       .click();
     await expect(page.getByRole('dialog', { name: /room/i })).toBeVisible();
+    // The drawer opens on a loading skeleton, then fades the details in; audit the details.
+    await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
     await audit(page, `${theme} room drawer`);
     await page.keyboard.press('Escape');
     // ⌘K search
