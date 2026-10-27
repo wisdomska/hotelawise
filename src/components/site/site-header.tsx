@@ -93,7 +93,7 @@ export function SiteHeader({ banner, phone, tel }: { banner: string | null; phon
       {showMobileBook && (
         <Link
           href="/book"
-          className="desk:hidden"
+          className="flex desk:hidden"
           style={{
             position: 'fixed',
             left: 16,
@@ -102,7 +102,6 @@ export function SiteHeader({ banner, phone, tel }: { banner: string | null; phon
             height: 48,
             padding: '0 20px',
             whiteSpace: 'nowrap',
-            display: 'flex',
             alignItems: 'center',
             borderRadius: 12,
             background: 'rgba(0,0,99,0.72)',
@@ -241,27 +240,6 @@ export function SiteHeader({ banner, phone, tel }: { banner: string | null; phon
                   );
                 })}
               </nav>
-              <Link
-                href="/book"
-                data-mi-btn="fill"
-                className="hidden desk:flex"
-                style={{
-                  alignItems: 'center',
-                  height: 'max(42px, var(--tap-min, 0px))',
-                  padding: '0 18px',
-                  borderRadius: 10,
-                  background: '#000063',
-                  color: '#F5F2EA',
-                  textDecoration: 'none',
-                  fontWeight: 500,
-                  fontSize: 14,
-                }}
-              >
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                  <Icon name="key" size={16} />
-                  Book a room
-                </span>
-              </Link>
               <button
                 type="button"
                 onClick={() => setMenu((m) => !m)}

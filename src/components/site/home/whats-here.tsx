@@ -22,7 +22,6 @@ export function WhatsHere({ heading, tiles }: { heading: string; tiles: { title:
           fontSize: 'var(--h2s)',
           lineHeight: 1.08,
           letterSpacing: '-0.04em',
-          textWrap: 'balance',
         }}
       >
         {heading}

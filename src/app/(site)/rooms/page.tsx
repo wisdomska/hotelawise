@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { priceLabel } from '@/components/site/key-card';
 import { RoomsFilter } from '@/components/site/rooms-filter';
+import { ScrollTable } from '@/components/site/scroll-table';
 import { leftTonight } from '@/server/content/availability';
 import { contactFrom } from '@/server/content/contact';
 import { getSiteData } from '@/server/content/site-data';
@@ -44,38 +45,20 @@ export default async function RoomsPage() {
           >
             Rooms<em style={{ fontWeight: 300 }}>, priced plainly.</em>
           </h1>
-          <p style={{ margin: 0, fontSize: 16, lineHeight: 1.55, color: 'rgba(0,0,58,0.72)', maxWidth: 440 }}>
-            {data.content['pages.roomsIntro']}
-          </p>
+          <p style={{ margin: 0, fontSize: 16, lineHeight: 1.55, color: 'rgba(0,0,58,0.72)' }}>{data.content['pages.roomsIntro']}</p>
         </div>
         <RoomsFilter rooms={data.rooms} images={images} left={left} tel={contact.tel} />
         <div style={{ marginTop: 'var(--sy)' }}>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'baseline',
-              gap: 12,
-              flexWrap: 'wrap',
-              marginBottom: 20,
-            }}
-          >
-            <h2 style={{ margin: 0, fontFamily: 'var(--font-serif)', fontWeight: 400, fontSize: 'var(--h3)' }}>Side by side</h2>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'rgba(0,0,58,0.6)' }}>
-              Scroll sideways on small screens →
-            </span>
-          </div>
-          <div
-            style={{ position: 'relative', overflowX: 'auto', borderTop: '1.5px solid #000063' }}
-            tabIndex={0}
-            role="region"
-            aria-label="Room comparison"
+          <ScrollTable
+            label="Room comparison"
+            heading={<h2 style={{ margin: 0, fontFamily: 'var(--font-serif)', fontWeight: 400, fontSize: 'var(--h3)' }}>Side by side</h2>}
           >
             <table style={{ width: '100%', minWidth: 720, borderCollapse: 'collapse', fontSize: 14 }}>
               <thead>
                 <tr>
                   <th
                     scope="col"
+                    className="aw-sticky-col"
                     style={{
                       textAlign: 'left',
                       padding: '14px 12px 14px 0',
@@ -105,6 +88,7 @@ export default async function RoomsPage() {
                   <tr key={row.label} style={{ borderTop: '1px solid rgba(0,0,99,0.12)' }}>
                     <th
                       scope="row"
+                      className="aw-sticky-col"
                       style={{
                         textAlign: 'left',
                         padding: '14px 12px 14px 0',
@@ -123,7 +107,7 @@ export default async function RoomsPage() {
                   </tr>
                 ))}
                 <tr style={{ borderTop: '1px solid rgba(0,0,99,0.12)' }}>
-                  <th scope="row" style={{ padding: '14px 12px 14px 0' }} />
+                  <th scope="row" className="aw-sticky-col" style={{ padding: '14px 12px 14px 0' }} />
                   {data.rooms.map((r) => (
                     <td key={r.code} style={{ padding: '14px 12px' }}>
                       <Link data-mi-card="" href={`/rooms/${r.code.toLowerCase()}`} style={{ fontSize: 14, fontWeight: 500 }}>
@@ -134,7 +118,7 @@ export default async function RoomsPage() {
                 </tr>
               </tbody>
             </table>
-          </div>
+          </ScrollTable>
         </div>
       </section>
     </main>

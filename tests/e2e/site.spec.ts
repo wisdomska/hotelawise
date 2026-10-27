@@ -1,10 +1,12 @@
 import { expect, test } from '@playwright/test';
 
 test.describe('rooms', () => {
-  test('guest and budget filters narrow the list, and Clear filters brings it back', async ({ page }) => {
+  test('guest and budget filters narrow the list, and Clear filters brings it back', async ({ page, isMobile }) => {
     await page.goto('/rooms');
-    const count = page.getByText(/of 4 room types/);
+    const count = page.getByText(/of 4 room types/).filter({ visible: true });
     await expect(count).toHaveText('4 of 4 room types');
+    // On phones the chips sit behind the Filters button.
+    if (isMobile) await page.getByRole('button', { name: /^Filters/ }).click();
     await page.getByRole('button', { name: '3–4' }).click();
     await expect(count).toHaveText('1 of 4 room types');
     await page.getByRole('button', { name: '≤ 200' }).click();

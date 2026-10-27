@@ -182,12 +182,10 @@ export function ManageBooking({ view, initialRef }: { view: ManageView | null; i
             letterSpacing: '-0.05em',
           }}
         >
-          Manage
-          <br />
-          <em style={{ fontWeight: 300 }}>my booking.</em>
+          Manage <em style={{ fontWeight: 300 }}>my booking.</em>
         </h1>
         {view ? (
-          <p style={{ margin: 0, fontSize: 15, lineHeight: 1.55, color: 'rgba(0,0,58,0.72)', maxWidth: 460 }}>
+          <p style={{ margin: 0, fontSize: 15, lineHeight: 1.55, color: 'rgba(0,0,58,0.72)' }}>
             You&apos;re looking at {view.ref}.{' '}
             <button
               type="button"
@@ -209,7 +207,7 @@ export function ManageBooking({ view, initialRef }: { view: ManageView | null; i
             </button>
           </p>
         ) : (
-          <p style={{ margin: 0, fontSize: 15, lineHeight: 1.55, color: 'rgba(0,0,58,0.72)', maxWidth: 460 }}>
+          <p style={{ margin: 0, fontSize: 15, lineHeight: 1.55, color: 'rgba(0,0,58,0.72)' }}>
             Your reference is in the SMS we sent, and looks like <span style={{ fontFamily: mono }}>AW-7Q3K</span>. We&apos;ll text a code
             to the phone you booked with.
           </p>

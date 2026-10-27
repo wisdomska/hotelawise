@@ -79,11 +79,9 @@ export function VenuesView({ venues, intro, turnstileSiteKey }: { venues: VenueC
             letterSpacing: '-0.05em',
           }}
         >
-          Host it
-          <br />
-          <em style={{ fontWeight: 300 }}>at ours.</em>
+          Host it <em style={{ fontWeight: 300 }}>at ours.</em>
         </h1>
-        <p style={{ margin: 0, fontSize: 16, lineHeight: 1.55, color: 'rgba(0,0,58,0.72)', maxWidth: 460 }}>{intro}</p>
+        <p style={{ margin: 0, fontSize: 16, lineHeight: 1.55, color: 'rgba(0,0,58,0.72)' }}>{intro}</p>
       </div>
       <div data-stagger="" style={{ display: 'grid', gridTemplateColumns: 'var(--c2)', gap: 20 }}>
         {venues.map((x, i) => {

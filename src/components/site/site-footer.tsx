@@ -1,5 +1,5 @@
-// Footer (Website.dc.html): photo band with the big wordmark and "Book your
-// stay" disc, Pages, Contact info and the newsletter.
+// Footer (Website.dc.html): photo band with the big wordmark, Pages, Contact
+// info and the newsletter.
 import Link from 'next/link';
 import { Icon } from '@/components/ui/icon';
 import type { Contact } from '@/server/content/contact';
@@ -54,30 +54,6 @@ export function SiteFooter({ contact, photo, turnstileSiteKey }: { contact: Cont
           >
             Hotel A-Wise
           </p>
-          <Link
-            href="/book"
-            className="aw-foot-book"
-            style={{
-              width: 'var(--foot-btn)',
-              height: 'var(--foot-btn)',
-              borderRadius: '50%',
-              background: '#000063',
-              color: '#F5F2EA',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              textAlign: 'center',
-              textDecoration: 'none',
-              fontSize: 'clamp(15px,1.4vw,20px)',
-              fontWeight: 500,
-              lineHeight: 1.25,
-              boxShadow: '0 0 0 10px rgba(255,255,255,0.12)',
-            }}
-          >
-            Book your
-            <br />
-            stay
-          </Link>
         </div>
       </div>
       <div className="grid grid-cols-1 desk:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
