@@ -36,7 +36,7 @@ export default async function ConfirmationPage({
   }
   if (b.status === 'cancelled' || b.status === 'expired') {
     return (
-      <section style={{ display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 560 }}>
+      <section style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         <h1
           style={{
             margin: 0,
@@ -112,11 +112,9 @@ export default async function ConfirmationPage({
             letterSpacing: '-0.05em',
           }}
         >
-          You&apos;re booked.
-          <br />
-          <em style={{ fontWeight: 300 }}>We&apos;ll leave the light on.</em>
+          You&apos;re booked. <em style={{ fontWeight: 300 }}>We&apos;ll leave the light on.</em>
         </h1>
-        <p style={{ margin: 0, fontSize: 16, lineHeight: 1.55, color: 'rgba(0,0,58,0.72)', maxWidth: 520 }}>
+        <p style={{ margin: 0, fontSize: 16, lineHeight: 1.55, color: 'rgba(0,0,58,0.72)' }}>
           We&apos;ve texted {formatPhone(b.phone)} your reference. The desk is staffed all night, so arrive whenever you arrive. Say the
           reference at reception and we&apos;ll hand you the key.
         </p>
@@ -217,7 +215,7 @@ export default async function ConfirmationPage({
 
 function PendingNote({ tel, phone }: { tel: string; phone: string }) {
   return (
-    <section style={{ display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 560 }}>
+    <section style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <h1
         style={{
           margin: 0,

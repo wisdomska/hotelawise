@@ -27,7 +27,7 @@ export function ConfirmPoller({ payRef, tel, phone }: { payRef: string; tel: str
     };
   }, [payRef, router]);
   return (
-    <section aria-live="polite" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 16, maxWidth: 560 }}>
+    <section aria-live="polite" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 16 }}>
       {!error && <KnotSpinner />}
       <h1
         style={{

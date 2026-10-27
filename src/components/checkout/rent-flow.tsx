@@ -357,11 +357,9 @@ export function RentFlow(p: RentFlowProps) {
               letterSpacing: '-0.05em',
             }}
           >
-            Rent for
-            <br />
-            <em style={{ fontWeight: 300 }}>the big day.</em>
+            Rent for <em style={{ fontWeight: 300 }}>the big day.</em>
           </h1>
-          <p style={{ margin: 0, fontSize: 16, lineHeight: 1.55, color: 'rgba(0,0,58,0.72)', maxWidth: 460 }}>{p.intro}</p>
+          <p style={{ margin: 0, fontSize: 16, lineHeight: 1.55, color: 'rgba(0,0,58,0.72)' }}>{p.intro}</p>
         </div>
         <div
           style={{
@@ -996,9 +994,7 @@ export function RentFlow(p: RentFlowProps) {
                   letterSpacing: '-0.05em',
                 }}
               >
-                Who&apos;s
-                <br />
-                <em style={{ fontWeight: 300 }}>collecting?</em>
+                Who&apos;s <em style={{ fontWeight: 300 }}>collecting?</em>
               </h1>
               <div
                 style={{
@@ -1155,9 +1151,7 @@ export function RentFlow(p: RentFlowProps) {
                   letterSpacing: '-0.05em',
                 }}
               >
-                How would you
-                <br />
-                <em style={{ fontWeight: 300 }}>like to pay?</em>
+                How would you <em style={{ fontWeight: 300 }}>like to pay?</em>
               </h1>
               {failed && (
                 <div

@@ -1,6 +1,7 @@
 'use client';
 // Rooms list with guest and budget filters (Website.dc.html › ROOMS).
-import { useState } from 'react';
+import { useId, useState } from 'react';
+import { Icon } from '@/components/ui/icon';
 import type { SiteImage as SiteImageT, SiteRoom } from '@/server/content/site-data';
 import { KeyCard } from './key-card';
 
@@ -71,6 +72,10 @@ export function RoomsFilter({
 }) {
   const [guests, setGuests] = useState<(typeof GUESTS)[number][0]>('any');
   const [budget, setBudget] = useState<(typeof BUDGETS)[number][0]>('any');
+  // Below 1024px the chips fold behind a Filters button so the rooms stay in view.
+  const [open, setOpen] = useState(false);
+  const panelId = useId();
+  const activeCount = (guests !== 'any' ? 1 : 0) + (budget !== 'any' ? 1 : 0);
   const filtered = rooms.filter(
     (r) => (guests === 'any' || guests === '2' || r.sleeps >= 3) && (budget === 'any' || r.from <= Number(budget) * 100),
   );
@@ -79,7 +84,7 @@ export function RoomsFilter({
       <div
         style={{
           display: 'flex',
-          gap: 24,
+          gap: '16px 24px',
           flexWrap: 'wrap',
           alignItems: 'center',
           padding: '14px 0',
@@ -88,25 +93,59 @@ export function RoomsFilter({
           marginBottom: 32,
         }}
       >
-        <div role="group" aria-label="Guests" style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
-          <span style={label}>Guests</span>
-          {GUESTS.map(([v, l]) => (
-            <Chip key={v} active={guests === v} onClick={() => setGuests(v)}>
-              {l}
-            </Chip>
-          ))}
-        </div>
-        <div role="group" aria-label="Budget" style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
-          <span style={label}>Budget / night</span>
-          {BUDGETS.map(([v, l]) => (
-            <Chip key={v} mono active={budget === v} onClick={() => setBudget(v)}>
-              {l}
-            </Chip>
-          ))}
-        </div>
-        <span style={{ marginLeft: 'auto', fontFamily: 'var(--font-mono)', fontSize: 12, color: 'rgba(0,0,58,0.6)' }} aria-live="polite">
+        <button
+          type="button"
+          className="aw-press inline-flex desk:hidden"
+          aria-expanded={open}
+          aria-controls={panelId}
+          onClick={() => setOpen((o) => !o)}
+          style={{
+            alignItems: 'center',
+            gap: 8,
+            height: 44,
+            padding: '0 16px',
+            borderRadius: 999,
+            border: `1px solid ${activeCount ? '#000063' : 'rgba(0,0,99,0.25)'}`,
+            background: activeCount ? '#000063' : 'transparent',
+            color: activeCount ? '#F5F2EA' : '#00003A',
+            fontSize: 14,
+            fontWeight: 500,
+          }}
+        >
+          <Icon name="sliders" size={16} />
+          Filters{activeCount ? ` · ${activeCount}` : ''}
+          <Icon
+            name="chevright"
+            size={14}
+            style={{ transform: open ? 'rotate(-90deg)' : 'rotate(90deg)', transition: 'transform 200ms' }}
+          />
+        </button>
+        {/* One count for every width; from 1024px it moves to the end of the row. */}
+        <span
+          className="aw-filter-count"
+          aria-live="polite"
+          style={{ marginLeft: 'auto', fontFamily: 'var(--font-mono)', fontSize: 12, color: 'rgba(0,0,58,0.6)' }}
+        >
           {filtered.length} of {rooms.length} room types
         </span>
+        <div id={panelId} className={open ? 'aw-filter-panel is-open' : 'aw-filter-panel'}>
+          <div role="group" aria-label="Guests" style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
+            <span style={label}>Guests</span>
+            {GUESTS.map(([v, l]) => (
+              <Chip key={v} active={guests === v} onClick={() => setGuests(v)}>
+                {l}
+              </Chip>
+            ))}
+          </div>
+          <div role="group" aria-label="Budget" style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
+            <span style={label}>Budget / night</span>
+            {BUDGETS.map(([v, l]) => (
+              <Chip key={v} mono active={budget === v} onClick={() => setBudget(v)}>
+                {l}
+              </Chip>
+            ))}
+          </div>
+        </div>
       </div>
       {filtered.length === 0 ? (
         <div
@@ -121,7 +160,7 @@ export function RoomsFilter({
           }}
         >
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'rgba(0,0,58,0.6)' }}>0 ROOMS MATCH</span>
-          <p style={{ margin: 0, fontFamily: 'var(--font-serif)', fontSize: 32, lineHeight: 1.1, maxWidth: 560 }}>
+          <p style={{ margin: 0, fontFamily: 'var(--font-serif)', fontSize: 32, lineHeight: 1.1 }}>
             Nothing fits that combination. Loosen the budget a little, or call us and we&apos;ll work something out.
           </p>
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
@@ -163,7 +202,8 @@ export function RoomsFilter({
           </div>
         </div>
       ) : (
-        <div data-stagger="" style={{ display: 'grid', gridTemplateColumns: 'var(--c4g)', gap: 'clamp(16px,2vw,28px)' }}>
+        // A wide gap between rows so each name and price clearly belongs to the photo above it.
+        <div data-stagger="" style={{ display: 'grid', gridTemplateColumns: 'var(--c4g)', gap: '56px clamp(16px,2vw,28px)' }}>
           {filtered.map((room, i) => (
             <KeyCard
               key={room.code}

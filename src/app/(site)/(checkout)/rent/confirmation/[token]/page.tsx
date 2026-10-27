@@ -30,7 +30,7 @@ export default async function RentConfirmationPage({
   if (o.status === 'pending_payment') {
     if (reference) return <ConfirmPoller payRef={reference} tel={ct.tel} phone={ct.phone} />;
     return (
-      <section style={{ display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 560 }}>
+      <section style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         <h1
           style={{
             margin: 0,
@@ -51,7 +51,7 @@ export default async function RentConfirmationPage({
   }
   if (o.status === 'cancelled') {
     return (
-      <section style={{ display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 560 }}>
+      <section style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         <h1
           style={{
             margin: 0,
@@ -119,11 +119,9 @@ export default async function RentConfirmationPage({
             letterSpacing: '-0.05em',
           }}
         >
-          Chairs: sorted.
-          <br />
-          <em style={{ fontWeight: 300 }}>Go plan the rest.</em>
+          Chairs: sorted. <em style={{ fontWeight: 300 }}>Go plan the rest.</em>
         </h1>
-        <p style={{ margin: 0, fontSize: 16, lineHeight: 1.55, color: 'rgba(0,0,58,0.72)', maxWidth: 520 }}>
+        <p style={{ margin: 0, fontSize: 16, lineHeight: 1.55, color: 'rgba(0,0,58,0.72)' }}>
           {rentalNote(o, hours)} We&apos;ve sent the details by SMS.
         </p>
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>

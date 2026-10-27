@@ -29,9 +29,7 @@ export default async function GalleryPage() {
           >
             Look around<em style={{ fontWeight: 300 }}>.</em>
           </h1>
-          <p style={{ margin: 0, fontSize: 16, lineHeight: 1.55, color: 'rgba(0,0,58,0.72)', maxWidth: 440 }}>
-            {data.content['pages.galleryIntro']}
-          </p>
+          <p style={{ margin: 0, fontSize: 16, lineHeight: 1.55, color: 'rgba(0,0,58,0.72)' }}>{data.content['pages.galleryIntro']}</p>
         </div>
         <GalleryGrid items={data.gallery} />
       </section>

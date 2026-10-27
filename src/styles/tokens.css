@@ -60,8 +60,8 @@
   --h2s: 30px;
   --h3: 26px;
   --quote: 24px;
-  --hero-h: 720px;
-  --foot-btn: 108px;
+  /* The hero fills the screen; its content sits on the bottom edge at every width. */
+  --hero-h: 100svh;
   --foot-h: 260px;
   --foot-type-checkout: 40px;
   --navgap: 10px;
@@ -70,10 +70,10 @@
   /* Layout switches from Website.dc.html (m = <1024px, ph = <640px). */
   --hgap: 20px;
   --hmb: 28px;
-  --bar-mt: 0px;
+  --bar-mt: 28px;
   --hero-pt: 120px;
   --hero-pb: 20px;
-  --hero-jc: space-between;
+  --hero-jc: flex-end;
   --c4: repeat(4, 80%);
   --c3: 1fr;
   --c55: minmax(0, 1fr);
@@ -149,7 +149,6 @@
     --h2s: clamp(36px, 3.6vw, 56px);
     --quote: clamp(30px, 3vw, 44px);
     --hero-h: min(92svh, 980px);
-    --foot-btn: clamp(130px, 11vw, 170px);
     --foot-h: clamp(280px, 34vw, 420px);
     --foot-type-checkout: clamp(52px, 6vw, 96px);
     --navgap: max(20px, calc(var(--pad) - 16px));

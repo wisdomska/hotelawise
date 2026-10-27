@@ -153,9 +153,7 @@ export default async function RoomPage({ params, searchParams }: { params: Promi
               >
                 {room.name} Room
               </h1>
-              <p style={{ margin: 0, fontSize: 18, lineHeight: 1.55, color: 'rgba(0,0,58,0.75)', maxWidth: 600, textWrap: 'pretty' }}>
-                {room.blurb}
-              </p>
+              <p style={{ margin: 0, fontSize: 18, lineHeight: 1.55, color: 'rgba(0,0,58,0.75)', textWrap: 'pretty' }}>{room.blurb}</p>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'var(--c2)', gap: 40 }}>
               <div>

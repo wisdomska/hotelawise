@@ -636,9 +636,7 @@ export function BookFlow(p: BookFlowProps) {
                   letterSpacing: '-0.05em',
                 }}
               >
-                When are you
-                <br />
-                <em style={{ fontWeight: 300 }}>coming?</em>
+                When are you <em style={{ fontWeight: 300 }}>coming?</em>
               </h1>
               <div style={{ ...card, display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
@@ -942,11 +940,9 @@ export function BookFlow(p: BookFlowProps) {
                   letterSpacing: '-0.05em',
                 }}
               >
-                Who&apos;s
-                <br />
-                <em style={{ fontWeight: 300 }}>checking in?</em>
+                Who&apos;s <em style={{ fontWeight: 300 }}>checking in?</em>
               </h1>
-              <p style={{ margin: 0, fontSize: 15, color: 'rgba(0,0,58,0.7)', maxWidth: 520 }}>
+              <p style={{ margin: 0, fontSize: 15, color: 'rgba(0,0,58,0.7)' }}>
                 No account needed. We&apos;ll text your receipt, and email it too if you give us an address.
               </p>
               <div style={{ ...card, display: 'grid', gridTemplateColumns: 'var(--c2)', gap: 16 }}>
@@ -1062,9 +1058,7 @@ export function BookFlow(p: BookFlowProps) {
                   letterSpacing: '-0.05em',
                 }}
               >
-                Settle up,
-                <br />
-                <em style={{ fontWeight: 300 }}>however suits.</em>
+                Settle up, <em style={{ fontWeight: 300 }}>however suits.</em>
               </h1>
               {failed && (
                 <div

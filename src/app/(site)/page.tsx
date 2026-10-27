@@ -3,6 +3,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { BookingBar } from '@/components/site/home/booking-bar';
+import { RoomsCarousel } from '@/components/site/home/rooms-carousel';
 import { WhatsHere } from '@/components/site/home/whats-here';
 import { JsonLd } from '@/components/site/json-ld';
 import { KeyCard } from '@/components/site/key-card';
@@ -23,7 +24,6 @@ const h2: React.CSSProperties = {
   fontSize: 'var(--h2s)',
   lineHeight: 1.08,
   letterSpacing: '-0.04em',
-  textWrap: 'balance',
 };
 const chip: React.CSSProperties = {
   display: 'inline-flex',
@@ -130,13 +130,11 @@ export default async function HomePage() {
           <h1
             style={{
               margin: 0,
-              maxWidth: 780,
               fontFamily: 'var(--font-serif)',
               fontWeight: 300,
               fontSize: 'var(--h1)',
               lineHeight: 1.02,
               letterSpacing: '-0.05em',
-              textWrap: 'balance',
               textShadow: '0 2px 24px rgba(0,0,0,0.25)',
             }}
           >
@@ -159,7 +157,7 @@ export default async function HomePage() {
           </h1>
           <div className="hidden tab:block" style={{ height: 1, background: 'rgba(245,242,234,0.4)' }} />
           <div className="hidden desk:flex" style={{ justifyContent: 'space-between', alignItems: 'flex-end', gap: 24, flexWrap: 'wrap' }}>
-            <p style={{ margin: 0, maxWidth: 560, fontSize: 18, lineHeight: 1.55, color: 'rgba(245,242,234,0.9)', textWrap: 'pretty' }}>
+            <p style={{ margin: 0, fontSize: 18, lineHeight: 1.55, color: 'rgba(245,242,234,0.9)', textWrap: 'pretty' }}>
               {c['home.heroSub']}
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
@@ -216,7 +214,7 @@ export default async function HomePage() {
       <section data-screen-label="Home · Rooms strip" style={{ padding: 'var(--sy) var(--pad)' }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 'var(--hgap)', marginBottom: 'var(--hmb)' }}>
           <h2 style={h2}>{c['home.roomsHeading']}</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 14, maxWidth: 440 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14, width: '100%' }}>
             <div aria-label="In every room" style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
               {IN_EVERY_ROOM.map(([icon, label]) => (
                 <span key={label} style={chip}>
@@ -232,18 +230,7 @@ export default async function HomePage() {
             </Link>
           </div>
         </div>
-        <div
-          data-stagger=""
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'var(--c4)',
-            gap: 'clamp(16px,2vw,28px)',
-            position: 'relative',
-            overflowX: 'auto',
-            scrollSnapType: 'x mandatory',
-            padding: '4px 2px 8px',
-          }}
-        >
+        <RoomsCarousel names={data.rooms.map((r) => r.name)}>
           {data.rooms.map((room) => (
             <KeyCard
               key={room.code}
@@ -253,7 +240,7 @@ export default async function HomePage() {
               sizes="(min-width: 1024px) 25vw, (min-width: 640px) 44vw, 80vw"
             />
           ))}
-        </div>
+        </RoomsCarousel>
       </section>
 
       <WhatsHere
@@ -264,7 +251,7 @@ export default async function HomePage() {
       <section data-screen-label="Home · Rentals" style={{ background: '#00003A', color: '#F5F2EA', padding: 'var(--sy) var(--pad)' }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 'var(--hgap)', marginBottom: 'var(--hmb)' }}>
           <h2 style={h2}>{c['home.rentalsHeading']}</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 14, maxWidth: 440 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14, width: '100%' }}>
             <p style={{ margin: 0, fontSize: 16, lineHeight: 1.5, color: 'rgba(245,242,234,0.78)' }}>{c['home.rentalsSub']}</p>
             <Link href="/rent" style={{ color: '#F5F2EA', fontSize: 14, fontWeight: 500 }}>
               Reserve rentals online <span aria-hidden="true">→</span>
@@ -460,7 +447,6 @@ export default async function HomePage() {
                   fontSize: 'var(--quote)',
                   lineHeight: 1.15,
                   letterSpacing: '-0.02em',
-                  textWrap: 'balance',
                 }}
               >
                 “{data.testimonial.quote}”

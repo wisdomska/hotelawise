@@ -19,12 +19,9 @@ export async function NotFoundBody() {
             fontSize: 'var(--h1)',
             lineHeight: 0.95,
             letterSpacing: '-0.05em',
-            maxWidth: 900,
           }}
         >
-          This room doesn&apos;t exist.
-          <br />
-          <em style={{ fontWeight: 300 }}>But these do.</em>
+          This room doesn&apos;t exist. <em style={{ fontWeight: 300 }}>But these do.</em>
         </h1>
         <p style={{ margin: '0 0 48px', fontSize: 16, color: 'rgba(0,0,58,0.7)' }}>Try one of these instead.</p>
         <div data-stagger="" style={{ display: 'grid', gridTemplateColumns: 'var(--c4g)', gap: 'clamp(16px,2vw,28px)' }}>
