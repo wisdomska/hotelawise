@@ -24,6 +24,10 @@ All notable changes to this project are recorded here. The format follows [Keep 
 - The rooms table is headed "Side by side comparison"; the hero's "View rooms" button is gone.
 - More breathing room inside the header pill and the rentals date bar; the manage-booking lookup is centred.
 
+### Fixed
+
+- Serif headings and mono labels showed in the sans font on the live sites: the error page's font import gave the fonts a second set of class names that the CSS used instead.
+
 ## [1.0.0] - 2026-10-27
 
 First production release, live at https://hotelawise.wisdomska.workers.dev.
