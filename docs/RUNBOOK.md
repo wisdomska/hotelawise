@@ -8,6 +8,8 @@ How to deploy, roll back and handle common problems. Commands that touch Cloudfl
 2. Check the preview site: booking, rentals, venues and the admin.
 3. Open a pull request from `preview` into `main`, then merge it. Production deploys the same way.
 
+To release a version, raise `version` in `package.json` and add its section to `CHANGELOG.md` in the same pull request. When it reaches `main`, the Release workflow tags the commit (`v1.2.3`) and publishes a GitHub release with that section as its notes.
+
 The preview can also be deployed by hand with `pnpm cf:deploy:preview`, and production with `pnpm cf:deploy:production`.
 
 ## First production launch
