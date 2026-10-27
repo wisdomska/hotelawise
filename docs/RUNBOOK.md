@@ -72,7 +72,7 @@ When a key is exposed, or a person with access leaves:
 
 ## Scheduled jobs
 
-Defined in `wrangler.jsonc`. `src/worker/scheduled.ts` turns each Cron Trigger into an internal `POST /api/cron/<job>` (DECISIONS D-43), which runs `src/server/services/jobs.ts`:
+Each Worker has one Cron Trigger, every 15 minutes (`wrangler.jsonc`; the free plan allows 5 per account, DECISIONS D-50). `src/worker/scheduled.ts` turns each run into internal `POST /api/cron/<job>` calls (D-43), adding the daily jobs on the 07:00 and 02:00 runs. They run `src/server/services/jobs.ts`:
 
 | Schedule (UTC = Accra time) | Job                                                                                                        |
 | --------------------------- | ---------------------------------------------------------------------------------------------------------- |

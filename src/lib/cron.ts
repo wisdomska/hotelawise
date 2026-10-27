@@ -12,6 +12,22 @@ export function cronName(cron: string): CronName | null {
   return null;
 }
 
+/**
+ * The jobs due for one trigger. The free plan allows 5 Cron Triggers per account, so each
+ * Worker has a single 15-minute trigger and the daily jobs ride on the 07:00 and 02:00
+ * runs (Accra is UTC, so no conversion). Older dedicated schedules still map as before.
+ */
+export function cronJobs(cron: string, at: Date): CronName[] {
+  const name = cronName(cron);
+  if (name !== 'every15') return name ? [name] : [];
+  const jobs: CronName[] = ['every15'];
+  if (at.getUTCMinutes() < 15) {
+    if (at.getUTCHours() === 7) jobs.push('daily07');
+    if (at.getUTCHours() === 2) jobs.push('daily02');
+  }
+  return jobs;
+}
+
 export async function cronKey(secret: string): Promise<string> {
   const bytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`hotel-a-wise cron\n${secret}`));
   return [...new Uint8Array(bytes)].map((b) => b.toString(16).padStart(2, '0')).join('');

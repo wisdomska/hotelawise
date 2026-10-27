@@ -357,3 +357,7 @@ The dark theme was a neutral grey. It is now a navy darker than the brand's own 
 ## D-49 Everything public is named `hotelawise`
 
 The owner wants the name written as one word. The Workers are `hotelawise` (production, `hotelawise.wisdomska.workers.dev`) and `hotelawise-preview` (`hotelawise-preview.wisdomska.workers.dev`); the preview Worker was renamed in place, so its secrets carried over. The Turnstile widgets, the package name and every downloaded file name (invoices, calendar files, exports, backup codes) follow. Three internal names stay as they were, because renaming them would mean moving data: the Cloudinary photo folder `hotel-a-wise/`, the D1 tag-cache databases `hotel-a-wise-tags*`, and the cron key's salt string. None of them is visible to guests.
+
+## D-50 One Cron Trigger per Worker
+
+The Workers free plan allows 5 Cron Triggers per account, and preview and production asked for 3 each, so the first production deploy was refused. Each Worker now has a single 15-minute trigger; `cronJobs()` in `src/lib/cron.ts` adds the 07:00 reminders and the 02:00 housekeeping to the run that starts in that quarter hour. Accra is on UTC all year, so the times need no conversion. Two of the five slots are used, leaving room for a third environment.
