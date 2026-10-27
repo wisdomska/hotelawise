@@ -19,7 +19,7 @@ describe('contact form rules', () => {
     expect(r.errors).toEqual({
       subject: 'Pick a subject.',
       name: 'We’d like to know who we’re talking to.',
-      phone: 'Enter a Ghana mobile number, like 055 555 7090.',
+      phone: 'Enter a Ghana mobile number, like 0555557090.',
       email: 'Check the email address.',
       message: 'A few more words, please.',
     });

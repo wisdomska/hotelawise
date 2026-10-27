@@ -3,7 +3,7 @@ export const GH_MOBILE_PREFIXES = ['20', '23', '24', '25', '26', '27', '28', '50
 
 export type PhoneResult = { ok: true; e164: string } | { ok: false; error: string };
 
-const GH_ERROR = "That doesn't look like a Ghana number. Try 024 412 3456 or +233 24 412 3456.";
+const GH_ERROR = "That doesn't look like a Ghana number. Try 0244123456 or +233244123456.";
 
 /** Normalises a Ghana number written as 0XX…, 233XX…, +233XX… or XX… (9 digits). */
 export function parseGhanaPhone(input: string): PhoneResult {
@@ -32,21 +32,14 @@ export function parseInternationalPhone(input: string, dialCode: string): PhoneR
   return { ok: true, e164: `+${d}` };
 }
 
-/** "+233 55 555 7090", the format the prototype prints. */
+/** "+233555557090": numbers print as one unbroken run, so they copy and dial as shown. */
 export function formatPhone(e164: string): string {
-  if (e164.startsWith('+233') && e164.length === 13) {
-    const n = e164.slice(4);
-    return `+233 ${n.slice(0, 2)} ${n.slice(2, 5)} ${n.slice(5)}`;
-  }
-  return e164;
+  return e164.replace(/\s+/g, '');
 }
 
-/** "055 555 7090", the local form used in admin tables. */
+/** "0555557090", the local form used in admin tables; unbroken, like formatPhone. */
 export function formatPhoneLocal(e164: string): string {
-  if (e164.startsWith('+233') && e164.length === 13) {
-    const n = '0' + e164.slice(4);
-    return `${n.slice(0, 3)} ${n.slice(3, 6)} ${n.slice(6)}`;
-  }
+  if (e164.startsWith('+233') && e164.length === 13) return '0' + e164.slice(4);
   return e164;
 }
 

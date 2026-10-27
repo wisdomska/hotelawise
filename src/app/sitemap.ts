@@ -8,6 +8,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ['/', 1],
     ['/rooms', 0.9],
     ...data.rooms.map((r): [string, number] => [`/rooms/${r.code.toLowerCase()}`, 0.8]),
+    ['/rent', 0.7],
     ['/gallery', 0.6],
     ['/contact', 0.6],
   ];

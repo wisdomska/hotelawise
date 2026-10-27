@@ -369,3 +369,11 @@ The owner doesn't want a "Verify you are human" box anywhere. Both Turnstile wid
 ## D-52 No password on New booking
 
 At the owner's request, creating a desk booking no longer asks for the staff member's password, even when the guest pays at the desk straight away. The permission check stays (taking money still needs "Take payments at the desk"), the payment is in the audit log under the staff member's name, and the amount is the booking's own price. Recording a later payment, refunds and every other money or account action still ask for the password.
+
+## D-53 Venues live on the rentals page
+
+Hiring the compound or the conference room is renting too, so `/venues` became a section of the rentals page (`/rent#venues`, "Rentals & venues"). The old address redirects there permanently, so links and search results keep working. The header, footer, checkout tabs, sitemap and home page all point to the section. The admin keeps its separate Venues screen, because enquiries and quotes are different work from rental orders; only the Content screen's page list changed. The same batch took Tablecloth and Chair cover off sale: they are archived, not deleted, so past orders that included them still print correctly.
+
+## D-54 Phone numbers print as one unbroken run
+
+The owner wants numbers shown without spaces (`+233555557090`, `0555557090`), so they copy and dial exactly as shown. `formatPhone` and `formatPhoneLocal` print them that way across the site, the admin, receipts and messages, and the placeholders and error examples match. Input still accepts spaces, dashes and brackets.

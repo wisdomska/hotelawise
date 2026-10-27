@@ -14,7 +14,6 @@ const PAGES = [
   '/manage',
   '/rent',
   '/rent/checkout',
-  '/venues',
 ];
 
 async function audit(page: Page) {

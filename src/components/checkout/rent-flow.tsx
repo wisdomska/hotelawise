@@ -8,6 +8,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { paymentState, sendMomoCode } from '@/app/(site)/(checkout)/pay-actions';
 import { onlinePaymentOn, payForOrder, placeOrder, rentalStock } from '@/app/(site)/(checkout)/rent/actions';
 import { DatePicker } from '@/components/ui/date-picker';
+import { Stepper } from './stepper';
 import { Icon, type AnyIconName } from '@/components/ui/icon';
 import { Select } from '@/components/ui/select';
 import { notify } from '@/components/ui/toaster';
@@ -60,42 +61,7 @@ const field = (bad?: boolean): React.CSSProperties => ({
 const chipSel = (on: boolean) => ({ border: `1.5px solid ${on ? '#000063' : 'rgba(0,0,99,0.2)'}`, background: on ? '#F6E2B3' : '#FFFFFF' });
 
 function Steps({ step }: { step: number }) {
-  const items: [string, AnyIconName][] = [
-    ['Dates & items', 'calendar'],
-    ['Your details', 'user'],
-    ['Pay', 'card'],
-  ];
-  return (
-    <ol aria-label="Reservation steps" style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-      {items.map(([label, icon], i) => {
-        const now = i + 1 === step;
-        const done = i + 1 < step;
-        return (
-          <li
-            key={label}
-            aria-current={now ? 'step' : undefined}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              height: 34,
-              padding: '0 12px',
-              whiteSpace: 'nowrap',
-              flexShrink: 0,
-              borderRadius: 999,
-              border: `1px solid ${now ? '#000063' : 'rgba(0,0,99,0.2)'}`,
-              background: now ? '#000063' : done ? '#F6E2B3' : 'transparent',
-              color: now ? '#F5F2EA' : '#00003A',
-              fontSize: 13,
-            }}
-          >
-            <Icon name={icon} size={15} />
-            {label}
-          </li>
-        );
-      })}
-    </ol>
-  );
+  return <Stepper steps={['Dates & items', 'Your details', 'Pay']} current={step} label="Reservation steps" />;
 }
 
 function PickupLine({ icon, k, v, size = 30 }: { icon: AnyIconName; k: string; v: string; size?: number }) {
@@ -367,13 +333,13 @@ export function RentFlow(p: RentFlowProps) {
             gap: 12,
             flexWrap: 'wrap',
             alignItems: 'flex-end',
-            padding: 16,
+            padding: 'clamp(20px, 3vw, 28px)',
             borderRadius: 20,
             background: '#00003A',
             color: '#F5F2EA',
           }}
         >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, minWidth: 190 }}>
+          <div className="tab:max-w-[260px]" style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: '1 1 190px', minWidth: 0 }}>
             <span style={{ ...eyebrow, color: '#F5F2EA', opacity: 0.9 }}>FROM</span>
             {ready && (
               <DatePicker
@@ -387,7 +353,7 @@ export function RentFlow(p: RentFlowProps) {
               />
             )}
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, minWidth: 190 }}>
+          <div className="tab:max-w-[260px]" style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: '1 1 190px', minWidth: 0 }}>
             <span style={{ ...eyebrow, color: '#F5F2EA', opacity: 0.9 }}>TO</span>
             {ready && (
               <DatePicker
@@ -408,7 +374,7 @@ export function RentFlow(p: RentFlowProps) {
             <span style={{ fontSize: 12, opacity: 0.7 }}>Stock shown for {rangeLabel}</span>
           </div>
           <div style={{ flex: 1 }} />
-          <Link href="/venues" style={{ color: '#F5F2EA', fontSize: 13, paddingBottom: 12 }}>
+          <Link href="#venues" style={{ color: '#F5F2EA', fontSize: 13, paddingBottom: 12 }}>
             Need the venue too? <span aria-hidden="true">→</span>
           </Link>
         </div>
@@ -519,7 +485,10 @@ export function RentFlow(p: RentFlowProps) {
                   : p.items.map((it) => {
                       const av = freeOf(it.slug);
                       const n = rent.cart[it.slug] ?? 0;
-                      const tone = av === 0 ? ['#EFE9E6', '#B42318'] : av < 20 ? ['#F2B544', '#00003A'] : ['#F6E2B3', '#000063'];
+                      // One tag colour for every item; only "all booked" stands out. Scarcity goes in the
+                      // words ("Only 3 left"), measured against the item's own stock, not a fixed number.
+                      const tone = av === 0 ? ['#EFE9E6', '#B42318'] : ['#F6E2B3', '#000063'];
+                      const few = av > 0 && av <= Math.max(3, Math.round(it.stockTotal * 0.1));
                       const step = qtyStep(it.stockTotal);
                       return (
                         <article
@@ -619,7 +588,11 @@ export function RentFlow(p: RentFlowProps) {
                                 color: tone[1],
                               }}
                             >
-                              {av === 0 ? `All booked for ${formatDayMonth(rent.from)}` : `${av} available on ${formatDayMonth(rent.from)}`}
+                              {av === 0
+                                ? `All booked for ${formatDayMonth(rent.from)}`
+                                : few
+                                  ? `Only ${av} left on ${formatDayMonth(rent.from)}`
+                                  : `${av} available on ${formatDayMonth(rent.from)}`}
                             </span>
                             <div style={{ flex: 1 }} />
                             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -1048,7 +1021,7 @@ export function RentFlow(p: RentFlowProps) {
                       setRf({ ...rf, phone: e.target.value });
                       setRe({ ...re, phone: undefined });
                     }}
-                    placeholder="055 555 7090"
+                    placeholder="0555557090"
                     aria-invalid={!!re.phone}
                     aria-describedby={re.phone ? 'rf-phone-err' : undefined}
                     style={{ ...field(!!re.phone), fontFamily: mono }}
@@ -1333,7 +1306,7 @@ export function RentFlow(p: RentFlowProps) {
                           setMomo(e.target.value);
                           setMomoErr(null);
                         }}
-                        placeholder="024 412 3456"
+                        placeholder="0244123456"
                         aria-invalid={!!momoErr}
                         style={{ ...field(!!momoErr), background: '#FFFFFF', fontFamily: mono }}
                       />

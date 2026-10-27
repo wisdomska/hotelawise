@@ -100,17 +100,6 @@ export const RENTAL_ITEMS = [
     image: 'foldableChair',
   },
   { slug: 'chair', name: 'Regular plastic chair', spec: 'Stackable, blue, with arms', price: 3, deposit: 1, stock: 400, image: null },
-  { slug: 'cloth', name: 'Tablecloth', spec: 'White, fits long tables', price: 15, deposit: 5, stock: 60, image: null, custom: true },
-  {
-    slug: 'cover',
-    name: 'Chair cover',
-    spec: 'White stretch cover with sash',
-    price: 4,
-    deposit: 1,
-    stock: 200,
-    image: null,
-    custom: true,
-  },
 ] as const;
 
 export const BUNDLES: { name: string; pctOff: number; description: string; items: Record<string, number> }[] = [

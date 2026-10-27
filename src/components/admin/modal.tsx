@@ -4,6 +4,7 @@
 // and the info note. One modal at a time, hosted by the shell.
 import { useId, useRef, type ReactNode } from 'react';
 import { DatePicker } from '@/components/ui/date-picker';
+import { Stepper } from '@/components/checkout/stepper';
 import { Icon } from '@/components/ui/icon';
 import { Select, type SelectOption } from '@/components/ui/select';
 import type { IsoDate } from '@/lib/dates';
@@ -104,49 +105,21 @@ export function ModalFrame(p: FrameProps) {
           </button>
         </div>
         {p.steps && (
-          <ol
-            aria-label="Steps"
-            style={{
-              listStyle: 'none',
-              margin: 0,
-              padding: 0,
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit,minmax(0,1fr))',
-              gap: 6,
-            }}
+          <div
+            style={
+              {
+                '--step-on': 'var(--pri-bg)',
+                '--step-on-fg': 'var(--pri-fg)',
+                '--step-ink': 'var(--ink)',
+                '--step-mute': 'var(--mute)',
+                '--step-line': 'var(--line2)',
+                '--step-edge': 'var(--line2)',
+                '--step-ring': 'color-mix(in srgb, var(--pri-bg) 18%, transparent)',
+              } as React.CSSProperties
+            }
           >
-            {p.steps.labels.map((l, i) => (
-              <li
-                key={l}
-                aria-current={i === p.steps!.idx ? 'step' : undefined}
-                style={{ display: 'flex', flexDirection: 'column', gap: 6, minWidth: 0 }}
-              >
-                <span
-                  style={{
-                    height: 3,
-                    borderRadius: 999,
-                    background: i <= p.steps!.idx ? 'var(--pri-bg)' : 'var(--line2)',
-                    transition: 'background 250ms',
-                  }}
-                />
-                <span
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 6,
-                    fontSize: 12,
-                    color: i === p.steps!.idx ? 'var(--ink)' : 'var(--mute)',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
-                >
-                  <span style={{ fontFamily: mono, fontSize: 11 }}>{String(i + 1).padStart(2, '0')}</span>
-                  {l}
-                </span>
-              </li>
-            ))}
-          </ol>
+            <Stepper steps={p.steps.labels} current={p.steps.idx + 1} label="Steps" />
+          </div>
         )}
         {p.children}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, flexWrap: 'wrap', paddingTop: 4 }}>

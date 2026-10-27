@@ -7,7 +7,8 @@ import type { SiteImage as SiteImageT } from '@/server/content/site-data';
 import { NewsletterForm } from './newsletter-form';
 import { SiteImage } from './site-image';
 
-const pageLink: React.CSSProperties = { color: '#F5F2EA', textDecoration: 'none', fontSize: 18 };
+// Same hover as the header nav: an underline that draws in from the left (data-mi-ul).
+const pageLink: React.CSSProperties = { color: '#F5F2EA', textDecoration: 'none', fontSize: 18, alignSelf: 'flex-start', paddingBottom: 4 };
 
 export function SiteFooter({ contact, photo, turnstileSiteKey }: { contact: Contact; photo: SiteImageT; turnstileSiteKey: string | null }) {
   return (
@@ -80,24 +81,24 @@ export function SiteFooter({ contact, photo, turnstileSiteKey }: { contact: Cont
                   borderRight: '1px solid rgba(245,242,234,0.35)',
                 }}
               >
-                <Link href="/" style={pageLink}>
+                <Link href="/" data-mi-ul="" style={pageLink}>
                   Home
                 </Link>
-                <Link href="/rooms" style={pageLink}>
+                <Link href="/rooms" data-mi-ul="" style={pageLink}>
                   Rooms
                 </Link>
-                <Link href="/rent" style={pageLink}>
+                <Link href="/rent" data-mi-ul="" style={pageLink}>
                   Rentals
                 </Link>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 22, paddingLeft: 48 }}>
-                <Link href="/gallery" style={pageLink}>
+                <Link href="/gallery" data-mi-ul="" style={pageLink}>
                   Gallery
                 </Link>
-                <Link href="/contact" style={pageLink}>
+                <Link href="/contact" data-mi-ul="" style={pageLink}>
                   Contact
                 </Link>
-                <Link href="/venues" style={pageLink}>
+                <Link href="/rent#venues" data-mi-ul="" style={pageLink}>
                   Venues
                 </Link>
               </div>

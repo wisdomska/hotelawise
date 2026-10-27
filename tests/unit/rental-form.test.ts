@@ -21,7 +21,7 @@ describe('checkCollector', () => {
       ok: false,
       errors: {
         name: 'Who will collect? We check the name at the desk.',
-        phone: "That doesn't look like a Ghana mobile number. Try 055 555 7090.",
+        phone: "That doesn't look like a Ghana mobile number. Try 0555557090.",
         email: 'Check the email address.',
       },
     });

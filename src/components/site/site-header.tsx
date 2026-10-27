@@ -12,7 +12,6 @@ const EASE = 'cubic-bezier(0.23,1,0.32,1)';
 export const NAV_LINKS: [label: string, href: string][] = [
   ['Rooms', '/rooms'],
   ['Rentals', '/rent'],
-  ['Venues', '/venues'],
   ['Gallery', '/gallery'],
   ['Contact', '/contact'],
 ];
@@ -202,7 +201,7 @@ export function SiteHeader({ banner, phone, tel }: { banner: string | null; phon
             }}
           />
           <div style={{ position: 'relative' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 28, padding: '10px 10px 10px 20px', minHeight: 60 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 28, padding: '10px 20px', minHeight: 60 }}>
               <Link
                 href="/"
                 aria-label="Hotel A-Wise home"

@@ -13,6 +13,16 @@ All notable changes to this project are recorded here. The format follows [Keep 
 - Page intros and captions always sit beneath their headings (rooms, gallery, rentals, venues, booking).
 - A branded error page replaces Next.js's default; a tab left open across a deploy reloads itself.
 - Releases are tagged and published by a workflow when the version changes on main.
+- Venues moved onto the rentals page ("Rentals & venues"); `/venues` redirects to `/rent#venues`.
+- Tablecloth and Chair cover are no longer for rent.
+- Booking, rental and admin steppers are numbered circles joined by a line, with ticks on finished steps.
+- Stock tags share one colour; low stock says "Only N left" instead of turning a deeper yellow.
+- The home rentals section is a swipeable carousel on phones and tablets, like the rooms strip.
+- Phone numbers print without spaces everywhere.
+- Contact details on the contact page read as a classic directory, with directions to the hotel.
+- Footer page links underline on hover, like the header's.
+- The rooms table is headed "Side by side comparison"; the hero's "View rooms" button is gone.
+- More breathing room inside the header pill and the rentals date bar; the manage-booking lookup is centred.
 
 ## [1.0.0] - 2026-10-27
 

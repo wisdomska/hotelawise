@@ -1,5 +1,5 @@
 'use client';
-// Book a room · Manage booking · Rentals · Venues (Checkout.dc.html › tabs).
+// Book a room · Manage booking · Rentals & venues (Checkout.dc.html › tabs).
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icon, type AnyIconName } from '@/components/ui/icon';
@@ -7,8 +7,7 @@ import { Icon, type AnyIconName } from '@/components/ui/icon';
 const TABS: [string, string, AnyIconName][] = [
   ['Book a room', '/book', 'key'],
   ['Manage booking', '/manage', 'file'],
-  ['Rentals', '/rent', 'tent'],
-  ['Venues', '/venues', 'building'],
+  ['Rentals & venues', '/rent', 'tent'],
 ];
 
 export function CheckoutTabs() {

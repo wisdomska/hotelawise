@@ -62,7 +62,6 @@ async function main() {
           pricePerDayPesewas: GHS(it.price),
           depositPerUnitPesewas: GHS(it.deposit),
           stockTotal: it.stock,
-          isCustom: 'custom' in it && it.custom,
           imageId: it.image ? cloudinaryId(it.image) : null,
           imageAlt: it.image ? IMAGES[it.image].alt : null,
         })

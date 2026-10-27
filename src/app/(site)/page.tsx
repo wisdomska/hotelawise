@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Fragment } from 'react';
 import { BookingBar } from '@/components/site/home/booking-bar';
-import { RoomsCarousel } from '@/components/site/home/rooms-carousel';
+import { Carousel, RoomsCarousel } from '@/components/site/home/rooms-carousel';
 import { WhatsHere } from '@/components/site/home/whats-here';
 import { JsonLd } from '@/components/site/json-ld';
 import { KeyCard } from '@/components/site/key-card';
@@ -180,47 +180,6 @@ export default async function HomePage() {
               {c['home.heroSub']}
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
-              <Link
-                data-mi-arrow-host=""
-                href="/rooms"
-                className="aw-press"
-                style={{
-                  whiteSpace: 'nowrap',
-                  flexShrink: 0,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 10,
-                  height: 48,
-                  padding: '0 6px 0 20px',
-                  borderRadius: 999,
-                  border: '1px solid rgba(255,255,255,0.35)',
-                  background: 'rgba(255,255,255,0.14)',
-                  WebkitBackdropFilter: 'blur(14px)',
-                  backdropFilter: 'blur(14px)',
-                  color: '#F5F2EA',
-                  textDecoration: 'none',
-                  fontSize: 15,
-                }}
-              >
-                View rooms
-                <span
-                  data-mi-arrow=""
-                  aria-hidden="true"
-                  style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: '50%',
-                    background: '#F5F2EA',
-                    color: '#1A1712',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: 16,
-                  }}
-                >
-                  ↗
-                </span>
-              </Link>
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.06em', color: 'rgba(245,242,234,0.7)' }}>
                 NO. 1 WISEPAK LANE · NEW ASOFAN · ACCRA
               </span>
@@ -281,7 +240,7 @@ export default async function HomePage() {
             </Link>
           </div>
         </div>
-        <div data-stagger="" style={{ display: 'grid', gridTemplateColumns: 'var(--c3)', gap: 16 }}>
+        <Carousel label="Rentals" noun="rental" names={rentals.map((it) => it.name)} columns="var(--c3s)" gap="16px" dark>
           {rentals.map((it) => (
             <Link
               key={it.name}
@@ -304,7 +263,7 @@ export default async function HomePage() {
                   image={it.image}
                   alt={it.alt}
                   fill
-                  sizes="(min-width: 1024px) 30vw, 90vw"
+                  sizes="(min-width: 1024px) 30vw, (min-width: 640px) 44vw, 80vw"
                   grade={false}
                   style={{ objectFit: 'contain', padding: 20, mixBlendMode: 'multiply' }}
                 />
@@ -321,7 +280,7 @@ export default async function HomePage() {
               </div>
             </Link>
           ))}
-        </div>
+        </Carousel>
       </section>
 
       <section data-screen-label="Home · Events">
@@ -360,7 +319,7 @@ export default async function HomePage() {
                 <Link
                   key={v.slug}
                   data-mi-nudge-host=""
-                  href="/venues"
+                  href="/rent#venues"
                   style={{
                     display: 'grid',
                     gridTemplateColumns: 'minmax(0,1fr) auto',
@@ -411,7 +370,7 @@ export default async function HomePage() {
               ) : null,
             )}
             <Link
-              href="/venues"
+              href="/rent#venues"
               data-mi-btn="fill"
               style={{
                 marginTop: 24,

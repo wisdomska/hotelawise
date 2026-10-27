@@ -19,7 +19,7 @@ const SEEN = sql`(
   or exists (select 1 from rental_orders o where o.customer_id = c.id)
   or exists (select 1 from enquiries e where e.customer_id = c.id))`;
 
-/** Name, email or phone; "055 555 7090", "0555557090" and "+233555557090" all find the same person. */
+/** Name, email or phone; "0555557090", "0555557090" and "+233555557090" all find the same person. */
 function matches(q: string) {
   const t = q.trim();
   if (!t) return sql`true`;

@@ -33,7 +33,7 @@ export function checkGuest(g: GuestInput): { ok: true; value: GuestClean } | { o
   else if (name.length > 120) errors.name = 'That name is a little long. Use 120 characters or fewer.';
   const known = BOOKING_DIAL_CODES.some((d) => d.value === g.dialCode);
   const phone = known ? parseInternationalPhone(g.phone, g.dialCode) : null;
-  if (!phone?.ok) errors.phone = g.dialCode === '+233' ? 'Enter a Ghana mobile number, like 055 555 7090.' : 'Enter a valid phone number.';
+  if (!phone?.ok) errors.phone = g.dialCode === '+233' ? 'Enter a Ghana mobile number, like 0555557090.' : 'Enter a valid phone number.';
   const email = g.email.trim().toLowerCase();
   if (email && (!EMAIL.test(email) || email.length > 254)) errors.email = 'Check the email address.';
   if (Object.keys(errors).length || !phone?.ok) return { ok: false, errors };

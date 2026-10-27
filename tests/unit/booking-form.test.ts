@@ -17,7 +17,7 @@ describe('booking form', () => {
       ok: false,
       errors: {
         name: 'We’ll need a name for the key.',
-        phone: 'Enter a Ghana mobile number, like 055 555 7090.',
+        phone: 'Enter a Ghana mobile number, like 0555557090.',
         email: 'Check the email address.',
       },
     });
