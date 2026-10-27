@@ -46,7 +46,7 @@ test('no axe violations with the lightbox open', async ({ page }) => {
       el
         .getAnimations({ subtree: true })
         .filter((a) => a.effect?.getTiming().iterations !== Infinity)
-        .map((a) => a.finished),
+        .map((a) => a.finished.catch(() => undefined)),
     ),
   );
   await audit(page);

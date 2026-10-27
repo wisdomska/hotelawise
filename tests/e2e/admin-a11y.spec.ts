@@ -42,13 +42,14 @@ async function setTheme(context: BrowserContext, theme: 'light' | 'dark', base: 
 }
 
 async function audit(page: Page, where: string) {
-  // Let entrance animations finish so contrast is measured on the final frame.
+  // Let entrance animations finish so contrast is measured on the final frame. A cancelled
+  // animation (the element re-rendered) rejects its `finished` promise; that's fine to skip.
   await page.evaluate(() =>
     Promise.all(
       document
         .getAnimations()
         .filter((a) => a.effect?.getTiming().iterations !== Infinity)
-        .map((a) => a.finished),
+        .map((a) => a.finished.catch(() => undefined)),
     ),
   );
   const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
