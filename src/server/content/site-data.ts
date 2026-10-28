@@ -4,6 +4,7 @@
 // catalogue and default copy, so pages still prerender.
 import 'server-only';
 import { asc, eq, ne } from 'drizzle-orm';
+import { cache } from 'react';
 import { unstable_cache } from 'next/cache';
 import * as s from '@/server/db/schema';
 import { BUNDLES, FAQS, GHS, RENTAL_ITEMS, ROOM_TYPES, VENUES } from './catalogue';
@@ -265,10 +266,18 @@ async function loadFromDatabase(): Promise<SiteData> {
 
 const cachedSiteData = unstable_cache(loadFromDatabase, ['site-data-v3'], { tags: [SITE_TAG], revalidate: 3600 });
 
-export async function getSiteData(): Promise<SiteData> {
+// One read per request (React cache): /rent asks for it twice at once, and two misses together
+// wrote the same Workers KV key in the same second, which KV refuses, so the page returned 500
+// right after a deploy or an admin edit. If the cache itself fails, read the database directly.
+export const getSiteData = cache(async (): Promise<SiteData> => {
   if (!process.env.DATABASE_URL) return defaultSiteData();
-  return cachedSiteData();
-}
+  try {
+    return await cachedSiteData();
+  } catch (e) {
+    console.error('site data cache failed; reading the database directly', e);
+    return loadFromDatabase();
+  }
+});
 
 /** Straight from the database, for scheduled jobs that run outside a Next.js request. */
 export async function getSiteDataFresh(): Promise<SiteData> {
