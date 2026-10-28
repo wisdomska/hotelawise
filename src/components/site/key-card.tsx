@@ -16,9 +16,9 @@ function roomRange(numbers: string[]): string {
   return sorted.length === 1 ? sorted[0]! : `${sorted[0]}-${sorted[sorted.length - 1]}`;
 }
 
+// Only "Sold out tonight" is shown: the owner doesn't show how many rooms are left (D-55).
 export function leftLabel(left: number | undefined): string | null {
-  if (left === undefined) return null;
-  return left === 0 ? 'Sold out tonight' : left === 1 ? 'Last one tonight' : `${left} left tonight`;
+  return left === 0 ? 'Sold out tonight' : null;
 }
 
 export function KeyCard({

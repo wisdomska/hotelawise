@@ -453,8 +453,9 @@ export function BookFlow(p: BookFlowProps) {
     r.variants.map((v, i) => {
       const a = freeOf(v.code);
       const tooMany = guests > r.sleeps;
-      const badge = tooMany ? `Sleeps ${r.sleeps}` : a === 0 ? 'Sold out these dates' : a === 1 ? 'Last one' : `${a} left`;
-      const tone = tooMany || a === 0 ? ['#EFE9E6', '#B42318'] : a === 1 ? ['#F2B544', '#00003A'] : ['#F6E2B3', '#000063'];
+      // The owner doesn't show how many rooms are left (D-55): only "sold out" or "sleeps N".
+      const badge = tooMany ? `Sleeps ${r.sleeps}` : a === 0 ? 'Sold out these dates' : null;
+      const tone = ['#EFE9E6', '#B42318'];
       return { key: `${r.code}:${i}`, room: r, variant: v, a, tooMany, badge, tone, disabled: a === 0 || tooMany };
     }),
   );
@@ -850,19 +851,21 @@ export function BookFlow(p: BookFlowProps) {
                             <span style={{ fontSize: 13, color: 'rgba(0,0,58,0.65)' }}>
                               {o.room.beds} · up to {o.room.sleeps} guests
                             </span>
-                            <span
-                              style={{
-                                fontFamily: mono,
-                                fontSize: 11,
-                                alignSelf: 'flex-start',
-                                padding: '3px 8px',
-                                borderRadius: 999,
-                                background: o.tone[0],
-                                color: o.tone[1],
-                              }}
-                            >
-                              {o.badge}
-                            </span>
+                            {o.badge && (
+                              <span
+                                style={{
+                                  fontFamily: mono,
+                                  fontSize: 11,
+                                  alignSelf: 'flex-start',
+                                  padding: '3px 8px',
+                                  borderRadius: 999,
+                                  background: o.tone[0],
+                                  color: o.tone[1],
+                                }}
+                              >
+                                {o.badge}
+                              </span>
+                            )}
                           </div>
                           <div
                             style={{

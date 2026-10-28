@@ -71,14 +71,19 @@ const range = z
 
 export type AvailabilityView = { ok: true; free: Record<string, number>; soldOut: string[] } | { ok: false; error: string };
 
-/** Free rooms per rate for the stay, and sold-out nights for the two months on screen. */
+/** Free rooms per rate for the stay (1 or 0: the site never reveals how many are left, D-55),
+ * and sold-out nights for the two months on screen. */
 export async function bookingAvailability(checkIn: string, checkOut: string, monthStart: string): Promise<AvailabilityView> {
   const r = range.safeParse({ checkIn, checkOut });
   if (!r.success || !isIsoDate(monthStart)) return { ok: false, error: 'Pick a check-out date after your check-in.' };
   if (!(await allow('availability', await clientIp()))) return { ok: false, error: 'Too many checks. Give it a minute.' };
   if (!dbReady()) {
     const data = await getSiteData();
-    return { ok: true, free: Object.fromEntries(data.rooms.flatMap((x) => x.variants).map((v) => [v.code, v.roomCount])), soldOut: [] };
+    return {
+      ok: true,
+      free: Object.fromEntries(data.rooms.flatMap((x) => x.variants).map((v) => [v.code, Math.min(1, v.roomCount)])),
+      soldOut: [],
+    };
   }
   const now = new Date();
   const d = await db();
@@ -87,7 +92,7 @@ export async function bookingAvailability(checkIn: string, checkOut: string, mon
     freeByVariant(d, checkIn, checkOut, now),
     soldOutNights(d, from, Math.max(1, nightsBetween(from, addDays(monthStart, 62))), now),
   ]);
-  return { ok: true, free, soldOut };
+  return { ok: true, free: Object.fromEntries(Object.entries(free).map(([k, n]) => [k, Math.min(1, n)])), soldOut };
 }
 
 /* ───────────── hold ───────────── */

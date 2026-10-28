@@ -24,7 +24,13 @@ All notable changes to this project are recorded here. The format follows [Keep 
 - The rooms table is headed "Side by side comparison"; the hero's "View rooms" button is gone.
 - More breathing room inside the header pill and the rentals date bar; the manage-booking lookup is centred.
 
+- The site no longer shows how many rooms are left; it only says when a room is sold out (D-55).
+- Badges on photos are solid navy with white text, readable on any photo.
+
 ### Fixed
+
+- Admin edits (photos, copy, prices) show on the site for the very next visitor, not minutes later.
+- The rentals page no longer returns an error right after a deploy or an admin edit.
 
 - Serif headings and mono labels showed in the sans font on the live sites: the error page's font import gave the fonts a second set of class names that the CSS used instead.
 

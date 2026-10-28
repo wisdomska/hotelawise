@@ -377,3 +377,7 @@ Hiring the compound or the conference room is renting too, so `/venues` became a
 ## D-54 Phone numbers print as one unbroken run
 
 The owner wants numbers shown without spaces (`+233555557090`, `0555557090`), so they copy and dial exactly as shown. `formatPhone` and `formatPhoneLocal` print them that way across the site, the admin, receipts and messages, and the placeholders and error examples match. Input still accepts spaces, dashes and brackets.
+
+## D-55 The site never shows how many rooms are left
+
+The owner doesn't want guests to see room counts. Room cards, the room page and the booking page say "Sold out" when nothing is free and nothing otherwise; "3 left tonight", "Last one" and the like are gone. The server sends only free (1) or sold out (0) per room type, so the counts aren't in the page data either. The admin still shows real availability. Rental stock ("12 available", "Only 3 left") is unchanged: it's about items, not rooms.

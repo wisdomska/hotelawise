@@ -40,7 +40,7 @@ const leader: React.CSSProperties = {
 };
 
 function tone(left: number): [string, string] {
-  return left === 0 ? ['#E9E2E2', '#B42318'] : left === 1 ? ['#F2B544', '#00003A'] : ['#F6E2B3', '#000063'];
+  return left === 0 ? ['#E9E2E2', '#B42318'] : ['#F6E2B3', '#000063'];
 }
 
 export function ReserveCard(p: ReserveProps) {
