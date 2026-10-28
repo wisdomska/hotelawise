@@ -2,6 +2,7 @@
 // password step-up for money, friendly errors, and a refresh of the admin.
 import 'server-only';
 import { revalidatePath, revalidateTag } from 'next/cache';
+import { availabilityChanged } from '@/server/content/availability';
 import { ZodError } from 'zod';
 import { fail, type ActionResult } from '@/lib/admin/result';
 import { confirmPassword, SetupRequiredError, StepUpFailedError } from '@/server/auth/actor';
@@ -50,7 +51,9 @@ export async function act(
     const r = await withTransactionDb((tx) => fn(tx, { id: actor.id, name: actor.name }));
     if (r.ok) {
       revalidatePath('/admin', 'layout');
-      if (opts.site) revalidateTag(SITE_TAG, 'max');
+      // Expire, not "stale while revalidate": the next visitor gets the change, not the old page.
+      if (opts.site) revalidateTag(SITE_TAG, { expire: 0 });
+      availabilityChanged();
     }
     return r;
   } catch (e) {

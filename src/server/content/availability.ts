@@ -1,11 +1,16 @@
 // "N left tonight" for the room cards: cached for five minutes and tagged
-// 'availability', which every booking, hold and room-status change revalidates.
+// 'availability'. Holds, bookings and every admin change expire it (availabilityChanged).
 import 'server-only';
-import { unstable_cache } from 'next/cache';
+import { revalidateTag, unstable_cache } from 'next/cache';
 import { todayInAccra } from '@/lib/dates';
 import type { SiteData } from './site-data';
 
 export const AVAILABILITY_TAG = 'availability';
+
+/** Expire the room counts now, so the next visitor sees them recomputed rather than stale. */
+export function availabilityChanged() {
+  revalidateTag(AVAILABILITY_TAG, { expire: 0 });
+}
 
 const cached = unstable_cache(
   async (night: string) => {

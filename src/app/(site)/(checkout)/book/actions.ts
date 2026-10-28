@@ -5,6 +5,7 @@ import { cookies } from 'next/headers';
 import { z } from 'zod';
 import { checkGuest, checkMomo, type GuestErrors, type PayMethod } from '@/lib/booking-form';
 import { addDays, isIsoDate, nightsBetween, todayInAccra } from '@/lib/dates';
+import { availabilityChanged } from '@/server/content/availability';
 import { contactFrom } from '@/server/content/contact';
 import { getSiteData } from '@/server/content/site-data';
 import {
@@ -119,6 +120,7 @@ export async function holdRoom(input: {
         sessionId: sid,
       }),
     );
+    availabilityChanged();
     return { ok: true, token: held.token, expiresIn: held.expiresAt.getTime() - Date.now() };
   } catch (e) {
     if (e instanceof NoRoomAvailableError)
@@ -132,6 +134,7 @@ export async function releaseRoom(token: string): Promise<void> {
   const sid = await session(false);
   if (!sid || !dbReady() || typeof token !== 'string') return;
   await withTransactionDb((tx) => abandonHold(tx, token, sid));
+  availabilityChanged();
 }
 
 /* ───────────── promo ───────────── */
