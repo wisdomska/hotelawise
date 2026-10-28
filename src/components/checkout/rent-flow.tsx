@@ -548,11 +548,14 @@ export function RentFlow(p: RentFlowProps) {
                                   top: 10,
                                   left: 10,
                                   fontFamily: mono,
-                                  fontSize: 11,
-                                  padding: '3px 7px',
-                                  borderRadius: 4,
+                                  fontSize: 12,
+                                  fontWeight: 500,
+                                  padding: '4px 8px',
+                                  borderRadius: 6,
                                   background: '#00003A',
-                                  color: '#F5F2EA',
+                                  color: '#FFFFFF',
+                                  border: '1px solid rgba(255,255,255,0.35)',
+                                  boxShadow: '0 2px 8px rgba(0,0,0,0.45)',
                                 }}
                               >
                                 NEW

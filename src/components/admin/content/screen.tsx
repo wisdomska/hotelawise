@@ -381,7 +381,12 @@ function Photos({ data }: { data: ContentData }) {
                         opacity: working ? 0.4 : 1,
                       }}
                     />
-                    {sl.custom && <span style={{ ...badge, background: 'var(--green-bg)', color: 'var(--green)' }}>Your photo</span>}
+                    {sl.custom && (
+                      <span style={badge}>
+                        <span aria-hidden="true" style={{ width: 7, height: 7, borderRadius: '50%', background: '#5BC08A' }} />
+                        Your photo
+                      </span>
+                    )}
                     {working && (
                       <span
                         style={{
@@ -434,14 +439,25 @@ function Photos({ data }: { data: ContentData }) {
   );
 }
 
+// Badges on photos are solid near-navy with white text (about 18:1), a light rim and a shadow,
+// so they read on any photo, light or dark, in either admin theme. No tints or transparency:
+// the photo behind would decide the contrast.
 const badge: CSSProperties = {
   position: 'absolute',
   top: 8,
   left: 8,
-  padding: '3px 8px',
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 6,
+  padding: '4px 10px',
   borderRadius: 999,
-  fontSize: 11.5,
-  fontWeight: 500,
+  fontSize: 12,
+  fontWeight: 600,
+  lineHeight: 1.2,
+  background: '#00003A',
+  color: '#FFFFFF',
+  border: '1px solid rgba(255,255,255,0.35)',
+  boxShadow: '0 2px 8px rgba(0,0,0,0.45)',
 };
 const smallBtn: CSSProperties = {
   display: 'flex',
@@ -601,27 +617,8 @@ function GalleryCard({
           loading="lazy"
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
         />
-        <span
-          style={{ ...badge, fontFamily: mono, fontSize: 11, padding: '2px 6px', borderRadius: 4, background: '#00003A', color: '#F5F2EA' }}
-        >
-          #{pos}
-        </span>
-        {/* A dark frosted pill reads on any photo: white text on near-navy is well above 4.5:1. */}
-        <span
-          style={{
-            ...badge,
-            left: 'auto',
-            right: 8,
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 6,
-            background: 'rgba(0,0,32,0.72)',
-            WebkitBackdropFilter: 'blur(8px) saturate(1.4)',
-            backdropFilter: 'blur(8px) saturate(1.4)',
-            border: '1px solid rgba(255,255,255,0.18)',
-            color: '#FFFFFF',
-          }}
-        >
+        <span style={{ ...badge, fontFamily: mono, borderRadius: 6 }}>#{pos}</span>
+        <span style={{ ...badge, left: 'auto', right: 8 }}>
           <span aria-hidden="true" style={{ width: 7, height: 7, borderRadius: '50%', background: ok ? '#5BC08A' : '#F4897E' }} />
           {ok ? 'Live' : 'Hidden'}
         </span>
