@@ -24,7 +24,7 @@ All notable changes to this project are recorded here. The format follows [Keep 
 - The rooms table is headed "Side by side comparison"; the hero's "View rooms" button is gone.
 - More breathing room inside the header pill and the rentals date bar; the manage-booking lookup is centred.
 
-- The site no longer shows how many rooms are left; it only says when a room is sold out (D-55).
+- The site no longer shows how many rooms or rental items are left; it only says when something is sold out or all booked (D-55).
 - Badges on photos are solid navy with white text, readable on any photo.
 
 ### Fixed

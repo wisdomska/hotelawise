@@ -174,7 +174,10 @@ export function RentFlow(p: RentFlowProps) {
     let v = Math.max(0, Math.floor(Number.isFinite(raw) ? raw : 0));
     const err = { ...qtyErr };
     if (v > max) {
-      err[slug] = max === 0 ? `${it.name}s are all booked for those dates.` : `Only ${max} free for those dates. That's the lot.`;
+      err[slug] =
+        max === 0
+          ? `${it.name}s are all booked for those dates.`
+          : 'We don’t have that many free for those dates. Call us about bigger orders.';
       v = max;
     } else delete err[slug];
     setQtyErr(err);
@@ -485,10 +488,7 @@ export function RentFlow(p: RentFlowProps) {
                   : p.items.map((it) => {
                       const av = freeOf(it.slug);
                       const n = rent.cart[it.slug] ?? 0;
-                      // One tag colour for every item; only "all booked" stands out. Scarcity goes in the
-                      // words ("Only 3 left"), measured against the item's own stock, not a fixed number.
-                      const tone = av === 0 ? ['#EFE9E6', '#B42318'] : ['#F6E2B3', '#000063'];
-                      const few = av > 0 && av <= Math.max(3, Math.round(it.stockTotal * 0.1));
+                      // Stock counts aren't shown (D-55); only "all booked" gets a tag.
                       const step = qtyStep(it.stockTotal);
                       return (
                         <article
@@ -580,23 +580,21 @@ export function RentFlow(p: RentFlowProps) {
                               />
                               <span style={{ opacity: 0.6 }}>dep. {formatGhs(it.deposit, { prefix: false })}</span>
                             </div>
-                            <span
-                              style={{
-                                alignSelf: 'flex-start',
-                                fontFamily: mono,
-                                fontSize: 11,
-                                padding: '4px 8px',
-                                borderRadius: 999,
-                                background: tone[0],
-                                color: tone[1],
-                              }}
-                            >
-                              {av === 0
-                                ? `All booked for ${formatDayMonth(rent.from)}`
-                                : few
-                                  ? `Only ${av} left on ${formatDayMonth(rent.from)}`
-                                  : `${av} available on ${formatDayMonth(rent.from)}`}
-                            </span>
+                            {av === 0 && (
+                              <span
+                                style={{
+                                  alignSelf: 'flex-start',
+                                  fontFamily: mono,
+                                  fontSize: 11,
+                                  padding: '4px 8px',
+                                  borderRadius: 999,
+                                  background: '#EFE9E6',
+                                  color: '#B42318',
+                                }}
+                              >
+                                All booked for {formatDayMonth(rent.from)}
+                              </span>
+                            )}
                             <div style={{ flex: 1 }} />
                             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                               <div
