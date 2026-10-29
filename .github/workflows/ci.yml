@@ -75,6 +75,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm cf:build
+      # The page's font classes must be defined in the CSS it loads (D-56).
+      - run: node scripts/check-fonts.mjs
       - run: node scripts/check-worker-size.mjs
         env:
           WORKER_MAX_GZIP_KIB: ${{ vars.WORKER_MAX_GZIP_KIB || '3072' }}

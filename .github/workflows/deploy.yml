@@ -38,5 +38,10 @@ jobs:
       # Migrations run here, before the new code goes live — never on page load.
       - run: pnpm db:migrate
       - run: node scripts/cf-clean-build.mjs --env "$TARGET"
+      # The page's font classes must be defined in the CSS it loads (D-56): stop here if not.
+      - run: node scripts/check-fonts.mjs
       # Uploads the Worker, populates the KV page cache and creates the D1 tag table.
       - run: pnpm exec opennextjs-cloudflare deploy --env "$TARGET"
+      # The same check on the live site: the font mismatch once appeared only once deployed.
+      - name: Check fonts on the live site
+        run: node scripts/check-fonts.mjs "https://${{ github.ref_name == 'main' && 'hotelawise' || 'hotelawise-preview' }}.wisdomska.workers.dev"
