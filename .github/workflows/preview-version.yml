@@ -12,7 +12,6 @@ permissions:
 jobs:
   upload:
     runs-on: ubuntu-latest
-    environment: preview
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -21,7 +20,7 @@ jobs:
         id: secrets
         run: |
           if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
-            echo "::notice::Cloudflare secrets are not set for the preview environment yet; skipping the preview upload."
+            echo "::notice::Repository secrets CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID are not set; skipping the preview upload."
             echo "ready=false" >> "$GITHUB_OUTPUT"
           else
             echo "ready=true" >> "$GITHUB_OUTPUT"

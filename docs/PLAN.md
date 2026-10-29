@@ -88,11 +88,11 @@ Separate workflows:
 - `dependabot.yml` (npm + Actions, weekly)
 - `deploy.yml`: on push to `preview` or `main`, run `drizzle-kit migrate` against that environment's Neon branch, **then** `wrangler deploy --env <env>`. Migrations never run on page load.
 
-Secrets live in GitHub Actions environments (`preview`, `production`):
+Secrets are GitHub Actions repository secrets (a private repo on GitHub Free has no environments, D-57):
 
 - `CLOUDFLARE_API_TOKEN`, scoped to Workers Scripts:Edit, Workers KV Storage:Edit, D1:Edit and Account Settings:Read for one account
 - `CLOUDFLARE_ACCOUNT_ID`
-- `DATABASE_URL_MIGRATE`
+- `DATABASE_URL_MIGRATE_PRODUCTION` and `DATABASE_URL_MIGRATE_PREVIEW`
 
 Runtime secrets live in `wrangler secret put … --env`.
 

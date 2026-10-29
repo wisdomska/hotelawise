@@ -163,7 +163,7 @@ docs/             plan, architecture, decisions, setup checklist, runbook, hotel
 | `main`    | production  | `hotelawise.wisdomska.workers.dev`, then `hotelawise.com`        |
 | `preview` | preview     | `hotelawise-preview.wisdomska.workers.dev`, open but not indexed |
 
-A push to `preview` or `main` migrates that environment's database and then deploys its Worker (`.github/workflows/deploy.yml`). Every pull request into `preview` also uploads a preview version and links it in the PR. Deploys, rollbacks and incident steps are in [docs/RUNBOOK.md](docs/RUNBOOK.md).
+A push to `preview` or `main` migrates that environment's database and then deploys its Worker (`.github/workflows/deploy.yml`). Its secrets are repository-level Actions secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `DATABASE_URL_MIGRATE_PRODUCTION` and `DATABASE_URL_MIGRATE_PREVIEW`. Every pull request into `preview` also uploads a preview version and links it in the PR. Deploys, rollbacks and incident steps are in [docs/RUNBOOK.md](docs/RUNBOOK.md).
 
 The Worker has to stay under the free plan's 3 MiB (gzip). CI measures it on every pull request.
 
