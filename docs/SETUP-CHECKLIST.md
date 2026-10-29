@@ -51,10 +51,12 @@ Add each key in **this cloud environment's settings**: the environment menu in t
 
    Alternatively, run `bash scripts/github/protect-branches.sh` on your computer after `gh auth login`.
 
-2. **Deploy secrets.** Repo → Settings → Environments → create `preview` and `production`. In each, add:
+2. **Deploy secrets.** Repo → Settings → Secrets and variables → Actions → New repository secret. Add:
    - `CLOUDFLARE_API_TOKEN`
    - `CLOUDFLARE_ACCOUNT_ID`
-   - `DATABASE_URL_MIGRATE`. I'll give you each environment's value once the Neon branches exist.
+   - `DATABASE_URL_MIGRATE_PRODUCTION` and `DATABASE_URL_MIGRATE_PREVIEW`, each database's direct connection string.
+
+   These are repository secrets, not environment secrets: a private repo on GitHub Free can't use environments (D-57).
 
    Until these are set, the Deploy workflow stops with a clear "secret not set" message. That is expected.
 

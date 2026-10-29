@@ -55,14 +55,14 @@ pnpm exec wrangler secret put PAYSTACK_SECRET_KEY --env production   # prompts f
 pnpm exec wrangler secret list --env production
 ```
 
-Worker secrets: `DATABASE_URL`, `BETTER_AUTH_SECRET`, `REF_SECRET`, `PAYSTACK_SECRET_KEY`, `RESEND_API_KEY`, `TURNSTILE_SECRET_KEY`, `SMS_API_KEY`, `CLOUDINARY_API_SECRET`, and `PREVIEW_PASSWORD` (preview only). Public values live in `wrangler.jsonc`. GitHub environment secrets (`preview`, `production`): `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `DATABASE_URL_MIGRATE`.
+Worker secrets: `DATABASE_URL`, `BETTER_AUTH_SECRET`, `REF_SECRET`, `PAYSTACK_SECRET_KEY`, `RESEND_API_KEY`, `TURNSTILE_SECRET_KEY`, `SMS_API_KEY`, `CLOUDINARY_API_SECRET`, and `PREVIEW_PASSWORD` (preview only). Public values live in `wrangler.jsonc`. GitHub repository secrets (Settings → Secrets and variables → Actions): `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `DATABASE_URL_MIGRATE_PRODUCTION`, `DATABASE_URL_MIGRATE_PREVIEW`.
 
 ## Rotate a secret
 
 When a key is exposed, or a person with access leaves:
 
 1. Create a new key at the provider (Paystack, Resend, Cloudinary, Neon, Cloudflare, GitHub).
-2. Set it with `wrangler secret put` (and in GitHub environment secrets if it's listed there).
+2. Set it with `wrangler secret put` (and in the GitHub repository secrets if it's listed there).
 3. Revoke the old key at the provider.
 4. `BETTER_AUTH_SECRET`: changing it signs every staff member out. `REF_SECRET`: changing it invalidates open guest codes and manage-booking passes, but not existing bookings.
 

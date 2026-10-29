@@ -40,4 +40,4 @@ The pull request template asks what changed, why, and how it was tested. Fill it
 
 ## Secrets
 
-Never commit secrets or paste them into issues, pull requests or chat. `.env.local` and `.dev.vars` are git-ignored. Deployed secrets are set with `wrangler secret put` and kept in GitHub environment secrets. See [SECURITY.md](SECURITY.md).
+Never commit secrets or paste them into issues, pull requests or chat. `.env.local` and `.dev.vars` are git-ignored. Deployed secrets are set with `wrangler secret put` and kept in GitHub repository secrets. See [SECURITY.md](SECURITY.md).
