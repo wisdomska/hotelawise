@@ -2,7 +2,7 @@
 
 Website, booking engine and admin for **Hotel A-Wise**, No. 1 Wisepak Lane, New Asofan, Accra.
 
-- **Guests** book a room and pay by Mobile Money or card, manage the booking with a texted code, reserve event rentals to collect, and enquire about hiring the event compound or conference room.
+- **Guests** book a room, reserve event rentals to collect, and enquire about hiring the event compound or conference room. Paying online by Mobile Money or card, and managing a booking with a texted code, switch on once the hotel's payment and messaging keys are added (see below).
 - **Staff** run the hotel from `/admin`: bookings, rooms, rentals, inventory, venues, payments, customers, content, reports and users, in a light or a night-navy dark theme. Every change is written to an audit log.
 
 **Live:** https://hotelawise.wisdomska.workers.dev (moves to `hotelawise.com` once the domain is connected). **Preview:** https://hotelawise-preview.wisdomska.workers.dev (not indexed). **Latest release:** [v1.0.0](https://github.com/wisdomska/hotelawise/releases/tag/v1.0.0), notes in [CHANGELOG.md](CHANGELOG.md); changes merged since then are listed under Unreleased.
@@ -21,12 +21,24 @@ Website, booking engine and admin for **Hotel A-Wise**, No. 1 Wisepak Lane, New 
 
 ### In production today
 
-| Works now                                                                               | Waiting on                                                         |
-| --------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| Public site, room bookings and rental reservations paid at the hotel                    | Paystack live keys: online MoMo and card payments                  |
-| Venue enquiries (on the rentals page) and contact messages, with an invisible bot check | Resend (email) and Arkesel (SMS) keys: confirmations and reminders |
-| The admin, the audit log and the scheduled jobs                                         | The above, for manage-my-booking codes sent by text or email       |
-|                                                                                         | The `hotelawise.com` domain                                        |
+**Works now**
+
+- The public site: home, rooms, gallery, contact, and rentals & venues.
+- Room bookings paid at the hotel, with a 15-minute hold. The database refuses overlapping bookings of the same room, so a room can't be double-booked, even by two guests clicking at once.
+- Rental reservations paid at pickup, with stock locked and re-counted when each order is placed.
+- Venue enquiries, contact messages and newsletter sign-ups, with an invisible bot check, all landing in the admin inbox.
+- The admin: desk bookings and payments, content and photos (changes show on the site for the next visitor), reports, exports and the audit log.
+- Photo uploads (Cloudinary) and the 15-minute scheduled job.
+
+The site shows when a room is sold out or a rental item is all booked, but never how many are left (D-55).
+
+**Waiting on the hotel's accounts**
+
+| Needed                                | What it switches on                                                                                                  |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Paystack live keys                    | Online Mobile Money and card payments. Until then guests pay at the hotel or at pickup                               |
+| Resend (email) and Arkesel (SMS) keys | Confirmations, reminders and the manage-my-booking sign-in code. Until then guests call the desk to change or cancel |
+| The `hotelawise.com` domain           | The site's own address, in place of `hotelawise.wisdomska.workers.dev`                                               |
 
 The plan is in [docs/PLAN.md](docs/PLAN.md). The release QA is in [docs/QA-REPORT.md](docs/QA-REPORT.md) and the security review in [docs/SECURITY.md](docs/SECURITY.md). Hotel facts that still need the owner's confirmation are in [docs/HOTEL-FACTS.md](docs/HOTEL-FACTS.md).
 
