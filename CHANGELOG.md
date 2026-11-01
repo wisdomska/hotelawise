@@ -29,6 +29,8 @@ All notable changes to this project are recorded here. The format follows [Keep 
 
 - CI and every deploy check that the fonts on the page match the CSS it loads, including on the live site after each deploy (D-56).
 
+- Deploy secrets are repository secrets and CI is trimmed, so the repository can be private on GitHub Free (D-57, D-58).
+
 ### Fixed
 
 - Admin edits (photos, copy, prices) show on the site for the very next visitor, not minutes later.

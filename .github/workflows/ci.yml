@@ -1,9 +1,16 @@
 name: CI
 
+# Kept lean for a private repo on GitHub Free (2,000 Actions minutes a month, D-58):
+# - preview is only ever fast-forwarded to main, so pushes there don't run CI again;
+# - changes to docs alone don't run CI;
+# - a squash-merged pull request ("… (#12)") already passed E2E on the PR, so the push to
+#   main skips it; a direct push to main still runs everything.
 on:
   pull_request:
+    paths-ignore: ['**/*.md', 'docs/**', 'LICENSE']
   push:
-    branches: [preview, main]
+    branches: [main]
+    paths-ignore: ['**/*.md', 'docs/**', 'LICENSE']
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -83,6 +90,7 @@ jobs:
 
   e2e:
     name: E2E (Playwright)
+    if: github.event_name == 'pull_request' || !contains(github.event.head_commit.message, '(#')
     runs-on: ubuntu-latest
     services:
       postgres:
