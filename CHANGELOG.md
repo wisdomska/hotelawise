@@ -41,6 +41,7 @@ All notable changes to this project are recorded here. The format follows [Keep 
 
 ### Security
 
+- Dependency updates (21 packages, minor and patch): newer wrangler clears the build tools' undici advisories; the audit goes from 19 to 3 (moderate, build tools only). GitHub Actions moved to current versions (checkout, setup-node and upload-artifact v7, github-script v9, pnpm/action-setup v6), off the deprecated Node 20 runtime.
 - Next.js 16.4.3 → 16.4.6, which fixes seven moderate advisories (cache disclosure and poisoning, image-optimizer SVG bypass, response injection, cookie exposure).
 
 ## [1.0.0] - 2026-10-27

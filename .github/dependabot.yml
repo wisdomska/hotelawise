@@ -1,16 +1,22 @@
+# Monthly and grouped, against main (preview only ever copies main): each update PR runs CI,
+# and a private repo on GitHub Free has 2,000 Actions minutes a month (D-58). Security
+# updates still arrive as soon as GitHub publishes an advisory.
 version: 2
 updates:
   - package-ecosystem: npm
     directory: /
     schedule:
-      interval: weekly
-    target-branch: preview
-    open-pull-requests-limit: 5
+      interval: monthly
+    target-branch: main
+    open-pull-requests-limit: 3
     groups:
       minor-and-patch:
         update-types: [minor, patch]
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: weekly
-    target-branch: preview
+      interval: monthly
+    target-branch: main
+    groups:
+      actions:
+        patterns: ['*']
