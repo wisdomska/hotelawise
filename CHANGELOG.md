@@ -39,6 +39,10 @@ All notable changes to this project are recorded here. The format follows [Keep 
 
 - Serif headings and mono labels showed in the sans font on the live sites: the error page's font import gave the fonts a second set of class names that the CSS used instead.
 
+### Security
+
+- Next.js 16.4.3 → 16.4.6, which fixes seven moderate advisories (cache disclosure and poisoning, image-optimizer SVG bypass, response injection, cookie exposure).
+
 ## [1.0.0] - 2026-10-27
 
 First production release, live at https://hotelawise.wisdomska.workers.dev.
