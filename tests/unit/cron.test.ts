@@ -4,7 +4,8 @@ import { runScheduled } from '@/worker/scheduled';
 
 describe('cron', () => {
   it('maps the wrangler schedules to jobs', () => {
-    expect(cronName('*/15 * * * *')).toBe('every15');
+    expect(cronName('0 2,7,10 * * *')).toBe('tidy');
+    expect(cronName('*/15 * * * *')).toBe('tidy');
     expect(cronName('0 7 * * *')).toBe('daily07');
     expect(cronName('0 2 * * *')).toBe('daily02');
     expect(cronName('5 4 * * *')).toBeNull();
@@ -12,10 +13,10 @@ describe('cron', () => {
 
   it('runs the daily jobs on the 15-minute trigger at 07:00 and 02:00', () => {
     const at = (iso: string) => new Date(`2027-01-05T${iso}:00Z`);
-    expect(cronJobs('*/15 * * * *', at('10:15'))).toEqual(['every15']);
-    expect(cronJobs('*/15 * * * *', at('07:00'))).toEqual(['every15', 'daily07']);
-    expect(cronJobs('*/15 * * * *', at('07:15'))).toEqual(['every15']);
-    expect(cronJobs('*/15 * * * *', at('02:00'))).toEqual(['every15', 'daily02']);
+    expect(cronJobs('0 2,7,10 * * *', at('10:00'))).toEqual(['tidy']);
+    expect(cronJobs('0 2,7,10 * * *', at('07:00'))).toEqual(['tidy', 'daily07']);
+    expect(cronJobs('0 2,7,10 * * *', at('02:00'))).toEqual(['tidy', 'daily02']);
+    expect(cronJobs('*/15 * * * *', at('07:15'))).toEqual(['tidy']);
     expect(cronJobs('0 7 * * *', at('07:00'))).toEqual(['daily07']);
     expect(cronJobs('5 4 * * *', at('04:05'))).toEqual([]);
   });
@@ -43,7 +44,7 @@ describe('cron', () => {
     fetchApp.mockClear();
     await runScheduled('*/15 * * * *', new Date('2027-01-05T02:00:00Z'), env, ctx, fetchApp);
     expect((fetchApp.mock.calls as unknown as [Request][]).map(([r]) => new URL(r.url).pathname)).toEqual([
-      '/api/cron/every15',
+      '/api/cron/tidy',
       '/api/cron/daily02',
     ]);
     fetchApp.mockClear();

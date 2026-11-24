@@ -7,7 +7,7 @@ import { todayInAccra } from '@/lib/dates';
 
 export async function run(name: CronName, at: Date): Promise<Record<string, unknown>> {
   const { withTransactionDb } = await import('@/server/platform/db');
-  if (name === 'every15') {
+  if (name === 'tidy') {
     const { sweepExpiredHolds } = await import('./holds');
     const { releaseUnpaidPickups } = await import('./reminders');
     const holds = await withTransactionDb((db) => sweepExpiredHolds(db, at));

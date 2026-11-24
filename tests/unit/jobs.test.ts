@@ -25,7 +25,7 @@ describe('scheduled jobs', () => {
   it('every 15 minutes releases lapsed holds and unpaid pay-at-pickup orders', async () => {
     sweep.mockResolvedValue(3);
     release.mockResolvedValue(1);
-    expect(await run('every15', AT)).toEqual({ holds: 3, orders: 1 });
+    expect(await run('tidy', AT)).toEqual({ holds: 3, orders: 1 });
     expect(sweep).toHaveBeenCalledWith(tx, AT);
     expect(release).toHaveBeenCalledWith(tx, AT);
     expect(remind).not.toHaveBeenCalled();

@@ -74,7 +74,7 @@ When a key is exposed, or a person with access leaves:
 
 ## Scheduled jobs
 
-Each Worker has one Cron Trigger, every 15 minutes (`wrangler.jsonc`; the free plan allows 5 per account, DECISIONS D-50). `src/worker/scheduled.ts` turns each run into internal `POST /api/cron/<job>` calls (D-43), adding the daily jobs on the 07:00 and 02:00 runs. They run `src/server/services/jobs.ts`:
+Each Worker has one Cron Trigger, at 02:00, 07:00 and 10:00 Accra (`wrangler.jsonc`; the free plan allows 5 per account, DECISIONS D-50 and D-59). `src/worker/scheduled.ts` turns each run into internal `POST /api/cron/<job>` calls (D-43), adding the daily jobs on the 07:00 and 02:00 runs. They run `src/server/services/jobs.ts`:
 
 | Schedule (UTC = Accra time) | Job                                                                                                        |
 | --------------------------- | ---------------------------------------------------------------------------------------------------------- |

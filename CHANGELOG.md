@@ -33,6 +33,7 @@ All notable changes to this project are recorded here. The format follows [Keep 
 
 ### Fixed
 
+- The scheduled job ran every 15 minutes and kept the Neon database awake, using up its free monthly compute; it now runs at 02:00, 07:00 and 10:00 (D-59).
 - Admin edits (photos, copy, prices) show on the site for the very next visitor, not minutes later.
 - The rentals page no longer returns an error right after a deploy or an admin edit.
 

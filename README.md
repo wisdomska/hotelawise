@@ -28,7 +28,7 @@ Website, booking engine and admin for **Hotel A-Wise**, No. 1 Wisepak Lane, New 
 - Rental reservations paid at pickup, with stock locked and re-counted when each order is placed.
 - Venue enquiries, contact messages and newsletter sign-ups, with an invisible bot check, all landing in the admin inbox.
 - The admin: desk bookings and payments, content and photos (changes show on the site for the next visitor), reports, exports and the audit log.
-- Photo uploads (Cloudinary) and the 15-minute scheduled job.
+- Photo uploads (Cloudinary) and the scheduled job (02:00, 07:00 and 10:00).
 
 The site shows when a room is sold out or a rental item is all booked, but never how many are left (D-55).
 
@@ -167,7 +167,7 @@ A push to `preview` or `main` migrates that environment's database and then depl
 
 The Worker has to stay under the free plan's 3 MiB (gzip). CI measures it on every pull request.
 
-Each Worker has one Cron Trigger, every 15 minutes (the free plan allows 5 per account): it releases expired holds and unpaid pay-at-pickup orders, and also sends the 07:00 reminders and runs the 02:00 housekeeping.
+Each Worker has one Cron Trigger, at 02:00, 07:00 and 10:00 Accra (the free plan allows 5 per account). Each run tidies lapsed holds and unpaid pay-at-pickup orders; the 07:00 run also sends reminders and the 02:00 run does housekeeping. It runs only three times a day so the Neon database can sleep in between and stay inside its free monthly compute (D-59).
 
 ### Releases
 

@@ -10,7 +10,7 @@ Browser ──► Cloudflare Worker (OpenNext: Next.js 16 App Router)
               ├─ ISR cache: KV · tags: D1 · revalidation queue: Durable Object
               ├─ Neon Postgres: HTTP driver for reads, WebSocket Pool for transactions
               ├─ Paystack · Resend · Cloudinary · Turnstile · Sentry
-              └─ scheduled(): one Cron Trigger every 15 min; daily jobs at 07:00 and 02:00 Accra
+              └─ scheduled(): one Cron Trigger at 02:00, 07:00, 10:00 Accra (D-59)
 ```
 
 - **Entry point.** `src/worker/index.ts` wraps the generated OpenNext worker and adds `scheduled()`.

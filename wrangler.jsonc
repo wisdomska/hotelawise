@@ -8,9 +8,9 @@
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
   "observability": { "enabled": true },
-  // One trigger per Worker (the free plan allows 5 per account); the 07:00 and 02:00 jobs
-  // ride on it (src/lib/cron.ts).
-  "triggers": { "crons": ["*/15 * * * *"] },
+  // One trigger per Worker (the free plan allows 5 per account), three times a day so the
+  // database can sleep in between (D-59); the 07:00 and 02:00 jobs ride on it (src/lib/cron.ts).
+  "triggers": { "crons": ["0 2,7,10 * * *"] },
   "kv_namespaces": [{ "binding": "NEXT_INC_CACHE_KV", "id": "00000000000000000000000000000000" }],
   "d1_databases": [
     { "binding": "NEXT_TAG_CACHE_D1", "database_name": "hotel-a-wise-tags-dev", "database_id": "00000000-0000-0000-0000-000000000000" },
@@ -25,7 +25,7 @@
       "name": "hotelawise-preview",
       // Until a domain is registered (docs/SETUP-CHECKLIST.md §1), the Worker is served on workers.dev.
       "workers_dev": true,
-      "triggers": { "crons": ["*/15 * * * *"] },
+      "triggers": { "crons": ["0 2,7,10 * * *"] },
       "kv_namespaces": [{ "binding": "NEXT_INC_CACHE_KV", "id": "dec4e897f0274c44be378cbabd630e9e" }],
       // database_id is filled in once the D1 database exists in the hotel's Cloudflare account (RUNBOOK).
       "d1_databases": [
@@ -55,7 +55,7 @@
       "name": "hotelawise",
       // Add custom-domain routes here once the domain exists (hotelawise.com, www.hotelawise.com).
       "workers_dev": true,
-      "triggers": { "crons": ["*/15 * * * *"] },
+      "triggers": { "crons": ["0 2,7,10 * * *"] },
       "kv_namespaces": [{ "binding": "NEXT_INC_CACHE_KV", "id": "4def674243fd42dfb96a868f11302356" }],
       "d1_databases": [
         { "binding": "NEXT_TAG_CACHE_D1", "database_name": "hotel-a-wise-tags", "database_id": "22ccc851-4227-4ff4-bbec-1b65596b2da1" },
