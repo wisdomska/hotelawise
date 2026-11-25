@@ -81,6 +81,11 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - uses: actions/cache@v6
+        with:
+          path: .next/cache
+          key: next-webpack-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('src/**', 'next.config.ts') }}
+          restore-keys: next-webpack-${{ hashFiles('pnpm-lock.yaml') }}-
       - run: pnpm cf:build
       # The page's font classes must be defined in the CSS it loads (D-56).
       - run: node scripts/check-fonts.mjs
@@ -119,6 +124,11 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm db:migrate && pnpm db:seed
       - run: pnpm exec playwright install --with-deps chromium webkit
+      - uses: actions/cache@v6
+        with:
+          path: .next/cache
+          key: next-turbo-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('src/**', 'next.config.ts') }}
+          restore-keys: next-turbo-${{ hashFiles('pnpm-lock.yaml') }}-
       - run: pnpm build
       - run: pnpm test:e2e
       - uses: actions/upload-artifact@v7

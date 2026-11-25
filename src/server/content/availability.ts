@@ -1,6 +1,6 @@
 // Whether each room type has a room free tonight (1) or is sold out (0), for the room cards.
-// Never the count: the owner doesn't show how many rooms are left (D-55). Cached for five
-// minutes and tagged 'availability'; holds, bookings and admin changes expire it.
+// Never the count: the owner doesn't show how many rooms are left (D-55). Cached for an
+// hour and tagged 'availability'; holds, bookings and admin changes expire it.
 import 'server-only';
 import { revalidateTag, unstable_cache } from 'next/cache';
 import { todayInAccra } from '@/lib/dates';
@@ -20,7 +20,9 @@ const cached = unstable_cache(
     return freeRoomsByType(await db(), night, new Date());
   },
   ['tonight-v1'],
-  { tags: [AVAILABILITY_TAG], revalidate: 300 },
+  // An hour: holds, releases, bookings and admin changes expire it at once; the timer only
+  // catches a hold that lapsed without being released. The booking page always checks live (D-60).
+  { tags: [AVAILABILITY_TAG], revalidate: 3600 },
 );
 
 export async function leftTonight(data: SiteData): Promise<Record<string, number>> {

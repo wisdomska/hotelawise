@@ -70,7 +70,7 @@ export function NewsletterForm({ siteKey }: { siteKey: string | null }) {
       >
         {pending ? 'Subscribing…' : 'Subscribe'}
       </button>
-      <Turnstile siteKey={siteKey} />
+      <Turnstile siteKey={siteKey} lazy />
     </form>
   );
 }

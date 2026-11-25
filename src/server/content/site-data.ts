@@ -264,7 +264,9 @@ async function loadFromDatabase(): Promise<SiteData> {
   };
 }
 
-const cachedSiteData = unstable_cache(loadFromDatabase, ['site-data-v3'], { tags: [SITE_TAG], revalidate: 3600 });
+// A day: every admin change expires the 'site' tag at once, so the timer is only a backstop,
+// and each refresh wakes the database (Neon's free compute allowance, D-60).
+const cachedSiteData = unstable_cache(loadFromDatabase, ['site-data-v3'], { tags: [SITE_TAG], revalidate: 86_400 });
 
 // One read per request (React cache): /rent asks for it twice at once, and two misses together
 // wrote the same Workers KV key in the same second, which KV refuses, so the page returned 500

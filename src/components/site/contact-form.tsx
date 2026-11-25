@@ -200,7 +200,7 @@ export function ContactForm({ siteKey }: { siteKey: string | null }) {
         />
         <FieldError id="cf-msg-err" text={errors.message} />
       </label>
-      <Turnstile siteKey={siteKey} />
+      <Turnstile siteKey={siteKey} lazy />
       {formError && (
         <p role="alert" style={{ margin: 0, fontSize: 13, color: '#B42318' }}>
           {formError}

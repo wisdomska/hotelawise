@@ -6,6 +6,9 @@ All notable changes to this project are recorded here. The format follows [Keep 
 
 ### Changed
 
+- Pages load much less third-party code: the bot check loads when a form is first used instead of on every page (2–6 MB per page), and the home page map loads as it scrolls into view (about 2 MB) (D-60).
+- The site's data and "sold out tonight" caches refresh less often, since every change already refreshes them at once, so the database sleeps more (D-60).
+- CI's browser tests run two at a time again and builds reuse their cache (D-60).
 - Home: the booking bar sits across the bottom edge of the hero, half over the photo, so more of the photo shows.
 - Turnstile runs invisibly; no "Verify you are human" box appears anywhere.
 - Admin: the top search reads "Search" on small screens; New booking no longer asks for a password.

@@ -9,6 +9,9 @@ const baseURL = process.env.BASE_URL ?? 'http://localhost:3100';
 export default defineConfig({
   testDir: 'tests/e2e',
   fullyParallel: false,
+  // Two files at a time in CI. Left unset, Playwright uses half the cores: one worker on the
+  // 2-core runners private repos get, which took E2E from about 7 to 10 minutes (D-60).
+  workers: process.env.CI ? 2 : undefined,
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [['github'], ['html', { open: 'never' }]] : 'list',
   use: { baseURL, trace: 'retain-on-failure' },

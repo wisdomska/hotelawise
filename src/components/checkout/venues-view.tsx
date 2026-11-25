@@ -376,7 +376,7 @@ export function VenuesView({ venues, intro, turnstileSiteKey }: { venues: VenueC
           />
         </label>
         <div style={{ gridColumn: '1 / -1' }}>
-          <Turnstile siteKey={turnstileSiteKey} onToken={setTurnstile} />
+          <Turnstile siteKey={turnstileSiteKey} onToken={setTurnstile} lazy />
         </div>
         {err && (
           <p role="alert" style={{ gridColumn: '1 / -1', margin: 0, fontSize: 14, color: '#B42318' }}>

@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Fragment } from 'react';
 import { BookingBar } from '@/components/site/home/booking-bar';
+import { LazyMap } from '@/components/site/home/lazy-map';
 import { Carousel, RoomsCarousel } from '@/components/site/home/rooms-carousel';
 import { WhatsHere } from '@/components/site/home/whats-here';
 import { JsonLd } from '@/components/site/json-ld';
@@ -521,15 +522,10 @@ export default async function HomePage() {
               Get directions
             </a>
           </div>
-          <div style={{ minHeight: 380, borderRadius: 16, overflow: 'hidden', background: '#F6E2B3' }}>
-            <iframe
-              title="Map showing Hotel A-Wise, New Asofan, Accra"
-              src="https://maps.google.com/maps?q=5.6455136,-0.2869356&z=15&output=embed"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              style={{ width: '100%', height: '100%', minHeight: 380, border: 0, filter: 'grayscale(0.6) contrast(1.05)' }}
-            />
-          </div>
+          <LazyMap
+            title="Map showing Hotel A-Wise, New Asofan, Accra"
+            src="https://maps.google.com/maps?q=5.6455136,-0.2869356&z=15&output=embed"
+          />
         </div>
       </section>
     </main>

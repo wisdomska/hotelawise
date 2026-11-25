@@ -397,3 +397,23 @@ As a private repo on GitHub Free, Actions gets 2,000 minutes a month, and CI had
 ## D-59 The scheduled job runs three times a day, not every 15 minutes
 
 Neon's free plan gives the project 100 compute-hours a month, and the 15-minute job used it all with almost no guests. Every run woke the database, which then stayed on for Neon's 5-minute idle timeout: about 8 hours a day for each of production and preview, roughly 120 compute-hours a month at the smallest size. The job only tidies up (lapsed holds, unpaid pay-at-pickup orders), and every query already treats those as released (D-13), so it doesn't need to run often. The trigger is now `0 2,7,10 * * *`. Every run tidies; 07:00 adds the reminders and 02:00 the housekeeping; 10:00 marks that day's unpaid pay-at-pickup orders cancelled and tells the customer (previously within 15 minutes of 10:00, now at 10:00). The job is renamed `tidy`, and the old trigger string still maps to it. Expected database time from the job falls from about 8 hours a day per branch to about 15 minutes.
+
+## D-60 Optimisation pass: load third-party code only when it's needed, let the database sleep, faster CI
+
+Measured on the live site before changing anything:
+
+- Turnstile, through the footer newsletter form, loaded on every page. That was 2–6 MB of scripts and frames (uncompressed), loaded twice on the contact page.
+- The home page's Google Maps embed was about 2 MB of map scripts. The browser's own `loading="lazy"` still fetched it at page load.
+
+Changes:
+
+- **Turnstile loads on first use** (`<Turnstile lazy>` on the newsletter, contact and venue forms). It starts when someone focuses or presses inside the form. A submit that beats the check waits for it, up to 8 seconds, then goes through; the server verifies every token as before. Tested with Cloudflare's always-pass test secret and a stubbed widget: no Turnstile before touching a form, one submit each, success on all three forms, and the server's usual message when no token arrives. The booking and rentals checkouts still load it up front, because their first step needs it.
+- **The map loads near the viewport** (`LazyMap`, IntersectionObserver with an 800 px margin), keeping its size so nothing shifts.
+- **Fewer database wake-ups.** Site data is cached for a day instead of an hour, because admin changes already expire it at once (D-59). The "sold out tonight" check is cached for an hour instead of 5 minutes; holds, releases, bookings and admin changes still expire it at once, and the booking page always checks live.
+- **CI** runs E2E with 2 workers. Left unset, Playwright used one worker on the 2-core runners private repos get, which took E2E from about 7 to 10 minutes. It also caches `.next/cache` for both builds.
+
+Looked at but left alone:
+
+- **Worker size** is 2,464 KiB of the 3,072 KiB limit. The two near-duplicate Better Auth chunks are Next.js's separate server and action layers, which can't safely be merged.
+- **Server CPU per request** is mostly the cold start of the Next.js runtime.
+- **Admin polling:** the admin's 15-second timers are on-screen clocks and don't touch the server.
